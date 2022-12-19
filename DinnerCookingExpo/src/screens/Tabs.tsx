@@ -1,0 +1,44 @@
+import React from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {FriendScreen} from './friends/FriendScreen';
+import {DinnerListScreen} from './home/DinnerListScreen';
+import {SettingScreen} from './settings/SettingScreen';
+// Tab Bar Icons
+import HomeIcon from '../assets/icons/home.svg';
+import ContactIcon from '../assets/icons/contact.svg';
+import SettingsIcon from '../assets/icons/settings.svg';
+
+export const Tabs = () => {
+  const Tab = createBottomTabNavigator();
+
+  return (
+    <Tab.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName="Dinners">
+      <Tab.Screen
+        name="Contacts"
+        component={FriendScreen}
+        options={{
+          tabBarLabel: 'Contacts',
+          tabBarIcon: ({color}) => <ContactIcon color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Dinners"
+        component={DinnerListScreen}
+        options={{
+          tabBarLabel: 'Dinners',
+          tabBarIcon: ({color}) => <HomeIcon color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Preferences"
+        component={SettingScreen}
+        options={{
+          tabBarLabel: 'Preferences',
+          tabBarIcon: ({color}) => <SettingsIcon color={color} />,
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
