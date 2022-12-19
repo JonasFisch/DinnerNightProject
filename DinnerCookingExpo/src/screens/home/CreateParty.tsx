@@ -13,36 +13,40 @@ import DatabaseContext from '../../contexts/DatabaseContext';
 import UserContext from '../../contexts/UserContext';
 import {AppButtonType} from '../../interfaces/Button';
 import {Dinner} from '../../interfaces/Dinner';
+import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import {Text} from 'react-native';
 
-// import DateTimePicker, {
-//   DateTimePickerAndroid,
-// } from '@react-native-community/datetimepicker';
-import moment from 'moment';
-
-export const CreateParty = () => {
+export const CreateParty = ({navigation}) => {
   const dbContext = useContext(DatabaseContext);
   const userContext = useContext(UserContext);
 
   const [name, setName] = useState<string>('');
-  const [date, setDate] = useState(new Date(1598051730000));
-  // const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(new Date(Date.now()));
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setDate(currentDate);
+  const setNewDate = (
+    _event: DateTimePickerEvent,
+    newDate: Date | undefined,
+  ) => {
+    // only extract date from given date
+    if (newDate) {
+      const clonedDate = new Date(date);
+      clonedDate.setDate(newDate.getDate());
+      setDate(clonedDate);
+    } else console.error('Unexpected Error while setting date.');
   };
 
-  // const test = async () => {
-  //   console.log('test');
-  //   try {
-  //     const {action, year, month, day} = await DateTimePickerAndroid.open({
-  //       value: new Date(),
-  //       onChange: onChange,
-  //     });
-  //   } catch ({code, message}) {
-  //     console.warn('Cannot open date picker', message);
-  //   }
-  // };
+  const setNewTime = (
+    _event: DateTimePickerEvent,
+    newDate: Date | undefined,
+  ) => {
+    // only extract time from given date
+    if (newDate) {
+      const clonedDate = new Date(date);
+      clonedDate.setTime(newDate.getTime());
+      setDate(clonedDate);
+    } else console.error('Unexpected Error while setting time.');
+  };
 
   const createParty = async () => {
     if (!userContext.userData?.uid) {
@@ -54,8 +58,8 @@ export const CreateParty = () => {
     const participants: DocumentReference[] = [];
 
     const docData: Dinner = {
-      date: Timestamp.now(),
-      name: 'Aus der App erstellt',
+      date: Timestamp.fromDate(date),
+      name,
       participants: [
         doc(dbContext.database, 'Users', userContext.userData.uid), // self
         ...participants,
@@ -63,6 +67,10 @@ export const CreateParty = () => {
     };
 
     await addDoc(collection(dbContext.database, 'Dinners'), docData);
+
+    // remove create party from navigation stack and navigate to details screen
+    navigation.popToTop();
+    navigation.navigate('PartyDetails');
   };
 
   return (
@@ -74,6 +82,17 @@ export const CreateParty = () => {
         textContentType="none"
         keyboardType="default"
       />
+
+      <Text>{date.toLocaleDateString()}</Text>
+      <Text>{date.toLocaleTimeString()}</Text>
+
+      <RNDateTimePicker
+        value={date}
+        minimumDate={new Date(Date.now())}
+        onChange={setNewDate}
+      />
+
+      <RNDateTimePicker value={date} mode="time" onChange={setNewTime} />
 
       <AppButton
         title="create dinner"

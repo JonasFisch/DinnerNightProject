@@ -9,7 +9,7 @@ export const Frame = props => {
 const styles = StyleSheet.create({
   frame: {
     paddingVertical: 40,
-    paddingHorizontal: 25,
+    paddingHorizontal: 16,
     backgroundColor: colors.white,
     minHeight: '100%',
   },

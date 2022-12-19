@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {UserDetails} from '../interfaces/UserDetails';
 import {colors} from '../styles/Color';
 import {sizes} from '../styles/Sizes';
@@ -11,23 +17,26 @@ type DinnerListItemProps = {
   title: string;
   creationDate: Date;
   participants?: UserDetails[];
+  onPress: (data: string) => void;
 };
 
 export const DinnerListItem = (props: DinnerListItemProps) => {
   return (
-    <View style={styles.dinnerListItemWrapper}>
-      <View style={styles.textWrapper}>
-        <Text style={[typography.body]}>{props.title}</Text>
-        <Text style={typography.body2}>
-          {props.creationDate.toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })}
-        </Text>
+    <TouchableWithoutFeedback onPress={() => props.onPress(props.id)}>
+      <View style={styles.dinnerListItemWrapper}>
+        <View style={styles.textWrapper}>
+          <Text style={[typography.body]}>{props.title}</Text>
+          <Text style={typography.body2}>
+            {props.creationDate.toLocaleDateString('de-DE', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            })}
+          </Text>
+        </View>
+        <Participants participants={props.participants ?? []} />
       </View>
-      <Participants participants={props.participants ?? []} />
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
