@@ -3,7 +3,8 @@ import {DinnerListItem} from './DinnerListItem';
 import React from 'react';
 import {Dinner} from '../interfaces/Dinner';
 import {ParticipantMap, UserDetails} from '../interfaces/UserDetails';
-import {Participants} from './Participants';
+import {useNavigation} from '@react-navigation/native';
+import {DinnerDetailScreenParams} from '../screens/home/DinnerDetailScreen';
 
 type DinnerListProps = {
   dinners: Array<Dinner>;
@@ -21,6 +22,20 @@ export const DinnerList = (props: DinnerListProps) => {
     return mappedDinner;
   });
 
+  // sort by date (smaller dates first)
+  mappedDinners.sort((a, b) => {
+    return Number(a.date) - Number(b.date);
+  });
+
+  const navigator = useNavigation();
+
+  // navigate to dinner details screen
+  const openDinnerDetails = (dinnerID: string) => {
+    navigator.navigate('PartyDetails', {
+      id: dinnerID,
+    } as DinnerDetailScreenParams);
+  };
+
   return (
     <View>
       {mappedDinners.map(dinner => (
@@ -28,9 +43,10 @@ export const DinnerList = (props: DinnerListProps) => {
           <DinnerListItem
             title={dinner.name}
             creationDate={dinner.date.toDate()}
-            id={dinner.id}
-            key={1}
+            id={dinner.id ?? ''}
+            key={dinner.id}
             participants={dinner.participantsResolved}
+            onPress={openDinnerDetails}
           />
         </View>
       ))}

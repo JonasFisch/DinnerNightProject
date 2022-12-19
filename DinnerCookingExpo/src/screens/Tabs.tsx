@@ -30,6 +30,7 @@ export const Tabs = () => {
           tabBarLabel: 'Dinners',
           tabBarIcon: ({color}) => <HomeIcon color={color} />,
         }}
+        initialParams={{needsUpdate: true}}
       />
       <Tab.Screen
         name="Preferences"
