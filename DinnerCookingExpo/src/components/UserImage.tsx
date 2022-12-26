@@ -22,6 +22,7 @@ const colorCollection = [
 /**
  * Show the given user image, when there is no user image given an alternative appearance (depending on the first letter of the name) is shown.
  * The loading strategie ist the folling: the alternative image is shown until the firebase image url is available
+ * TODO: could be improved by suspense boundaries!
  * @param props contains image url and the users name
  * @returns React Component
  */
