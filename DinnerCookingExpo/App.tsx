@@ -21,6 +21,7 @@ import UserContext from './src/contexts/UserContext';
 import {StepScreen} from './src/screens/intro/StepScreen';
 import {initializeApp} from 'firebase/app';
 import {getAuth, User} from 'firebase/auth';
+import {getStorage} from 'firebase/storage';
 
 import {
   doc,
@@ -38,6 +39,7 @@ import DatabaseContext from './src/contexts/DatabaseContext';
 import {typography} from './src/styles/Typography';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import StorageContext from './src/contexts/StorageContext';
 
 // TODO: put this into config file
 const firebaseConfig = {
@@ -53,6 +55,7 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);
 const auth = getAuth();
 const playground = false;
 
@@ -168,62 +171,67 @@ const App = () => {
         logout: logout,
         finishIntro: markIntroAsFinished,
       }}>
-      <DatabaseContext.Provider
+      <StorageContext.Provider
         value={{
-          database: db,
+          storage: storage,
         }}>
-        <NavigationContainer>
-          <AppStack.Navigator>
-            {user ? (
-              <AppStack.Group key={'Authenticated'}>
-                {/* replace this with data from user object */}
-                {userDetails?.hasDoneIntro ? (
-                  <AppStack.Group key={'Main'}>
-                    <AppStack.Screen
-                      name="Tabs"
-                      component={Tabs}
-                      options={{headerShown: false}}
-                    />
-                    {/* Sub Screens of Dinner List Screen */}
-                    <AppStack.Screen
-                      name="PartyDetails"
-                      component={DinnerDetailScreen}
-                    />
-                    <AppStack.Screen
-                      name="CreateParty"
-                      options={{
-                        headerTitle: 'Create Dinner',
-                        headerTitleStyle: typography.h4,
-                      }}
-                      component={CreateParty}
-                    />
-                    {/* Sub Screens of Friends Screen */}
-                    {/* Sub Screens of Settings Screen */}
-                  </AppStack.Group>
-                ) : (
-                  <AppStack.Group
-                    key={'Intro'}
-                    screenOptions={{headerShown: false}}>
-                    <AppStack.Screen
-                      name="Welcome"
-                      component={IntroWelcomeScreen}
-                    />
-                    <AppStack.Screen name="Steps" component={StepScreen} />
-                  </AppStack.Group>
-                )}
-              </AppStack.Group>
-            ) : (
-              <AppStack.Group
-                key={'Unauthenticated'}
-                screenOptions={{headerShown: false}}>
-                <AppStack.Screen name="Welcome" component={WelcomeScreen} />
-                <AppStack.Screen name="Login" component={LoginScreen} />
-                <AppStack.Screen name="Register" component={RegisterScreen} />
-              </AppStack.Group>
-            )}
-          </AppStack.Navigator>
-        </NavigationContainer>
-      </DatabaseContext.Provider>
+        <DatabaseContext.Provider
+          value={{
+            database: db,
+          }}>
+          <NavigationContainer>
+            <AppStack.Navigator>
+              {user ? (
+                <AppStack.Group key={'Authenticated'}>
+                  {/* replace this with data from user object */}
+                  {userDetails?.hasDoneIntro ? (
+                    <AppStack.Group key={'Main'}>
+                      <AppStack.Screen
+                        name="Tabs"
+                        component={Tabs}
+                        options={{headerShown: false}}
+                      />
+                      {/* Sub Screens of Dinner List Screen */}
+                      <AppStack.Screen
+                        name="PartyDetails"
+                        component={DinnerDetailScreen}
+                      />
+                      <AppStack.Screen
+                        name="CreateParty"
+                        options={{
+                          headerTitle: 'Create Dinner',
+                          headerTitleStyle: typography.h4,
+                        }}
+                        component={CreateParty}
+                      />
+                      {/* Sub Screens of Friends Screen */}
+                      {/* Sub Screens of Settings Screen */}
+                    </AppStack.Group>
+                  ) : (
+                    <AppStack.Group
+                      key={'Intro'}
+                      screenOptions={{headerShown: false}}>
+                      <AppStack.Screen
+                        name="Welcome"
+                        component={IntroWelcomeScreen}
+                      />
+                      <AppStack.Screen name="Steps" component={StepScreen} />
+                    </AppStack.Group>
+                  )}
+                </AppStack.Group>
+              ) : (
+                <AppStack.Group
+                  key={'Unauthenticated'}
+                  screenOptions={{headerShown: false}}>
+                  <AppStack.Screen name="Welcome" component={WelcomeScreen} />
+                  <AppStack.Screen name="Login" component={LoginScreen} />
+                  <AppStack.Screen name="Register" component={RegisterScreen} />
+                </AppStack.Group>
+              )}
+            </AppStack.Navigator>
+          </NavigationContainer>
+        </DatabaseContext.Provider>
+      </StorageContext.Provider>
     </UserContext.Provider>
   );
 };
