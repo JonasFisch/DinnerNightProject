@@ -1,9 +1,10 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors} from '../styles/Color';
+import {alphabete} from '../utils/alphabete';
+import {typography} from '../styles/Typography';
 
 type UserImageProps = {
-  // userId: string;
   imageUrl?: string;
   name: string;
 };
@@ -16,8 +17,14 @@ const colorCollection = [
 ];
 
 export const UserImage = (props: UserImageProps) => {
+  // get letter index
+  const firstLetter = props.name[0];
+  const letterIndex = alphabete.findIndex(
+    element => element === firstLetter.toLowerCase(),
+  );
+
   const alternativeColor =
-    colorCollection[Number(Math.floor(Math.random() * colorCollection.length))];
+    colorCollection[letterIndex % colorCollection.length];
 
   return (
     // TODO: get image from google cloud!
@@ -30,8 +37,8 @@ export const UserImage = (props: UserImageProps) => {
           }}
         />
       ) : (
-        <View style={[styles.alternative, {backgroundColor: alternativeColor}]}>
-          <Text style={{color: colors.textWhite}}>
+        <View style={[styles.alternative, {borderColor: alternativeColor}]}>
+          <Text style={[typography.subtitle2, {color: alternativeColor}]}>
             {props.name?.charAt(0).toUpperCase()}
           </Text>
         </View>
@@ -48,5 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 2,
   },
 });

@@ -16,6 +16,7 @@ import {Dinner} from '../../interfaces/Dinner';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {Text} from 'react-native';
+import {DinnerDetailScreenParams} from './DinnerDetailScreen';
 
 export const CreateParty = ({navigation}) => {
   const dbContext = useContext(DatabaseContext);
@@ -66,11 +67,16 @@ export const CreateParty = ({navigation}) => {
       ],
     };
 
-    await addDoc(collection(dbContext.database, 'Dinners'), docData);
+    const newDoc = await addDoc(
+      collection(dbContext.database, 'Dinners'),
+      docData,
+    );
 
     // remove create party from navigation stack and navigate to details screen
     navigation.popToTop();
-    navigation.navigate('PartyDetails');
+    navigation.navigate('PartyDetails', {
+      id: newDoc.id,
+    } as DinnerDetailScreenParams);
   };
 
   return (
