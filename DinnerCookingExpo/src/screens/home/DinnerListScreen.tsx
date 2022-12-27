@@ -8,25 +8,18 @@ import {typography} from '../../styles/Typography';
 import {Direction, spacings} from '../../styles/Spacing';
 import {DinnerList} from '../../components/DinnerList';
 import Logo from '../../assets/icons/add-material.svg';
-import {
-  collection,
-  doc,
-  DocumentSnapshot,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore/lite';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import {Dinner} from '../../interfaces/Dinner';
-import {UserDetails, ParticipantMap} from '../../interfaces/UserDetails';
+import {ParticipantMap} from '../../interfaces/UserDetails';
 import UserContext from '../../contexts/UserContext';
-import {onSnapshot, Query, Unsubscribe} from 'firebase/firestore';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
 import {useCallback} from 'react';
+import {fetchParticipants} from '../../utils/participants/fetchParticipants';
+import {fetchDinners} from '../../utils/dinners/fetchDinners';
 
 export const DinnerListScreen = () => {
   const navigation = useNavigation();
@@ -40,93 +33,36 @@ export const DinnerListScreen = () => {
   const [participantsMap, setParticipantsMap] = useState<ParticipantMap>(
     new Map(),
   );
-  const dbContext = useContext(DatabaseContext);
+
   const userContext = useContext(UserContext);
-
+  const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
-  /**
-   * fetches all given participants from the Users Collection
-   * @param participants array of user ids
-   * @returns
-   */
-  const fetchParticipants = async (
-    participantIds: Array<string>,
-  ): Promise<ParticipantMap> => {
-    // create query
-    const participantRef = collection(db, 'Users');
-    const participantsQuery = query(
-      participantRef,
-      where('__name__', 'in', participantIds), // __name__ = id of the document n firestore
-    );
 
-    // fetch participant data from firestore
-    const participantsSnap = await getDocs(participantsQuery);
-    if (participantsSnap.docs.length < 0) {
-      console.log('there was an error while fetching participants');
-      return new Map();
-    }
-
-    // create save participants in a list
-    const map = new Map() as ParticipantMap;
-    participantsSnap.docs.forEach(participant => {
-      map.set(participant.id, participant.data() as UserDetails);
-    });
-    return map;
-  };
-
-  const fetchDinners = async () => {
-    // Create a query for fetch all dinners related to the authenticated user
-    const dinnersRef = collection(db, 'Dinners');
-    if (!userContext.userData?.uid) {
-      console.error('user not authenticated!');
+  const resolveDinners = async () => {
+    try {
+      if (!userContext.userData) {
+        throw new Error('User not authenticated.');
+      }
+      const data = await fetchDinners(db, userContext.userData);
+      // IDEA: i think it could be more efficient if we set the Dinners before making the request for the participants
+      setDinners(data.dinners);
+      // get all participants in one request!
+      const fetchedParticipants = await fetchParticipants(
+        db,
+        Array.from(data.rawParticipants),
+      );
+      // set Participants map
+      setParticipantsMap(fetchedParticipants);
+    } catch (error) {
+      console.error(error);
       return;
     }
-
-    // get authenticated user reference
-    const userDocRef = doc(db, 'Users', userContext.userData.uid);
-
-    const q = query(
-      dinnersRef,
-      where('participants', 'array-contains', userDocRef),
-    );
-
-    // get data from firebase
-    const dinnersSnap = await getDocs(q);
-    if (dinnersSnap.docs.length < 0) {
-      console.log('could not get dinner snap');
-      return;
-    }
-
-    // extract data from return data
-    const fetchedDinners: Array<Dinner> = dinnersSnap.docs.map(document => {
-      const data = document.data() as Dinner;
-      data.id = document.id; // extract the document id here
-      return data;
-    });
-
-    // extract participants data and save into a set
-    const participants = new Set<string>(
-      fetchedDinners
-        .map(data => data.participants.map(participant => participant.id))
-        .flat(),
-    );
-
-    // IDEA: i think it could be more efficient if we set the Dinners before making the request for the participants
-    setDinners(fetchedDinners);
-
-    // get all participants in one request!
-    const fetchedParticipants = await fetchParticipants(
-      Array.from(participants),
-    );
-
-    // set Participants map
-    setParticipantsMap(fetchedParticipants);
   };
 
   // refetch dinners on focus screen
   useFocusEffect(
     useCallback(() => {
-      fetchDinners();
+      resolveDinners();
     }, []),
   );
 
@@ -166,7 +102,6 @@ export const DinnerListScreen = () => {
   );
 };
 
-// TODO: WIP here! how to make button sticky at the Bottom!
 const styles = StyleSheet.create({
   tabs: {
     height: '100%',

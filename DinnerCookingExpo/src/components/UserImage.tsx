@@ -39,8 +39,6 @@ export const UserImage = (props: UserImageProps) => {
   const storage = useContext(StorageContext).storage;
 
   const fetchImageURL = () => {
-    console.log(props.imageUrl);
-
     const pathReference = ref(storage, props.imageUrl);
 
     getDownloadURL(pathReference)
