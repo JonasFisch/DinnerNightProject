@@ -2,9 +2,12 @@ import React, {useContext, useState} from 'react';
 import {View, Text} from 'react-native';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {useCallback} from 'react';
-import {fetchDinnerDetails} from '../../utils/dinners/fetchDinnerDetails';
-import DatabaseContext from '../../contexts/DatabaseContext';
-import {Dinner} from '../../interfaces/Dinner';
+import {fetchDinnerDetails} from '../../../utils/dinners/fetchDinnerDetails';
+import DatabaseContext from '../../../contexts/DatabaseContext';
+import {Dinner, DinnerState} from '../../../interfaces/Dinner';
+import {CookingScreen} from './CookingScreen';
+import {VotingScreen} from './VotingScreen';
+import {InviteScreen} from './InviteScreen';
 
 export type DinnerDetailScreenParams = {
   id: string;
@@ -33,14 +36,25 @@ export const DinnerDetailScreen = () => {
     }, []),
   );
 
-  // TODO: show screen depending on current state and in these views show admin / user view! use switch case here
-  // switch (key) {
-  //   case value:
-  //     break;
+  // get state
+  const state: DinnerState = dinner?.state ?? DinnerState.LOADING;
+  console.log(state);
 
-  //   default:
-  //     break;
-  // }
+  if (!dinner) return <Text>Loading...</Text>;
+
+  switch (state) {
+    case DinnerState.INVITE:
+      return <InviteScreen dinner={dinner} isAdmin={true}></InviteScreen>;
+    case DinnerState.VOTING:
+      return <VotingScreen></VotingScreen>;
+    case DinnerState.COOKING:
+      return <CookingScreen></CookingScreen>;
+    case DinnerState.FINISHED:
+      return <Text>Already Finished.</Text>;
+    case DinnerState.LOADING:
+    default:
+      return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

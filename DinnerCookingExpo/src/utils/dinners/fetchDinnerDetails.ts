@@ -2,7 +2,7 @@ import {User} from 'firebase/auth';
 import {Firestore} from 'firebase/firestore';
 import {doc, getDoc} from 'firebase/firestore/lite';
 import {Dinner} from '../../interfaces/Dinner';
-import {DinnerDetailScreenParams} from '../../screens/home/DinnerDetailScreen';
+import {DinnerDetailScreenParams} from '../../screens/home/DinnerDetails/DinnerDetailScreen';
 
 export const fetchDinnerDetails = async (
   db: Firestore,

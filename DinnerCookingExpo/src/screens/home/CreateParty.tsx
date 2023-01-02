@@ -16,7 +16,7 @@ import {Dinner} from '../../interfaces/Dinner';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {Text} from 'react-native';
-import {DinnerDetailScreenParams} from './DinnerDetailScreen';
+import {DinnerDetailScreenParams} from './DinnerDetails/index';
 
 export const CreateParty = ({navigation}) => {
   const dbContext = useContext(DatabaseContext);

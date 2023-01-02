@@ -14,7 +14,7 @@ import {Platform, UIManager, useColorScheme} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {Tabs} from './src/screens/Tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {DinnerDetailScreen} from './src/screens/home/DinnerDetailScreen';
+import {DinnerDetailScreen} from './src/screens/home/DinnerDetails/index';
 import {LoginScreen} from './src/screens/auth/LoginScreen';
 import {RegisterScreen} from './src/screens/auth/RegisterScreen';
 import UserContext from './src/contexts/UserContext';

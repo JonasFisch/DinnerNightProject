@@ -4,7 +4,7 @@ import React from 'react';
 import {Dinner} from '../interfaces/Dinner';
 import {ParticipantMap, UserDetails} from '../interfaces/UserDetails';
 import {useNavigation} from '@react-navigation/native';
-import {DinnerDetailScreenParams} from '../screens/home/DinnerDetailScreen';
+import {DinnerDetailScreenParams} from '../screens/home/DinnerDetails/DinnerDetailScreen';
 
 type DinnerListProps = {
   dinners: Array<Dinner>;
