@@ -8,6 +8,7 @@ type Dinner = {
   participantsResolved?: UserDetails[];
   id?: string;
   state: DinnerState;
+  admin: DocumentReference;
 };
 
 enum DinnerState {

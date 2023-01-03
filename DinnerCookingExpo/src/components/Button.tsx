@@ -126,8 +126,8 @@ const styles = {
   }),
   text: StyleSheet.create({
     default: {
-      backgroundColor: colors.white,
-      borderColor: colors.white,
+      backgroundColor: colors.transparent,
+      borderColor: colors.transparent,
     },
     defaultText: {
       color: colors.primary,

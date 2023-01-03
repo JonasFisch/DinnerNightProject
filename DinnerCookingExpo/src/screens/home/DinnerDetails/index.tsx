@@ -8,6 +8,7 @@ import {Dinner, DinnerState} from '../../../interfaces/Dinner';
 import {CookingScreen} from './CookingScreen';
 import {VotingScreen} from './VotingScreen';
 import {InviteScreen} from './InviteScreen';
+import UserContext from '../../../contexts/UserContext';
 
 export type DinnerDetailScreenParams = {
   id: string;
@@ -18,12 +19,19 @@ export const DinnerDetailScreen = () => {
   const params = route.params as DinnerDetailScreenParams;
 
   const db = useContext(DatabaseContext).database;
+  const user = useContext(UserContext).userData;
   const [dinner, setDinner] = useState<Dinner>();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   // fetch dinner details here
   const fetchDinner = async () => {
     try {
-      setDinner(await fetchDinnerDetails(db, params.id));
+      const fetchedDinner = await fetchDinnerDetails(db, params.id)
+      
+      // if current user is admin of dinner
+      if (`Users/${user?.uid}` === dinner?.admin.path) setIsAdmin(true);
+      
+      setDinner(fetchedDinner);
     } catch (error) {
       console.log(error);
     }
@@ -38,13 +46,12 @@ export const DinnerDetailScreen = () => {
 
   // get state
   const state: DinnerState = dinner?.state ?? DinnerState.LOADING;
-  console.log(state);
 
   if (!dinner) return <Text>Loading...</Text>;
 
   switch (state) {
     case DinnerState.INVITE:
-      return <InviteScreen dinner={dinner} isAdmin={true}></InviteScreen>;
+      return <InviteScreen dinner={dinner} isAdmin={isAdmin}></InviteScreen>;
     case DinnerState.VOTING:
       return <VotingScreen></VotingScreen>;
     case DinnerState.COOKING:
@@ -55,16 +62,4 @@ export const DinnerDetailScreen = () => {
     default:
       return <Text>Loading...</Text>;
   }
-
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Dinner Detail Screen for Dinner with id of: {params.id}</Text>
-      {dinner ? (
-        <>
-          <Text>Dinner Name: {dinner.name}</Text>
-          <Text>Dinner Date: {dinner.date.toString()}</Text>
-        </>
-      ) : null}
-    </View>
-  );
 };

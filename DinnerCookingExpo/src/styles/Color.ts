@@ -12,4 +12,5 @@ export const colors = {
   white: '#fff',
   dark: '#000',
   error: '#B3261E',
+  transparent: 'rgba(255, 255, 255, 0)'
 };

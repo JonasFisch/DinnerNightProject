@@ -3,6 +3,7 @@ interface UserDetails {
   userId: string | null;
   name: string;
   imageUrl: string;
+  // inviteStates: {};
 }
 
 const INITIAL_USER_DETAILS: UserDetails = {
@@ -12,10 +13,17 @@ const INITIAL_USER_DETAILS: UserDetails = {
   imageUrl: '',
 };
 
+export enum InviteState {
+  PENDING,
+  ACCEPTED,
+  REJECTED,
+}
+
 export type Participant = {
   userId: string;
   imageUrl?: string;
   username: string;
+  inviteState: InviteState;
 };
 
 export type ParticipantMap = Map<string, UserDetails | null>;

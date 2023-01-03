@@ -13,6 +13,7 @@ type DinnerListProps = {
 export const DinnerList = (props: DinnerListProps) => {
   const mappedDinners = props.dinners.map(dinner => {
     const mappedDinner = dinner;
+
     const participants = dinner.participants.map(participant =>
       props.participantsMap.get(participant.id),
     );

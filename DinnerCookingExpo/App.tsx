@@ -170,6 +170,7 @@ const App = () => {
         setUserData: setUserData,
         logout: logout,
         finishIntro: markIntroAsFinished,
+        userDetails: userDetails ?? null,
       }}>
       <StorageContext.Provider
         value={{
@@ -179,57 +180,57 @@ const App = () => {
           value={{
             database: db,
           }}>
-          <NavigationContainer>
-            <AppStack.Navigator>
-              {user ? (
-                <AppStack.Group key={'Authenticated'}>
-                  {/* replace this with data from user object */}
-                  {userDetails?.hasDoneIntro ? (
-                    <AppStack.Group key={'Main'}>
-                      <AppStack.Screen
-                        name="Tabs"
-                        component={Tabs}
-                        options={{headerShown: false}}
-                      />
-                      {/* Sub Screens of Dinner List Screen */}
-                      <AppStack.Screen
-                        name="PartyDetails"
-                        component={DinnerDetailScreen}
-                      />
-                      <AppStack.Screen
-                        name="CreateParty"
-                        options={{
-                          headerTitle: 'Create Dinner',
-                          headerTitleStyle: typography.h4,
-                        }}
-                        component={CreateParty}
-                      />
-                      {/* Sub Screens of Friends Screen */}
-                      {/* Sub Screens of Settings Screen */}
-                    </AppStack.Group>
-                  ) : (
-                    <AppStack.Group
+            <NavigationContainer>
+              <AppStack.Navigator>
+                {user ? (
+                  <AppStack.Group key={'Authenticated'}>
+                    {/* replace this with data from user object */}
+                    {userDetails?.hasDoneIntro ? (
+                      <AppStack.Group key={'Main'}>
+                        <AppStack.Screen
+                          name="Tabs"
+                          component={Tabs}
+                          options={{headerShown: false}}
+                          />
+                        {/* Sub Screens of Dinner List Screen */}
+                        <AppStack.Screen
+                          name="PartyDetails"
+                          component={DinnerDetailScreen}
+                          />
+                        <AppStack.Screen
+                          name="CreateParty"
+                          options={{
+                            headerTitle: 'Create Dinner',
+                            headerTitleStyle: typography.h4,
+                          }}
+                          component={CreateParty}
+                          />
+                        {/* Sub Screens of Friends Screen */}
+                        {/* Sub Screens of Settings Screen */}
+                      </AppStack.Group>
+                    ) : (
+                      <AppStack.Group
                       key={'Intro'}
                       screenOptions={{headerShown: false}}>
-                      <AppStack.Screen
-                        name="Welcome"
-                        component={IntroWelcomeScreen}
-                      />
-                      <AppStack.Screen name="Steps" component={StepScreen} />
-                    </AppStack.Group>
-                  )}
-                </AppStack.Group>
-              ) : (
-                <AppStack.Group
-                  key={'Unauthenticated'}
-                  screenOptions={{headerShown: false}}>
-                  <AppStack.Screen name="Welcome" component={WelcomeScreen} />
-                  <AppStack.Screen name="Login" component={LoginScreen} />
-                  <AppStack.Screen name="Register" component={RegisterScreen} />
-                </AppStack.Group>
-              )}
-            </AppStack.Navigator>
-          </NavigationContainer>
+                        <AppStack.Screen
+                          name="Welcome"
+                          component={IntroWelcomeScreen}
+                          />
+                        <AppStack.Screen name="Steps" component={StepScreen} />
+                      </AppStack.Group>
+                    )}
+                  </AppStack.Group>
+                ) : (
+                  <AppStack.Group
+                    key={'Unauthenticated'}
+                    screenOptions={{headerShown: false}}>
+                    <AppStack.Screen name="Welcome" component={WelcomeScreen} />
+                    <AppStack.Screen name="Login" component={LoginScreen} />
+                    <AppStack.Screen name="Register" component={RegisterScreen} />
+                  </AppStack.Group>
+                )}
+              </AppStack.Navigator>
+            </NavigationContainer>
         </DatabaseContext.Provider>
       </StorageContext.Provider>
     </UserContext.Provider>

@@ -12,7 +12,7 @@ import {AppInput} from '../../components/Input';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import UserContext from '../../contexts/UserContext';
 import {AppButtonType} from '../../interfaces/Button';
-import {Dinner} from '../../interfaces/Dinner';
+import {Dinner, DinnerState} from '../../interfaces/Dinner';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {Text} from 'react-native';
@@ -57,14 +57,17 @@ export const CreateParty = ({navigation}) => {
 
     // TODO: fill participants
     const participants: DocumentReference[] = [];
+    const userSelfRef = doc(dbContext.database, 'Users', userContext.userData.uid);
 
     const docData: Dinner = {
       date: Timestamp.fromDate(date),
       name,
       participants: [
-        doc(dbContext.database, 'Users', userContext.userData.uid), // self
+        userSelfRef, // self
         ...participants,
       ],
+      admin: userSelfRef,
+      state: DinnerState.INVITE,
     };
 
     const newDoc = await addDoc(

@@ -44,6 +44,7 @@ export const DinnerListScreen = () => {
         throw new Error('User not authenticated.');
       }
       const data = await fetchDinners(db, userContext.userData);
+          
       // IDEA: i think it could be more efficient if we set the Dinners before making the request for the participants
       setDinners(data.dinners);
       // get all participants in one request!
@@ -51,6 +52,7 @@ export const DinnerListScreen = () => {
         db,
         Array.from(data.rawParticipants),
       );
+      
       // set Participants map
       setParticipantsMap(fetchedParticipants);
     } catch (error) {
