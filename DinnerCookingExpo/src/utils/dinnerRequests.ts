@@ -1,12 +1,12 @@
+import { DinnerState, UserFirebase } from './../interfaces/FirebaseSchema';
 import {User} from 'firebase/auth';
-import {collection, doc, getDocs, query, where} from 'firebase/firestore/lite';
-import { Dinner } from '../interfaces/Dinner';
+import { collection, doc, DocumentReference, Firestore, getDocs, query, where, Timestamp, addDoc, getDoc } from 'firebase/firestore/lite';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 
 export const fetchDinners = async (
   db: Firestore,
   userData: User,
-): Promise<DinnerFirebase> => {
+): Promise<DinnerFirebase[]> => {
   return new Promise(async (resolve, reject) => {
     // get data from firebase
     const dinnersSnap = await getDocs(
@@ -19,27 +19,81 @@ export const fetchDinners = async (
       ),
     );
 
-    if (!dinnersSnap.docs) {
-      reject('could not get dinner snap.');
+    if (!dinnersSnap.docs) reject('could not get dinner snap.');
+    resolve(dinnersSnap.docs.map(dinner => {
+      const din = dinner.data() as DinnerFirebase;
+      din.id = dinner.id;
+      return din;
     }
-
-    // extract data from return data
-    const fetchedDinners: Array<Dinner> = dinnersSnap.docs.map(document => {
-      const data = document.data() as Dinner;
-      data.id = document.id; // extract the document id here
-      return data;
-    });
-
-    // extract participants data and save into a set
-    const participants = new Set<string>(
-      fetchedDinners
-        .map(data => data.participants.map(participant => participant.id))
-        .flat(),
-    );
-
-    resolve({
-      dinners: fetchedDinners,
-      rawParticipants: participants,
-    });
+    ));
   });
 };
+
+export const fetchDinner = async (
+  db: Firestore,
+  dinnerID: string,
+) : Promise<DinnerFirebase> => {
+  return new Promise(async (resolve, reject) => {
+    const dinnersSnap = await getDoc(
+      doc(db, `Dinners/${dinnerID}`)
+    );
+    if (!dinnersSnap.data()) reject('cannot fetch dinner details.');
+    
+    const dinner = dinnersSnap.data() as DinnerFirebase;
+    resolve(dinner);
+  })
+}
+
+export const fetchUsers = async (
+  db: Firestore,
+  participants: DocumentReference[]
+) : Promise<UserFirebase[]> => {
+  return new Promise(async (resolve, reject) => {    
+    // fetch participant data from firestore
+    
+    if (participants.length <= 0) resolve([])
+    
+    const participantsSnap = await getDocs(
+      query(
+        collection(db, 'Users'),
+        where('__name__', 'in', participants.map(participant => participant.id)), // __name__ = id of the document n firestore
+      )
+    );
+    
+    if (participantsSnap.docs.length < 0) reject('there was an error while fetching participants,');
+
+    resolve(participantsSnap.docs.map(participant => {
+      const user: UserFirebase = participant.data() as UserFirebase;
+      user.id = participant.id; // add the document id here as well!
+      return user;
+    }));
+  });
+}
+
+export const createDinner = async (
+  db: Firestore,
+  participants: DocumentReference[],
+  self: DocumentReference,
+  date: Date,
+  name: string
+) : Promise<DocumentReference> => {
+  return new Promise(async (resolve, reject) => {
+    const newDinner: DinnerFirebase = {
+      date: Timestamp.fromDate(date),
+      name,
+      participants: [
+        self, // self
+        ...participants,
+      ],
+      admin: self,
+      state: DinnerState.INVITE,
+    }
+  
+    const newDinnerDoc = await addDoc(
+      collection(db, 'Dinners'),
+      newDinner,
+    );
+
+    resolve(newDinnerDoc)
+  })  
+}

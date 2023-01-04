@@ -9,7 +9,6 @@ import {Direction, spacings} from '../../styles/Spacing';
 import {DinnerList} from '../../components/DinnerList';
 import Logo from '../../assets/icons/add-material.svg';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import {Dinner} from '../../interfaces/Dinner';
 import {ParticipantMap} from '../../interfaces/UserDetails';
 import UserContext from '../../contexts/UserContext';
 import {
@@ -18,8 +17,8 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {useCallback} from 'react';
-import {fetchParticipants} from '../../utils/participants/fetchParticipants';
-import {fetchDinners} from '../../utils/dinners/fetchDinners';
+import { fetchDinners, fetchUsers } from '../../utils/dinnerRequests';
+import { DinnerFirebase } from '../../interfaces/FirebaseSchema';
 
 export const DinnerListScreen = () => {
   const navigation = useNavigation();
@@ -29,7 +28,7 @@ export const DinnerListScreen = () => {
     navigation.navigate('CreateParty');
   };
 
-  const [dinners, setDinners] = useState<Array<Dinner>>([]);
+  const [dinners, setDinners] = useState<DinnerFirebase[]>([]);
   const [participantsMap, setParticipantsMap] = useState<ParticipantMap>(
     new Map(),
   );
@@ -40,24 +39,12 @@ export const DinnerListScreen = () => {
 
   const resolveDinners = async () => {
     try {
-      if (!userContext.userData) {
-        throw new Error('User not authenticated.');
-      }
-      const data = await fetchDinners(db, userContext.userData);
-          
-      // IDEA: i think it could be more efficient if we set the Dinners before making the request for the participants
-      setDinners(data.dinners);
-      // get all participants in one request!
-      const fetchedParticipants = await fetchParticipants(
-        db,
-        Array.from(data.rawParticipants),
-      );
+      if (!userContext.userData) throw new Error('User not authenticated.');
       
-      // set Participants map
-      setParticipantsMap(fetchedParticipants);
+      const fetchedDinners = await fetchDinners(db, userContext.userData);            
+      setDinners(fetchedDinners);
     } catch (error) {
       console.error(error);
-      return;
     }
   };
 
@@ -77,15 +64,13 @@ export const DinnerListScreen = () => {
         <Tabs
           tabViews={[
             {
-              node: (
-                <DinnerList
-                  dinners={dinners}
-                  participantsMap={participantsMap}
-                />
-              ),
+              node: <DinnerList dinners={dinners}/>,
               title: 'In Progress',
             },
-            {node: <Text>Seite 2</Text>, title: 'Archive'},
+            {
+              node: <Text>Seite 2</Text>, 
+              title: 'Archive'
+            },
           ]}
         />
       </View>

@@ -1,7 +1,6 @@
 import {Auth, User} from 'firebase/auth';
 import React from 'react';
-
-import type { UserDetails } from '../interfaces/UserDetails';
+import { UserFirebase } from '../interfaces/FirebaseSchema';
 
 const UserContext = React.createContext({
   userData: null as User | null,
@@ -10,7 +9,7 @@ const UserContext = React.createContext({
   logout: () => {},
   finishIntro: () => {},
   auth: {} as Auth,
-  userDetails: {} as UserDetails,
+  userDetails: {} as UserFirebase,
 });
 
 export default UserContext;

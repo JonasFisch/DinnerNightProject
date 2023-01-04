@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {UserDetails} from '../interfaces/UserDetails';
+import { UserFirebase } from '../interfaces/FirebaseSchema';
 import {typography} from '../styles/Typography';
 import {UserImage} from './UserImage';
 
 type ParticipantsProps = {
-  participants: UserDetails[];
+  participants: UserFirebase[];
 };
 
 export const Participants = (props: ParticipantsProps) => {

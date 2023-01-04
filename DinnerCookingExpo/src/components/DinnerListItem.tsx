@@ -1,4 +1,5 @@
-import React from 'react';
+import { DocumentReference } from 'firebase/firestore/lite';
+import React, { useContext, useState } from 'react';
 import {
   GestureResponderEvent,
   StyleSheet,
@@ -6,21 +7,34 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {UserDetails} from '../interfaces/UserDetails';
+import DatabaseContext from '../contexts/DatabaseContext';
+import { UserFirebase } from '../interfaces/FirebaseSchema';
 import {colors} from '../styles/Color';
 import {sizes} from '../styles/Sizes';
 import {typography} from '../styles/Typography';
+import { fetchUsers } from '../utils/dinnerRequests';
 import {Participants} from './Participants';
 
 type DinnerListItemProps = {
   id: string;
   title: string;
   creationDate: Date;
-  participants?: UserDetails[];
+  participants: DocumentReference[];
   onPress: (data: string) => void;
 };
 
 export const DinnerListItem = (props: DinnerListItemProps) => {
+
+  const [participants, setParticipants] = useState<UserFirebase[]>([])
+  const db = useContext(DatabaseContext).database;
+
+  const resolveParticipants = async () => {
+    setParticipants(await fetchUsers(db, props.participants))
+  }
+
+  // fetch participants
+  resolveParticipants()
+
   return (
     <TouchableWithoutFeedback onPress={() => props.onPress(props.id)}>
       <View style={styles.dinnerListItemWrapper}>
@@ -34,7 +48,7 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
             })}
           </Text>
         </View>
-        <Participants participants={props.participants ?? []} />
+        <Participants participants={participants} />
       </View>
     </TouchableWithoutFeedback>
   );

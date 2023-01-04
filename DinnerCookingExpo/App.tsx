@@ -30,7 +30,7 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore/lite';
-import {INITIAL_USER_DETAILS, UserDetails} from './src/interfaces/UserDetails';
+import {INITIAL_USER_DETAILS} from './src/interfaces/UserDetails';
 import {Playground} from './src/screens/Playground';
 import {IntroWelcomeScreen} from './src/screens/intro/IntroWelcomeScreen';
 import {WelcomeScreen} from './src/screens/auth/Welcome';
@@ -40,6 +40,7 @@ import {typography} from './src/styles/Typography';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import StorageContext from './src/contexts/StorageContext';
+import { UserFirebase } from './src/interfaces/FirebaseSchema';
 
 // TODO: put this into config file
 const firebaseConfig = {
@@ -70,7 +71,7 @@ if (
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [user, setUser] = useState<User | null>(null);
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const [userDetails, setUserDetails] = useState<UserFirebase | null>(null);
 
   // fetch User details and set User State
   const setUserData = async (userData: User) => {
@@ -90,7 +91,7 @@ const App = () => {
     const userRef = doc(db, 'Users', userData.uid);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
-      setUserDetails(docSnap.data() as UserDetails);
+      setUserDetails(docSnap.data() as UserFirebase);
     } else {
       // create new dataset for user
       await setDoc(userRef, INITIAL_USER_DETAILS).then(_data => {

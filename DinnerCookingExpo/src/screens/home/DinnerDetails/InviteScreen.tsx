@@ -2,7 +2,6 @@ import React, { useContext, useRef } from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {Frame} from '../../../components/Frame';
 import {InviteStatus} from '../../../components/InviteStatus';
-import {Dinner} from '../../../interfaces/Dinner';
 import InviteGrafic from '../../../assets/graphics/invited.svg';
 import { AppButton } from '../../../components/Button';
 import { AppButtonType } from '../../../interfaces/Button';
@@ -13,9 +12,11 @@ import { useNavigation } from '@react-navigation/native';
 import { leaveDinnerFB } from '../../../utils/dinners/updateDinner';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import UserContext from '../../../contexts/UserContext';
+import { collection, collectionGroup, DocumentSnapshot, getDocs, query, where } from 'firebase/firestore/lite';
+import { DinnerFirebase } from '../../../interfaces/FirebaseSchema';
 
 type DinnerProps = {
-  dinner: Dinner;
+  dinner: DinnerFirebase;
   isAdmin: boolean;
 };
 
@@ -25,6 +26,30 @@ export const InviteScreen = (props: DinnerProps) => {
   const bottomSheet = useRef<BottomSheetRef>(null);
   const db = useContext(DatabaseContext).database;
   const userDetails = useContext(UserContext).userDetails
+
+  // get invite states
+  const fetchInviteStates = async () => {
+    const participantIDs = props.dinner.participants.map(participant => participant.id)
+
+    console.log(participantIDs);
+    
+    // get states
+    const participantsSnap = await getDocs(
+      query(
+        collection(db, "Users"),
+        where("__name__", "in", participantIDs)
+      ),
+    )
+
+    // TODO: transform participant data!
+    console.log(participantsSnap.docs.map(participant => {
+      return participant.data()
+    }));
+
+
+    // collection("Users")
+  }
+  fetchInviteStates()
 
   // leaves the dinner
   const leaveDinner = () => {

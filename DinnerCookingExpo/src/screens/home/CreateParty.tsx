@@ -12,14 +12,14 @@ import {AppInput} from '../../components/Input';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import UserContext from '../../contexts/UserContext';
 import {AppButtonType} from '../../interfaces/Button';
-import {Dinner, DinnerState} from '../../interfaces/Dinner';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import {Text} from 'react-native';
 import {DinnerDetailScreenParams} from './DinnerDetails/index';
+import { createDinner } from '../../utils/dinnerRequests';
 
 export const CreateParty = ({navigation}) => {
-  const dbContext = useContext(DatabaseContext);
+  const db = useContext(DatabaseContext).database;
   const userContext = useContext(UserContext);
 
   const [name, setName] = useState<string>('');
@@ -55,30 +55,31 @@ export const CreateParty = ({navigation}) => {
       return;
     }
 
-    // TODO: fill participants
     const participants: DocumentReference[] = [];
-    const userSelfRef = doc(dbContext.database, 'Users', userContext.userData.uid);
+    // const userSelfRef = doc(db, 'Users', userContext.userData.uid);
 
-    const docData: Dinner = {
-      date: Timestamp.fromDate(date),
-      name,
-      participants: [
-        userSelfRef, // self
-        ...participants,
-      ],
-      admin: userSelfRef,
-      state: DinnerState.INVITE,
-    };
+    // const docData: Dinner = {
+    //   date: Timestamp.fromDate(date),
+    //   name,
+    //   participants: [
+    //     userSelfRef, // self
+    //     ...participants,
+    //   ],
+    //   admin: userSelfRef,
+    //   state: DinnerState.INVITE,
+    // };
 
-    const newDoc = await addDoc(
-      collection(dbContext.database, 'Dinners'),
-      docData,
-    );
+    // const newDoc = await addDoc(
+    //   collection(db, 'Dinners'),
+    //   docData,
+    // );
+
+    const createdDinner = await createDinner(db, participants, doc(db, 'Users', userContext.userData.uid), date, name)
 
     // remove create party from navigation stack and navigate to details screen
     navigation.popToTop();
     navigation.navigate('PartyDetails', {
-      id: newDoc.id,
+      id: createdDinner.id,
     } as DinnerDetailScreenParams);
   };
 

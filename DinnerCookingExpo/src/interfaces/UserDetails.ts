@@ -1,14 +1,8 @@
-interface UserDetails {
-  hasDoneIntro: boolean;
-  userId: string | null;
-  name: string;
-  imageUrl: string;
-  // inviteStates: {};
-}
+import { UserFirebase } from "./FirebaseSchema";
 
-const INITIAL_USER_DETAILS: UserDetails = {
+const INITIAL_USER_DETAILS: UserFirebase = {
+  id: '',
   hasDoneIntro: false,
-  userId: null,
   name: '',
   imageUrl: '',
 };
@@ -26,7 +20,6 @@ export type Participant = {
   inviteState: InviteState;
 };
 
-export type ParticipantMap = Map<string, UserDetails | null>;
+export type ParticipantMap = Map<string, UserFirebase>;
 
 export {INITIAL_USER_DETAILS};
-export type {UserDetails};
