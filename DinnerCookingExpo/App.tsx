@@ -120,10 +120,8 @@ const App = () => {
         console.log(error);
       });
   };
-
+  
   // check if user is already authenticated
-  console.log(auth.currentUser);
-
   if (user == null && auth.currentUser != null) {
     setUser(auth.currentUser);
   }

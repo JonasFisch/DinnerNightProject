@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {Frame} from '../../../components/Frame';
 import {InviteStatus} from '../../../components/InviteStatus';
@@ -7,13 +7,11 @@ import { AppButton } from '../../../components/Button';
 import { AppButtonType } from '../../../interfaces/Button';
 import { typography } from '../../../styles/Typography';
 import { BottomSheet, BottomSheetRef } from 'react-native-sheet';
-import { colors } from '../../../styles/Color';
-import { useNavigation } from '@react-navigation/native';
-import { leaveDinnerFB } from '../../../utils/dinners/updateDinner';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import UserContext from '../../../contexts/UserContext';
 import { collection, collectionGroup, DocumentSnapshot, getDocs, query, where } from 'firebase/firestore/lite';
-import { DinnerFirebase } from '../../../interfaces/FirebaseSchema';
+import { DinnerFirebase, UserFirebase } from '../../../interfaces/FirebaseSchema';
 
 type DinnerProps = {
   dinner: DinnerFirebase;
@@ -26,12 +24,13 @@ export const InviteScreen = (props: DinnerProps) => {
   const bottomSheet = useRef<BottomSheetRef>(null);
   const db = useContext(DatabaseContext).database;
   const userDetails = useContext(UserContext).userDetails
+  const [participants, setParticipants] = useState<UserFirebase[]>([])
+
+  
 
   // get invite states
   const fetchInviteStates = async () => {
     const participantIDs = props.dinner.participants.map(participant => participant.id)
-
-    console.log(participantIDs);
     
     // get states
     const participantsSnap = await getDocs(
@@ -41,15 +40,16 @@ export const InviteScreen = (props: DinnerProps) => {
       ),
     )
 
-    // TODO: transform participant data!
-    console.log(participantsSnap.docs.map(participant => {
-      return participant.data()
-    }));
-
-
-    // collection("Users")
+    // transform participant data!
+    setParticipants(participantsSnap.docs.map(participant => participant.data() as UserFirebase));
   }
-  fetchInviteStates()
+
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchInviteStates()
+    }, []),
+  );  
 
   // leaves the dinner
   const leaveDinner = () => {
@@ -70,8 +70,8 @@ export const InviteScreen = (props: DinnerProps) => {
             accept the invite, you can start loading recipe proposals, that fit
             all participants eating preferences.
           </Text>
-          {props.dinner.participants.map(participant => (
-            <InviteStatus />
+          {participants.map(participant => (
+            <InviteStatus participant={participant} key={participant.id} />
           ))}
         </View>
       ) : (

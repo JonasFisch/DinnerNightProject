@@ -29,8 +29,8 @@ export const DinnerDetailScreen = () => {
       const fetchedDinner = await fetchDinner(db, params.id)
       
       // if current user is admin of dinner
-      if (`Users/${user?.uid}` === dinner?.admin.path) setIsAdmin(true);
-      
+      if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
+
       setDinner(fetchedDinner);
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ export const DinnerDetailScreen = () => {
     useCallback(() => {
       resolveDinner();
     }, []),
-  );
+  );  
 
   // get state
   const state: DinnerState = dinner?.state ?? DinnerState.LOADING;
