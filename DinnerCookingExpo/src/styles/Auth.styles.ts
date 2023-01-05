@@ -1,17 +1,18 @@
 import {StyleSheet} from 'react-native';
+import { spacing } from './Spacing';
 
 export const authStyles = StyleSheet.create({
   textWrapper: {
-    marginBottom: 48,
+    marginBottom: spacing.xxl,
   },
   heading: {
-    marginBottom: 20,
+    marginBottom: spacing.l,
   },
   inputWrapper: {
-    marginBottom: 8,
+    marginBottom: spacing.xs,
   },
   input: {
-    marginBottom: 40,
+    marginBottom: spacing.xxl,
   },
   oAuthWrapper: {
     flexDirection: 'row',
@@ -22,17 +23,17 @@ export const authStyles = StyleSheet.create({
     //gap: 10, // only supported in React 0.70!
   },
   oAuthFacebook: {
-    marginLeft: 15,
+    marginLeft: spacing.m,
   },
   oAuthGoogle: {
-    marginRight: 15,
+    marginRight: spacing.m,
   },
   textContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
     // 15 : margin of the button
-    marginTop: 36,
-    marginBottom: 32,
+    marginTop: spacing.xxl,
+    marginBottom: spacing.xl,
   },
 });

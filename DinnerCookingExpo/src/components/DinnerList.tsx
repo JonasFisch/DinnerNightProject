@@ -1,9 +1,10 @@
-import {StyleSheet, View} from 'react-native';
-import {DinnerListItem} from './DinnerListItem';
+import { StyleSheet, View } from 'react-native';
+import { DinnerListItem } from './DinnerListItem';
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {DinnerDetailScreenParams} from '../screens/home/DinnerDetails/DinnerDetailScreen';
+import { useNavigation } from '@react-navigation/native';
+import { DinnerDetailScreenParams } from '../screens/home/DinnerDetails/DinnerDetailScreen';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
+import { spacing } from '../styles/Spacing';
 
 type DinnerListProps = {
   dinners: DinnerFirebase[];
@@ -40,7 +41,7 @@ export const DinnerList = (props: DinnerListProps) => {
 
 const styles = StyleSheet.create({
   dinnerListItem: {
-    marginBottom: 12,
+    marginBottom: spacing.m,
   },
   spacer: {
     marginBottom: 80,

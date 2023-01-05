@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 import DatabaseContext from '../contexts/DatabaseContext';
 import { UserFirebase } from '../interfaces/FirebaseSchema';
-import {colors} from '../styles/Color';
-import {sizes} from '../styles/Sizes';
-import {typography} from '../styles/Typography';
+import { colors } from '../styles/Color';
+import { sizes } from '../styles/Sizes';
+import { spacing } from '../styles/Spacing';
+import { typography } from '../styles/Typography';
 import { fetchUsers } from '../utils/dinnerRequests';
-import {Participants} from './Participants';
+import { Participants } from './Participants';
 
 type DinnerListItemProps = {
   id: string;
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: sizes.borderRadius,
-    padding: 10,
+    padding: spacing.m,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

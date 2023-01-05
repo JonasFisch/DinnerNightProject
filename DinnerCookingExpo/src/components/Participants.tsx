@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { UserFirebase } from '../interfaces/FirebaseSchema';
-import {typography} from '../styles/Typography';
-import {UserImage} from './UserImage';
+import { spacing } from '../styles/Spacing';
+import { typography } from '../styles/Typography';
+import { UserImage } from './UserImage';
 
 type ParticipantsProps = {
   participants: UserFirebase[];
@@ -23,7 +24,7 @@ export const Participants = (props: ParticipantsProps) => {
               key={`participant-${index}`}
               style={[
                 styles.userImage,
-                {right: 5 + index * 25, zIndex: index * 2},
+                { right: 5 + index * 25, zIndex: index * 2 },
               ]}>
               <UserImage
                 name={participant.name}
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
   participantsWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 0,
+    paddingRight: spacing.none,
   },
   participants: {
     flexDirection: 'row',

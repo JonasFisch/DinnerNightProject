@@ -1,10 +1,11 @@
-import React, {ReactNode, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {colors} from '../styles/Color';
-import {typography} from '../styles/Typography';
+import React, { ReactNode, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { colors } from '../styles/Color';
+import { spacing } from '../styles/Spacing';
+import { typography } from '../styles/Typography';
 
 type TabsProps = {
-  tabViews: {node: ReactNode; title: string}[];
+  tabViews: { node: ReactNode; title: string }[];
 };
 
 export const Tabs = (props: TabsProps) => {
@@ -53,10 +54,10 @@ const styles = StyleSheet.create({
   },
   navigationButton: {
     width: '50%',
-    borderBottomColor: colors.grey,
+    borderBottomColor: colors.textLight,
     borderBottomWidth: 2,
     borderStyle: 'solid',
-    padding: 12,
+    padding: spacing.s,
   },
   navigationButtonActive: {
     borderBottomColor: colors.primary,
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   contentView: {
-    paddingVertical: 19,
+    paddingVertical: spacing.m,
     overflow: 'scroll',
     height: '80%',
   },

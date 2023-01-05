@@ -1,14 +1,15 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {colors} from '../styles/Color';
-import {typography} from '../styles/Typography';
-import {sizes} from '../styles/Sizes';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '../styles/Color';
+import { typography } from '../styles/Typography';
+import { sizes } from '../styles/Sizes';
+import { spacing } from '../styles/Spacing';
 
 export const LineWithText = props => {
   return (
     <View style={styles.lineWrapper}>
       <View style={styles.textWrapper}>
-        <Text style={[typography.subtitle2, styles.text]}>
+        <Text style={[typography.body, styles.text]}>
           {props.children}
         </Text>
       </View>
@@ -22,8 +23,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   line: {
-    backgroundColor: colors.grey,
-    height: 2,
+    backgroundColor: colors.textLight,
+    height: 1,
     position: 'absolute',
     width: '100%',
     top: typography.subtitle2.lineHeight / 2 - 1,
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
   },
   text: {
     backgroundColor: colors.white,
-    color: colors.grey,
+    color: colors.textLight,
     zIndex: 2,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.m,
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {colors} from '../styles/Color';
+import { StyleSheet, View } from 'react-native';
+import { colors } from '../styles/Color';
+import { spacing } from '../styles/Spacing';
 
 export const Frame = props => {
   return <View style={styles.frame}>{props.children}</View>;
@@ -8,8 +9,8 @@ export const Frame = props => {
 
 const styles = StyleSheet.create({
   frame: {
-    paddingVertical: 40,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.xxl,
+    paddingHorizontal: spacing.m,
     backgroundColor: colors.white,
     minHeight: '100%',
   },

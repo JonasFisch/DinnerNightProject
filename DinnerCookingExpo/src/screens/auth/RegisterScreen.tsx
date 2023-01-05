@@ -1,20 +1,21 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import UserContext from '../../contexts/UserContext';
-import {AuthErrorCodes, createUserWithEmailAndPassword} from 'firebase/auth';
-import {AppInput} from '../../components/Input';
-import {AppButton} from '../../components/Button';
-import {AppButtonType} from '../../interfaces/Button';
-import {typography} from '../../styles/Typography';
-import {Frame} from '../../components/Frame';
-import {LineWithText} from '../../components/LineWithText';
-import {FirebaseError} from 'firebase/app';
-import {authStyles} from '../../styles/Auth.styles';
+import { AuthErrorCodes, createUserWithEmailAndPassword } from 'firebase/auth';
+import { AppInput } from '../../components/Input';
+import { AppButton } from '../../components/Button';
+import { AppButtonType } from '../../interfaces/Button';
+import { typography } from '../../styles/Typography';
+import { Frame } from '../../components/Frame';
+import { LineWithText } from '../../components/LineWithText';
+import { FirebaseError } from 'firebase/app';
+import { authStyles } from '../../styles/Auth.styles';
+import { colors } from '../../styles/Color';
 
 const passwordRules =
   'required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;';
 
-export const RegisterScreen = ({navigation}) => {
+export const RegisterScreen = ({ navigation }) => {
   const userContext = useContext(UserContext);
 
   const navigateLogin = () => {
@@ -171,7 +172,7 @@ export const RegisterScreen = ({navigation}) => {
           </View>
         </View>
         <View style={authStyles.textContainer}>
-          <Text style={[typography.link]} onPress={navigateLogin}>
+          <Text style={[typography.link, { color: colors.primary }]} onPress={navigateLogin}>
             Already have an account? Sign In
           </Text>
         </View>

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useRef, useState } from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {Frame} from '../../../components/Frame';
-import {InviteStatus} from '../../../components/InviteStatus';
+import { Text, View, StyleSheet } from 'react-native';
+import { Frame } from '../../../components/Frame';
+import { InviteStatus } from '../../../components/InviteStatus';
 import InviteGrafic from '../../../assets/graphics/invited.svg';
 import { AppButton } from '../../../components/Button';
 import { AppButtonType } from '../../../interfaces/Button';
@@ -12,6 +12,7 @@ import DatabaseContext from '../../../contexts/DatabaseContext';
 import UserContext from '../../../contexts/UserContext';
 import { collection, collectionGroup, DocumentSnapshot, getDocs, query, where } from 'firebase/firestore/lite';
 import { DinnerFirebase, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import { spacing } from '../../../styles/Spacing';
 
 type DinnerProps = {
   dinner: DinnerFirebase;
@@ -26,12 +27,12 @@ export const InviteScreen = (props: DinnerProps) => {
   const userDetails = useContext(UserContext).userDetails
   const [participants, setParticipants] = useState<UserFirebase[]>([])
 
-  
+
 
   // get invite states
   const fetchInviteStates = async () => {
     const participantIDs = props.dinner.participants.map(participant => participant.id)
-    
+
     // get states
     const participantsSnap = await getDocs(
       query(
@@ -49,7 +50,7 @@ export const InviteScreen = (props: DinnerProps) => {
     useCallback(() => {
       fetchInviteStates()
     }, []),
-  );  
+  );
 
   // leaves the dinner
   const leaveDinner = () => {
@@ -77,13 +78,13 @@ export const InviteScreen = (props: DinnerProps) => {
       ) : (
         <View>
           <Text style={typography.body}>
-          You joined the Dinner! Once all other participants have accepted their invitation, the Owner of this Dinner will start loading recipe proposals!
+            You joined the Dinner! Once all other participants have accepted their invitation, the Owner of this Dinner will start loading recipe proposals!
           </Text>
           <InviteGrafic width={"100%"}></InviteGrafic>
           <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => bottomSheet.current?.show()}></AppButton>
           <BottomSheet height={125} ref={bottomSheet} >
             <View style={style.bottomSheetView}>
-              <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => leaveDinner()}/>
+              <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => leaveDinner()} />
             </View>
           </BottomSheet>
         </View>
@@ -94,10 +95,10 @@ export const InviteScreen = (props: DinnerProps) => {
 
 const style = StyleSheet.create({
   bottomSheetView: {
-    height: "100%", 
-    display: 'flex', 
-    justifyContent: "flex-start", 
-    alignItems: "flex-start", 
-    paddingTop: 20
+    height: "100%",
+    display: 'flex',
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    paddingTop: spacing.l
   }
 })

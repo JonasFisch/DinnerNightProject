@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   LayoutAnimation,
@@ -8,12 +8,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {colors} from '../styles/Color';
-import {typography} from '../styles/Typography';
-import {AppInputProps} from '../interfaces/Input';
-import {sizes} from '../styles/Sizes';
+import { colors } from '../styles/Color';
+import { typography } from '../styles/Typography';
+import { AppInputProps } from '../interfaces/Input';
+import { sizes } from '../styles/Sizes';
 import EyeIcon from '../assets/icons/eye.svg';
 import EyeOffIcon from '../assets/icons/eye-off.svg';
+import { spacing } from '../styles/Spacing';
 
 export const AppInput = (props: AppInputProps) => {
   const height = 56;
@@ -92,12 +93,12 @@ export const AppInput = (props: AppInputProps) => {
     },
     label: {
       position: 'absolute',
-      marginLeft: 16,
+      marginLeft: spacing.m,
       color: active ? colors.primaryDark : colors.text,
       backgroundColor: colors.white,
       zIndex: 1,
-      paddingLeft: 4,
-      paddingRight: 4,
+      paddingLeft: spacing.xxs,
+      paddingRight: spacing.xxs,
       top: labelTop,
       transform: [
         {
@@ -106,17 +107,17 @@ export const AppInput = (props: AppInputProps) => {
       ],
     },
     textInput: {
-      borderColor: active ? colors.primaryDark : colors.grey,
+      borderColor: active ? colors.primaryDark : colors.textLight,
       borderWidth: active ? 2 : 1,
       borderRadius: sizes.borderRadius,
-      padding: 12,
-      paddingLeft: 16,
+      padding: spacing.s,
+      paddingLeft: spacing.m,
     },
     trailingWrapper: {
       position: 'absolute',
       right: 0,
       top: (height - 24) / 2 - 12,
-      padding: 12,
+      padding: spacing.s,
     },
     trailingIcon: {
       height: 24,
@@ -126,8 +127,9 @@ export const AppInput = (props: AppInputProps) => {
       borderColor: colors.error,
     },
     errorText: {
-      marginLeft: 8,
-      marginTop: 2,
+      marginLeft: spacing.xs,
+      marginTop: spacing.xxs,
+      color: colors.error,
     },
     errorLabel: {
       color: colors.error,
@@ -181,7 +183,7 @@ export const AppInput = (props: AppInputProps) => {
       )}
       {/* Error Message */}
       {props.errorMessage ? (
-        <Text style={[typography.error, styles.errorText]}>
+        <Text style={[typography.body, styles.errorText]}>
           {props.errorMessage}
         </Text>
       ) : null}
