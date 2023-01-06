@@ -17,6 +17,7 @@
     "@typescript-eslint/parser": "^5.46.1",
     "eslint": "^8.30.0",
     "expo": "~47.0.8",
+    "expo-checkbox": "~2.2.2",
     "expo-font": "~11.0.1",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",

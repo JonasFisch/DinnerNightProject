@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Frame } from '../../components/Frame';
 import { typography } from '../../styles/Typography';
 import { spacing } from '../../styles/Spacing';
+import { SelectableList } from '../../components/SelectableList';
 
 
 export const ContactsScreen = () => {
@@ -16,9 +17,27 @@ export const ContactsScreen = () => {
     navigator.navigate('AddContacts');
   };
 
+  const listValues = ["Sabine", "Max", "Jonas"];
+  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
+
+  const handleToggle = (value: string) => {
+    const isValueAlreadySelected = selectedValues.includes(value);
+    let newSelectedValues = [...selectedValues];
+
+    if (isValueAlreadySelected) {
+      newSelectedValues = newSelectedValues.filter(element => element !== value);
+    } else {
+      newSelectedValues.push(value);
+    }
+
+    setSelectedValues(newSelectedValues);
+  };
+
+
   return (
     <Frame>
       <Text style={[typography.h3, { marginBottom: spacing.l }]}>Contacts</Text>
+      <SelectableList values={listValues} isSelectable={true} selectedValues={selectedValues} onSelectionChanged={handleToggle}></SelectableList>
       <AppButton
         onPress={addContacts}
         title="add contacts"
