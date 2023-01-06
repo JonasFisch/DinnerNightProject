@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { colors } from '../styles/Color';
 import { spacing } from '../styles/Spacing';
 
-export const Frame = props => {
-  return <View style={styles.frame}>{props.children}</View>;
+type Frameprops = {
+  children?: ReactNode;
+  withBottomNavBar?: boolean;
+}
+
+export const Frame = ({ children, withBottomNavBar = false }: Frameprops) => {
+  return <View style={withBottomNavBar ? styles.frameWithNavBar : styles.frameWithoutNavBar}>{children}</View>;
 };
 
 const styles = StyleSheet.create({
-  frame: {
+  frameWithoutNavBar: {
     paddingVertical: spacing.xxl,
     paddingHorizontal: spacing.m,
     backgroundColor: colors.white,
-    minHeight: '100%',
+  },
+  frameWithNavBar: {
+    paddingTop: spacing.xxl,
+    paddingBottom: spacing.m,
+    paddingHorizontal: spacing.m,
+    backgroundColor: colors.white,
+    flex: 1
   },
 });

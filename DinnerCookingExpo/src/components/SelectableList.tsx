@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { SelectableListItem } from './SelectableListItem';
 
 type SelectableListProps = {
@@ -7,6 +7,7 @@ type SelectableListProps = {
     isSelectable: boolean;
     selectedValues?: string[];
     onSelectionChanged?: (value: string) => void;
+    style?: object;
 };
 
 export const SelectableList = ({
@@ -14,18 +15,22 @@ export const SelectableList = ({
     isSelectable,
     selectedValues = [],
     onSelectionChanged = () => { },
+    ...others
 }: SelectableListProps) => {
     return (
-        <View>
-            {values.map(value => {
-                return (
-                    <SelectableListItem
-                        label={value}
-                        isChecked={selectedValues.includes(value)}
-                        onValueChanged={() => onSelectionChanged(value)}
-                        shouldRenderCheckbox={isSelectable}></SelectableListItem>
-                );
-            })}
-        </View>
+        < ScrollView {...others} >
+            {
+                values.map(value => {
+                    return (
+                        <SelectableListItem
+                            label={value}
+                            key={value}
+                            isChecked={selectedValues.includes(value)}
+                            onValueChanged={() => onSelectionChanged(value)}
+                            shouldRenderCheckbox={isSelectable}></SelectableListItem>
+                    );
+                })
+            }
+        </ScrollView >
     );
 };
