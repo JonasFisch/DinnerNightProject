@@ -8,20 +8,20 @@
  * @format
  */
 
-import React, {useCallback, useState} from 'react';
-import {Platform, UIManager, useColorScheme} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Platform, UIManager, useColorScheme } from 'react-native';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {Tabs} from './src/screens/Tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {DinnerDetailScreen} from './src/screens/home/DinnerDetails/index';
-import {LoginScreen} from './src/screens/auth/LoginScreen';
-import {RegisterScreen} from './src/screens/auth/RegisterScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { Tabs } from './src/screens/Tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { DinnerDetailScreen } from './src/screens/home/DinnerDetails/index';
+import { LoginScreen } from './src/screens/auth/LoginScreen';
+import { RegisterScreen } from './src/screens/auth/RegisterScreen';
 import UserContext from './src/contexts/UserContext';
-import {StepScreen} from './src/screens/intro/StepScreen';
-import {initializeApp} from 'firebase/app';
-import {getAuth, User} from 'firebase/auth';
-import {getStorage} from 'firebase/storage';
+import { StepScreen } from './src/screens/intro/StepScreen';
+import { initializeApp } from 'firebase/app';
+import { getAuth, User } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
 import {
   doc,
@@ -30,17 +30,18 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore/lite';
-import {INITIAL_USER_DETAILS} from './src/interfaces/UserDetails';
-import {Playground} from './src/screens/Playground';
-import {IntroWelcomeScreen} from './src/screens/intro/IntroWelcomeScreen';
-import {WelcomeScreen} from './src/screens/auth/Welcome';
-import {CreateParty} from './src/screens/home/CreateParty';
+import { INITIAL_USER_DETAILS } from './src/interfaces/UserDetails';
+import { Playground } from './src/screens/Playground';
+import { IntroWelcomeScreen } from './src/screens/intro/IntroWelcomeScreen';
+import { WelcomeScreen } from './src/screens/auth/Welcome';
+import { CreateParty } from './src/screens/home/CreateParty';
 import DatabaseContext from './src/contexts/DatabaseContext';
-import {typography} from './src/styles/Typography';
-import {useFonts} from 'expo-font';
+import { typography } from './src/styles/Typography';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import StorageContext from './src/contexts/StorageContext';
 import { UserFirebase } from './src/interfaces/FirebaseSchema';
+import { AddContactsScreen } from './src/screens/friends/AddContactsScreen';
 
 // TODO: put this into config file
 const firebaseConfig = {
@@ -120,7 +121,7 @@ const App = () => {
         console.log(error);
       });
   };
-  
+
   // check if user is already authenticated
   if (user == null && auth.currentUser != null) {
     setUser(auth.currentUser);
@@ -179,57 +180,61 @@ const App = () => {
           value={{
             database: db,
           }}>
-            <NavigationContainer>
-              <AppStack.Navigator>
-                {user ? (
-                  <AppStack.Group key={'Authenticated'}>
-                    {/* replace this with data from user object */}
-                    {userDetails?.hasDoneIntro ? (
-                      <AppStack.Group key={'Main'}>
-                        <AppStack.Screen
-                          name="Tabs"
-                          component={Tabs}
-                          options={{headerShown: false}}
-                          />
-                        {/* Sub Screens of Dinner List Screen */}
-                        <AppStack.Screen
-                          name="PartyDetails"
-                          component={DinnerDetailScreen}
-                          />
-                        <AppStack.Screen
-                          name="CreateParty"
-                          options={{
-                            headerTitle: 'Create Dinner',
-                            headerTitleStyle: typography.h4,
-                          }}
-                          component={CreateParty}
-                          />
-                        {/* Sub Screens of Friends Screen */}
-                        {/* Sub Screens of Settings Screen */}
-                      </AppStack.Group>
-                    ) : (
-                      <AppStack.Group
+          <NavigationContainer>
+            <AppStack.Navigator>
+              {user ? (
+                <AppStack.Group key={'Authenticated'}>
+                  {/* replace this with data from user object */}
+                  {userDetails?.hasDoneIntro ? (
+                    <AppStack.Group key={'Main'}>
+                      <AppStack.Screen
+                        name="Tabs"
+                        component={Tabs}
+                        options={{ headerShown: false }}
+                      />
+                      {/* Sub Screens of Dinner List Screen */}
+                      <AppStack.Screen
+                        name="PartyDetails"
+                        component={DinnerDetailScreen}
+                      />
+                      <AppStack.Screen
+                        name="CreateParty"
+                        options={{
+                          headerTitle: 'Create Dinner',
+                          headerTitleStyle: typography.h4,
+                        }}
+                        component={CreateParty}
+                      />
+                      {/* Sub Screens of Friends Screen */}
+                      <AppStack.Screen
+                        name="AddContacts"
+                        component={AddContactsScreen}
+                      />
+                      {/* Sub Screens of Settings Screen */}
+                    </AppStack.Group>
+                  ) : (
+                    <AppStack.Group
                       key={'Intro'}
-                      screenOptions={{headerShown: false}}>
-                        <AppStack.Screen
-                          name="Welcome"
-                          component={IntroWelcomeScreen}
-                          />
-                        <AppStack.Screen name="Steps" component={StepScreen} />
-                      </AppStack.Group>
-                    )}
-                  </AppStack.Group>
-                ) : (
-                  <AppStack.Group
-                    key={'Unauthenticated'}
-                    screenOptions={{headerShown: false}}>
-                    <AppStack.Screen name="Welcome" component={WelcomeScreen} />
-                    <AppStack.Screen name="Login" component={LoginScreen} />
-                    <AppStack.Screen name="Register" component={RegisterScreen} />
-                  </AppStack.Group>
-                )}
-              </AppStack.Navigator>
-            </NavigationContainer>
+                      screenOptions={{ headerShown: false }}>
+                      <AppStack.Screen
+                        name="Welcome"
+                        component={IntroWelcomeScreen}
+                      />
+                      <AppStack.Screen name="Steps" component={StepScreen} />
+                    </AppStack.Group>
+                  )}
+                </AppStack.Group>
+              ) : (
+                <AppStack.Group
+                  key={'Unauthenticated'}
+                  screenOptions={{ headerShown: false }}>
+                  <AppStack.Screen name="Welcome" component={WelcomeScreen} />
+                  <AppStack.Screen name="Login" component={LoginScreen} />
+                  <AppStack.Screen name="Register" component={RegisterScreen} />
+                </AppStack.Group>
+              )}
+            </AppStack.Navigator>
+          </NavigationContainer>
         </DatabaseContext.Provider>
       </StorageContext.Provider>
     </UserContext.Provider>
