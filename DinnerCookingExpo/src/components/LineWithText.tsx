@@ -9,9 +9,7 @@ export const LineWithText = props => {
   return (
     <View style={styles.lineWrapper}>
       <View style={styles.textWrapper}>
-        <Text style={[typography.body, styles.text]}>
-          {props.children}
-        </Text>
+        <Text style={[typography.body, styles.text]}>{props.children}</Text>
       </View>
       <View style={styles.line}></View>
     </View>

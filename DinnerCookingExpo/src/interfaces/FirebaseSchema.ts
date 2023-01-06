@@ -1,29 +1,33 @@
-import { DocumentData, QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
-import { DocumentReference, Timestamp } from "firebase/firestore/lite"
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+} from 'firebase/firestore';
+import { DocumentReference, Timestamp } from 'firebase/firestore/lite';
 
 enum DinnerState {
-	INVITE,
-	VOTING,
-	COOKING,
-	DELETED,
-	FINISHED,
-	LOADING,
+  INVITE,
+  VOTING,
+  COOKING,
+  DELETED,
+  FINISHED,
+  LOADING,
 }
-  
+
 type DinnerFirebase = {
-	id?: string,
-	admin: DocumentReference
-	date: Timestamp,
-	name: string,
-	participants: DocumentReference[];
-	state: number,
-} 
+  id?: string;
+  admin: DocumentReference;
+  date: Timestamp;
+  name: string;
+  participants: DocumentReference[];
+  state: number;
+};
 
 type UserFirebase = {
-	id: string,
-	hasDoneIntro: boolean,
-	imageUrl: string,
-	name: string,
-}
+  id: string;
+  hasDoneIntro: boolean;
+  imageUrl: string;
+  name: string;
+};
 
-export {DinnerState, DinnerFirebase, UserFirebase}
+export { DinnerState, DinnerFirebase, UserFirebase };

@@ -1,13 +1,16 @@
-import React, {useContext, useState} from 'react';
-import {View, Text} from 'react-native';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {useCallback} from 'react';
+import React, { useContext, useState } from 'react';
+import { View, Text } from 'react-native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useCallback } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
-import {CookingScreen} from './CookingScreen';
-import {VotingScreen} from './VotingScreen';
-import {InviteScreen} from './InviteScreen';
+import { CookingScreen } from './CookingScreen';
+import { VotingScreen } from './VotingScreen';
+import { InviteScreen } from './InviteScreen';
 import UserContext from '../../../contexts/UserContext';
-import { DinnerFirebase, DinnerState } from '../../../interfaces/FirebaseSchema';
+import {
+  DinnerFirebase,
+  DinnerState,
+} from '../../../interfaces/FirebaseSchema';
 import { fetchDinner } from '../../../utils/dinnerRequests';
 
 export type DinnerDetailScreenParams = {
@@ -26,8 +29,8 @@ export const DinnerDetailScreen = () => {
   // fetch dinner details here
   const resolveDinner = async () => {
     try {
-      const fetchedDinner = await fetchDinner(db, params.id)
-      
+      const fetchedDinner = await fetchDinner(db, params.id);
+
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
 
@@ -42,7 +45,7 @@ export const DinnerDetailScreen = () => {
     useCallback(() => {
       resolveDinner();
     }, []),
-  );  
+  );
 
   // get state
   const state: DinnerState = dinner?.state ?? DinnerState.LOADING;

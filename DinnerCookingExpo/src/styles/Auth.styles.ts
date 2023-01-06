@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import { spacing } from './Spacing';
 
 export const authStyles = StyleSheet.create({

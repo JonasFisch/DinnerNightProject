@@ -6,13 +6,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {AppButton} from '../components/Button';
-import {AppInput} from '../components/Input';
-import {AppButtonType} from '../interfaces/Button';
-import {typography} from '../styles/Typography';
-import {colors} from '../styles/Color';
-import {Tabs} from '../components/Tabs';
-import {Frame} from '../components/Frame';
+import { AppButton } from '../components/Button';
+import { AppInput } from '../components/Input';
+import { AppButtonType } from '../interfaces/Button';
+import { typography } from '../styles/Typography';
+import { colors } from '../styles/Color';
+import { Tabs } from '../components/Tabs';
+import { Frame } from '../components/Frame';
 
 export const Playground = () => {
   const test = () => {
@@ -23,15 +23,15 @@ export const Playground = () => {
     <Frame>
       <Tabs
         tabViews={[
-          {node: <Text>Seite 1</Text>, title: 'In Progess'},
-          {node: <Text>Seite 2</Text>, title: 'Archive'},
+          { node: <Text>Seite 1</Text>, title: 'In Progess' },
+          { node: <Text>Seite 2</Text>, title: 'Archive' },
         ]}
       />
     </Frame>
   );
 
   return (
-    <ScrollView style={{backgroundColor: colors.white}}>
+    <ScrollView style={{ backgroundColor: colors.white }}>
       <View
         // eslint-disable-next-line react-native/no-inline-styles
         style={{

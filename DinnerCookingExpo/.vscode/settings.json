@@ -1,2 +1,10 @@
 {
+  "search.exclude": {
+    "**/node_modules": true
+  },
+  "files.trimTrailingWhitespace": true,
+  "prettier.prettierPath": "./node_modules/prettier",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2
 }

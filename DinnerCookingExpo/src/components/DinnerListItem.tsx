@@ -25,16 +25,15 @@ type DinnerListItemProps = {
 };
 
 export const DinnerListItem = (props: DinnerListItemProps) => {
-
-  const [participants, setParticipants] = useState<UserFirebase[]>([])
+  const [participants, setParticipants] = useState<UserFirebase[]>([]);
   const db = useContext(DatabaseContext).database;
 
   const resolveParticipants = async () => {
-    setParticipants(await fetchUsers(db, props.participants))
-  }
+    setParticipants(await fetchUsers(db, props.participants));
+  };
 
   // fetch participants
-  resolveParticipants()
+  resolveParticipants();
 
   return (
     <TouchableWithoutFeedback onPress={() => props.onPress(props.id)}>

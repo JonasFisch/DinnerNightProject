@@ -1,19 +1,19 @@
-import {useFonts} from 'expo-font';
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
-import {AppButton} from './src/components/Button';
-import {typography} from './src/styles/Typography';
+import { useFonts } from 'expo-font';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+import { AppButton } from './src/components/Button';
+import { typography } from './src/styles/Typography';
 import * as SplashScreen from 'expo-splash-screen';
-import {useCallback, useEffect, useState} from 'react';
-import {AppButtonType} from './src/interfaces/Button';
+import { useCallback, useEffect, useState } from 'react';
+import { AppButtonType } from './src/interfaces/Button';
 import * as React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {LoginScreen} from './src/screens/auth/LoginScreen';
-import {Playground} from './src/screens/Playground';
-import {NavigationContainer} from '@react-navigation/native';
-import {initializeApp} from 'firebase/app';
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
-import {getFirestore} from 'firebase/firestore';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LoginScreen } from './src/screens/auth/LoginScreen';
+import { Playground } from './src/screens/Playground';
+import { NavigationContainer } from '@react-navigation/native';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 export default function App2() {
   // firebase config

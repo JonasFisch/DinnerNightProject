@@ -13,7 +13,7 @@ const palette = {
   red: '#B3261E',
   beige: '#FFDABF',
   brown: '#B67458',
-}
+};
 
 export const colors = {
   primary: palette.blue,

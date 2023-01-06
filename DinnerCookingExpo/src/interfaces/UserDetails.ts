@@ -1,4 +1,4 @@
-import { UserFirebase } from "./FirebaseSchema";
+import { UserFirebase } from './FirebaseSchema';
 
 const INITIAL_USER_DETAILS: UserFirebase = {
   id: '',
@@ -22,4 +22,4 @@ export type Participant = {
 
 export type ParticipantMap = Map<string, UserFirebase>;
 
-export {INITIAL_USER_DETAILS};
+export { INITIAL_USER_DETAILS };

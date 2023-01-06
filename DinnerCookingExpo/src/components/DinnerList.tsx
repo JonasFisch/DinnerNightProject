@@ -10,7 +10,6 @@ type DinnerListProps = {
   dinners: DinnerFirebase[];
 };
 export const DinnerList = (props: DinnerListProps) => {
-
   const navigator = useNavigation();
 
   // navigate to dinner details screen

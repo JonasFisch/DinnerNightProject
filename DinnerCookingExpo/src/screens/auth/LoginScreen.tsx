@@ -122,7 +122,9 @@ export const LoginScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={authStyles.textContainer}>
-          <Text style={[typography.link, { color: colors.primary }]} onPress={navigateRegister}>
+          <Text
+            style={[typography.link, { color: colors.primary }]}
+            onPress={navigateRegister}>
             Don't have an account? Create one here
           </Text>
         </View>

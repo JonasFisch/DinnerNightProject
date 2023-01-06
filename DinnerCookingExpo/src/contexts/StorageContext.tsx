@@ -1,5 +1,5 @@
 import React from 'react';
-import {getStorage} from 'firebase/storage';
+import { getStorage } from 'firebase/storage';
 
 const StorageContext = React.createContext({
   storage: {},

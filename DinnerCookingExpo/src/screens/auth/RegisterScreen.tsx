@@ -172,7 +172,9 @@ export const RegisterScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={authStyles.textContainer}>
-          <Text style={[typography.link, { color: colors.primary }]} onPress={navigateLogin}>
+          <Text
+            style={[typography.link, { color: colors.primary }]}
+            onPress={navigateLogin}>
             Already have an account? Sign In
           </Text>
         </View>

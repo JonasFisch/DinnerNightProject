@@ -6,10 +6,17 @@ import { spacing } from '../styles/Spacing';
 type Frameprops = {
   children?: ReactNode;
   withBottomNavBar?: boolean;
-}
+};
 
 export const Frame = ({ children, withBottomNavBar = false }: Frameprops) => {
-  return <View style={withBottomNavBar ? styles.frameWithNavBar : styles.frameWithoutNavBar}>{children}</View>;
+  return (
+    <View
+      style={
+        withBottomNavBar ? styles.frameWithNavBar : styles.frameWithoutNavBar
+      }>
+      {children}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -23,6 +30,6 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.m,
     paddingHorizontal: spacing.m,
     backgroundColor: colors.white,
-    flex: 1
+    flex: 1,
   },
 });

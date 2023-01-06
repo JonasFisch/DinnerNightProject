@@ -10,8 +10,18 @@ import { BottomSheet, BottomSheetRef } from 'react-native-sheet';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import UserContext from '../../../contexts/UserContext';
-import { collection, collectionGroup, DocumentSnapshot, getDocs, query, where } from 'firebase/firestore/lite';
-import { DinnerFirebase, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import {
+  collection,
+  collectionGroup,
+  DocumentSnapshot,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore/lite';
+import {
+  DinnerFirebase,
+  UserFirebase,
+} from '../../../interfaces/FirebaseSchema';
 import { spacing } from '../../../styles/Spacing';
 
 type DinnerProps = {
@@ -20,35 +30,34 @@ type DinnerProps = {
 };
 
 export const InviteScreen = (props: DinnerProps) => {
-
   const navigator = useNavigation();
   const bottomSheet = useRef<BottomSheetRef>(null);
   const db = useContext(DatabaseContext).database;
-  const userDetails = useContext(UserContext).userDetails
-  const [participants, setParticipants] = useState<UserFirebase[]>([])
-
-
+  const userDetails = useContext(UserContext).userDetails;
+  const [participants, setParticipants] = useState<UserFirebase[]>([]);
 
   // get invite states
   const fetchInviteStates = async () => {
-    const participantIDs = props.dinner.participants.map(participant => participant.id)
+    const participantIDs = props.dinner.participants.map(
+      participant => participant.id,
+    );
 
     // get states
     const participantsSnap = await getDocs(
-      query(
-        collection(db, "Users"),
-        where("__name__", "in", participantIDs)
-      ),
-    )
+      query(collection(db, 'Users'), where('__name__', 'in', participantIDs)),
+    );
 
     // transform participant data!
-    setParticipants(participantsSnap.docs.map(participant => participant.data() as UserFirebase));
-  }
-
+    setParticipants(
+      participantsSnap.docs.map(
+        participant => participant.data() as UserFirebase,
+      ),
+    );
+  };
 
   useFocusEffect(
     useCallback(() => {
-      fetchInviteStates()
+      fetchInviteStates();
     }, []),
   );
 
@@ -60,7 +69,7 @@ export const InviteScreen = (props: DinnerProps) => {
     setTimeout(() => {
       navigator.goBack();
     }, 200);
-  }
+  };
 
   return (
     <Frame>
@@ -78,13 +87,22 @@ export const InviteScreen = (props: DinnerProps) => {
       ) : (
         <View>
           <Text style={typography.body}>
-            You joined the Dinner! Once all other participants have accepted their invitation, the Owner of this Dinner will start loading recipe proposals!
+            You joined the Dinner! Once all other participants have accepted
+            their invitation, the Owner of this Dinner will start loading recipe
+            proposals!
           </Text>
-          <InviteGrafic width={"100%"}></InviteGrafic>
-          <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => bottomSheet.current?.show()}></AppButton>
-          <BottomSheet height={125} ref={bottomSheet} >
+          <InviteGrafic width={'100%'}></InviteGrafic>
+          <AppButton
+            title="LEAVE DINNER"
+            type={AppButtonType.text}
+            onPress={() => bottomSheet.current?.show()}></AppButton>
+          <BottomSheet height={125} ref={bottomSheet}>
             <View style={style.bottomSheetView}>
-              <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => leaveDinner()} />
+              <AppButton
+                title="LEAVE DINNER"
+                type={AppButtonType.text}
+                onPress={() => leaveDinner()}
+              />
             </View>
           </BottomSheet>
         </View>
@@ -95,10 +113,10 @@ export const InviteScreen = (props: DinnerProps) => {
 
 const style = StyleSheet.create({
   bottomSheetView: {
-    height: "100%",
+    height: '100%',
     display: 'flex',
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    paddingTop: spacing.l
-  }
-})
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingTop: spacing.l,
+  },
+});

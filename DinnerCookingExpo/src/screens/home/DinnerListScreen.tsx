@@ -69,7 +69,7 @@ export const DinnerListScreen = () => {
             },
             {
               node: <Text>Seite 2</Text>,
-              title: 'Archive'
+              title: 'Archive',
             },
           ]}
         />
