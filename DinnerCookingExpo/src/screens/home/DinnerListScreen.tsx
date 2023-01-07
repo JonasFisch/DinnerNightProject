@@ -9,7 +9,6 @@ import {Direction, spacings} from '../../styles/Spacing';
 import {DinnerList} from '../../components/DinnerList';
 import Logo from '../../assets/icons/add-material.svg';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import {ParticipantMap} from '../../interfaces/UserDetails';
 import UserContext from '../../contexts/UserContext';
 import {
   useFocusEffect,
@@ -18,7 +17,7 @@ import {
 } from '@react-navigation/native';
 import {useCallback} from 'react';
 import { fetchDinners, fetchUsers } from '../../utils/dinnerRequests';
-import { DinnerFirebase } from '../../interfaces/FirebaseSchema';
+import { DinnerFirebase, ParticipantMap } from '../../interfaces/FirebaseSchema';
 
 export const DinnerListScreen = () => {
   const navigation = useNavigation();

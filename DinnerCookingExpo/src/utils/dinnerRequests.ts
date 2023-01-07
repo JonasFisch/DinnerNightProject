@@ -22,7 +22,7 @@ export const fetchDinners = async (
     if (!dinnersSnap.docs) reject('could not get dinner snap.');
     resolve(dinnersSnap.docs.map(dinner => {
       const din = dinner.data() as DinnerFirebase;
-      din.id = dinner.id;
+      din.id = dinner.id;      
       return din;
     }
     ));
@@ -40,6 +40,7 @@ export const fetchDinner = async (
     if (!dinnersSnap.data()) reject('cannot fetch dinner details.');
     
     const dinner = dinnersSnap.data() as DinnerFirebase;
+    dinner.id = dinnersSnap.id;
     resolve(dinner);
   })
 }

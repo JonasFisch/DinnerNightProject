@@ -26,8 +26,6 @@ export const InviteScreen = (props: DinnerProps) => {
   const userDetails = useContext(UserContext).userDetails
   const [participants, setParticipants] = useState<UserFirebase[]>([])
 
-  
-
   // get invite states
   const fetchInviteStates = async () => {
     const participantIDs = props.dinner.participants.map(participant => participant.id)
@@ -64,14 +62,14 @@ export const InviteScreen = (props: DinnerProps) => {
   return (
     <Frame>
       {props.isAdmin ? (
-        <View>
+        <View style={style.userContentWrapper}>
           <Text>
             An invitation to your dinner was send to all participants. Once they
             accept the invite, you can start loading recipe proposals, that fit
             all participants eating preferences.
           </Text>
           {participants.map(participant => (
-            <InviteStatus participant={participant} key={participant.id} />
+            <InviteStatus dinnerID={props.dinner.id} participant={participant} key={participant.id} />
           ))}
         </View>
       ) : (
@@ -99,5 +97,5 @@ const style = StyleSheet.create({
     justifyContent: "flex-start", 
     alignItems: "flex-start", 
     paddingTop: 20
-  }
+  },
 })

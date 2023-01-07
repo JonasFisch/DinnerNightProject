@@ -9,6 +9,23 @@ enum DinnerState {
 	FINISHED,
 	LOADING,
 }
+
+export type ParticipantMap = Map<string, UserFirebase>;
+
+export const INITIAL_USER_DETAILS: UserFirebase = {
+	id: '',
+  hasDoneIntro: false,
+  name: '',
+  imageUrl: '',
+  inviteStates: {}
+};
+
+
+export enum InviteState {
+	PENDING,
+	ACCEPTED,
+	REJECTED,
+  }
   
 type DinnerFirebase = {
 	id?: string,
@@ -24,6 +41,7 @@ type UserFirebase = {
 	hasDoneIntro: boolean,
 	imageUrl: string,
 	name: string,
+	inviteStates: {[key: string]: InviteState}
 }
 
 export {DinnerState, DinnerFirebase, UserFirebase}
