@@ -6,30 +6,45 @@ import { spacing } from '../styles/Spacing';
 type Frameprops = {
   children?: ReactNode;
   withBottomNavBar?: boolean;
+  withSubPageHeader?: boolean;
 };
 
-export const Frame = ({ children, withBottomNavBar = false }: Frameprops) => {
+export const Frame = ({
+  children,
+  withBottomNavBar = false,
+  withSubPageHeader = false,
+}: Frameprops) => {
   return (
     <View
-      style={
-        withBottomNavBar ? styles.frameWithNavBar : styles.frameWithoutNavBar
-      }>
+      style={[
+        styles.base,
+        withBottomNavBar
+          ? styles.frameWithNavBar
+          : withSubPageHeader
+          ? styles.frameWithHeader
+          : styles.frameWithoutNavBar,
+      ]}>
       {children}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  frameWithoutNavBar: {
-    paddingVertical: spacing.xxl,
+  base: {
     paddingHorizontal: spacing.m,
     backgroundColor: colors.white,
+  },
+  frameWithoutNavBar: {
+    paddingVertical: spacing.xxl,
   },
   frameWithNavBar: {
     paddingTop: spacing.xxl,
     paddingBottom: spacing.m,
-    paddingHorizontal: spacing.m,
-    backgroundColor: colors.white,
+    flex: 1,
+  },
+  frameWithHeader: {
+    paddingTop: spacing.m,
+    paddingBottom: spacing.m,
     flex: 1,
   },
 });

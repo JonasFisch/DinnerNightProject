@@ -6,12 +6,13 @@ import {
 
 export interface AppInputProps {
   label: string;
-  keyboardType: KeyboardTypeOptions | undefined;
+  keyboardType?: KeyboardTypeOptions;
   errorMessage?: string;
   disabled?: boolean;
   hideable?: boolean;
+  clearable?: boolean;
   value: string;
-  onChangeText?: ((text: string) => void) | undefined;
+  onChangeText: (text: string) => void;
   onEndEdit?:
     | ((e: NativeSyntheticEvent<TextInputEndEditingEventData>) => void)
     | undefined;

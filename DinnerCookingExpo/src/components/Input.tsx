@@ -12,8 +12,9 @@ import { colors } from '../styles/Color';
 import { typography } from '../styles/Typography';
 import { AppInputProps } from '../interfaces/Input';
 import { sizes } from '../styles/Sizes';
-import EyeIcon from '../assets/icons/eye.svg';
-import EyeOffIcon from '../assets/icons/eye-off.svg';
+import EyeIcon from '../assets/icons/visibility.svg';
+import EyeOffIcon from '../assets/icons/visibility_off.svg';
+import ClearIcon from '../assets/icons/close.svg';
 import { spacing } from '../styles/Spacing';
 
 export const AppInput = (props: AppInputProps) => {
@@ -55,17 +56,18 @@ export const AppInput = (props: AppInputProps) => {
     }
   };
 
-  const trailingIconAction = () => {
-    if (props.hideable) {
-      // toggle text Hidden and change Icon
-      setTextHidden(!textHidden);
-      console.log(textHidden);
+  const clearInput = () => {
+    props.onChangeText('');
+  };
 
-      if (textHidden) {
-        setVisibility(false);
-      } else {
-        setVisibility(true);
-      }
+  const togglePasswordVisibility = () => {
+    // toggle text Hidden and change Icon
+    setTextHidden(!textHidden);
+
+    if (textHidden) {
+      setVisibility(false);
+    } else {
+      setVisibility(true);
     }
   };
 
@@ -122,6 +124,7 @@ export const AppInput = (props: AppInputProps) => {
     trailingIcon: {
       height: 24,
       width: 24,
+      color: colors.textLight,
     },
     errorFrame: {
       borderColor: colors.error,
@@ -169,10 +172,10 @@ export const AppInput = (props: AppInputProps) => {
         editable={!props.disabled}
         secureTextEntry={textHidden}
       />
-      {/* Button */}
-      {!props.hideable ? null : (
+      {/* Password hide/show Button */}
+      {props.hideable && (
         <Pressable
-          onPress={() => trailingIconAction()}
+          onPress={togglePasswordVisibility}
           style={styles.trailingWrapper}>
           {visible ? (
             <EyeIcon style={styles.trailingIcon} />
@@ -181,12 +184,26 @@ export const AppInput = (props: AppInputProps) => {
           )}
         </Pressable>
       )}
+      {/* Clear Input Button */}
+      {props.clearable && (
+        <Pressable onPress={clearInput} style={styles.trailingWrapper}>
+          <ClearIcon style={styles.trailingIcon} />
+        </Pressable>
+      )}
       {/* Error Message */}
-      {props.errorMessage ? (
+      {props.errorMessage && (
         <Text style={[typography.body, styles.errorText]}>
           {props.errorMessage}
         </Text>
-      ) : null}
+      )}
     </View>
   );
+};
+
+AppInput.defaultProps = {
+  disabled: false,
+  hideable: false,
+  clearable: false,
+  keyboardType: 'default',
+  textContentType: 'none',
 };
