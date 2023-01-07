@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { AppButtonType } from '../../interfaces/Button';
-import AddIcon from '../../assets/icons/add-material.svg';
+import AddIcon from '../../assets/icons/add.svg';
 import { useNavigation } from '@react-navigation/native';
 import { Frame } from '../../components/Frame';
 import { typography } from '../../styles/Typography';
@@ -32,22 +32,6 @@ export const ContactsScreen = () => {
     'Peter Hans KLaus Jung',
     'Bernd Brot',
   ];
-  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
-
-  const handleToggle = (value: string) => {
-    const isValueAlreadySelected = selectedValues.includes(value);
-    let newSelectedValues = [...selectedValues];
-
-    if (isValueAlreadySelected) {
-      newSelectedValues = newSelectedValues.filter(
-        element => element !== value,
-      );
-    } else {
-      newSelectedValues.push(value);
-    }
-
-    setSelectedValues(newSelectedValues);
-  };
 
   return (
     <Frame withBottomNavBar={true}>
@@ -55,11 +39,7 @@ export const ContactsScreen = () => {
       <Text style={[typography.subtitle2, styles.contactCount]}>
         {contacts.length} Contacts
       </Text>
-      <SelectableList
-        values={contacts}
-        isSelectable={true}
-        selectedValues={selectedValues}
-        onSelectionChanged={handleToggle}></SelectableList>
+      <SelectableList values={contacts} isSelectable={false}></SelectableList>
       <AppButton
         style={styles.addButton}
         onPress={addContacts}

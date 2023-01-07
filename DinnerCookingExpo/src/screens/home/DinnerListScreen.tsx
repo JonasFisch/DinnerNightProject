@@ -7,7 +7,7 @@ import { AppButtonType } from '../../interfaces/Button';
 import { typography } from '../../styles/Typography';
 import { spacing } from '../../styles/Spacing';
 import { DinnerList } from '../../components/DinnerList';
-import Logo from '../../assets/icons/add-material.svg';
+import Logo from '../../assets/icons/add.svg';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { ParticipantMap } from '../../interfaces/UserDetails';
 import UserContext from '../../contexts/UserContext';

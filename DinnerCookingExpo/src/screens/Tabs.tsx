@@ -5,7 +5,7 @@ import { DinnerListScreen } from './home/DinnerListScreen';
 import { SettingScreen } from './settings/SettingScreen';
 // Tab Bar Icons
 import HomeIcon from '../assets/icons/home.svg';
-import ContactIcon from '../assets/icons/contact.svg';
+import ContactIcon from '../assets/icons/person_add.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
 
 export const Tabs = () => {
