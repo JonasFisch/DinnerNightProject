@@ -1,4 +1,4 @@
-import {Auth, User} from 'firebase/auth';
+import { Auth, User } from 'firebase/auth';
 import React from 'react';
 import { UserFirebase } from '../interfaces/FirebaseSchema';
 

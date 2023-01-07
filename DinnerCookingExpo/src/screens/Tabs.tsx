@@ -1,11 +1,11 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {FriendScreen} from './friends/FriendScreen';
-import {DinnerListScreen} from './home/DinnerListScreen';
-import {SettingScreen} from './settings/SettingScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ContactsScreen } from './friends/ContactsScreen';
+import { DinnerListScreen } from './home/DinnerListScreen';
+import { SettingScreen } from './settings/SettingScreen';
 // Tab Bar Icons
 import HomeIcon from '../assets/icons/home.svg';
-import ContactIcon from '../assets/icons/contact.svg';
+import ContactIcon from '../assets/icons/person_add.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
 
 export const Tabs = () => {
@@ -13,14 +13,14 @@ export const Tabs = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
       initialRouteName="Dinners">
       <Tab.Screen
         name="Contacts"
-        component={FriendScreen}
+        component={ContactsScreen}
         options={{
           tabBarLabel: 'Contacts',
-          tabBarIcon: ({color}) => <ContactIcon color={color} />,
+          tabBarIcon: ({ color }) => <ContactIcon color={color} />,
         }}
       />
       <Tab.Screen
@@ -28,16 +28,16 @@ export const Tabs = () => {
         component={DinnerListScreen}
         options={{
           tabBarLabel: 'Dinners',
-          tabBarIcon: ({color}) => <HomeIcon color={color} />,
+          tabBarIcon: ({ color }) => <HomeIcon color={color} />,
         }}
-        initialParams={{needsUpdate: true}}
+        initialParams={{ needsUpdate: true }}
       />
       <Tab.Screen
         name="Preferences"
         component={SettingScreen}
         options={{
           tabBarLabel: 'Preferences',
-          tabBarIcon: ({color}) => <SettingsIcon color={color} />,
+          tabBarIcon: ({ color }) => <SettingsIcon color={color} />,
         }}
       />
     </Tab.Navigator>

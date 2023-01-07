@@ -1,17 +1,18 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, Button, StyleSheet, ScrollView} from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import UserContext from '../../contexts/UserContext';
-import {AuthErrorCodes, signInWithEmailAndPassword} from 'firebase/auth';
-import {Frame} from '../../components/Frame';
-import {authStyles} from '../../styles/Auth.styles';
-import {typography} from '../../styles/Typography';
-import {AppInput} from '../../components/Input';
-import {FirebaseError} from 'firebase/app';
-import {AppButton} from '../../components/Button';
-import {AppButtonType} from '../../interfaces/Button';
-import {LineWithText} from '../../components/LineWithText';
+import { AuthErrorCodes, signInWithEmailAndPassword } from 'firebase/auth';
+import { Frame } from '../../components/Frame';
+import { authStyles } from '../../styles/Auth.styles';
+import { typography } from '../../styles/Typography';
+import { AppInput } from '../../components/Input';
+import { FirebaseError } from 'firebase/app';
+import { AppButton } from '../../components/Button';
+import { AppButtonType } from '../../interfaces/Button';
+import { LineWithText } from '../../components/LineWithText';
+import { colors } from '../../styles/Color';
 
-export const LoginScreen = ({navigation}) => {
+export const LoginScreen = ({ navigation }) => {
   const userContext = useContext(UserContext);
 
   const [email, setEmail] = useState<string>('jon.fischerboy@gmail.com');
@@ -121,8 +122,10 @@ export const LoginScreen = ({navigation}) => {
           </View>
         </View>
         <View style={authStyles.textContainer}>
-          <Text style={[typography.link]} onPress={navigateRegister}>
-            Don't have an account? create one here
+          <Text
+            style={[typography.link, { color: colors.primary }]}
+            onPress={navigateRegister}>
+            Don't have an account? Create one here
           </Text>
         </View>
       </Frame>

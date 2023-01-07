@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useRef, useState } from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {Frame} from '../../../components/Frame';
-import {InviteStatus} from '../../../components/InviteStatus';
+import { Text, View, StyleSheet } from 'react-native';
+import { Frame } from '../../../components/Frame';
+import { InviteStatus } from '../../../components/InviteStatus';
 import InviteGrafic from '../../../assets/graphics/invited.svg';
 import { AppButton } from '../../../components/Button';
 import { AppButtonType } from '../../../interfaces/Button';
@@ -10,8 +10,19 @@ import { BottomSheet, BottomSheetRef } from 'react-native-sheet';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import UserContext from '../../../contexts/UserContext';
-import { collection, collectionGroup, DocumentSnapshot, getDocs, query, where } from 'firebase/firestore/lite';
-import { DinnerFirebase, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import {
+  collection,
+  collectionGroup,
+  DocumentSnapshot,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore/lite';
+import {
+  DinnerFirebase,
+  UserFirebase,
+} from '../../../interfaces/FirebaseSchema';
+import { spacing } from '../../../styles/Spacing';
 
 type DinnerProps = {
   dinner: DinnerFirebase;
@@ -19,35 +30,36 @@ type DinnerProps = {
 };
 
 export const InviteScreen = (props: DinnerProps) => {
-
   const navigator = useNavigation();
   const bottomSheet = useRef<BottomSheetRef>(null);
   const db = useContext(DatabaseContext).database;
-  const userDetails = useContext(UserContext).userDetails
-  const [participants, setParticipants] = useState<UserFirebase[]>([])
+  const userDetails = useContext(UserContext).userDetails;
+  const [participants, setParticipants] = useState<UserFirebase[]>([]);
 
   // get invite states
   const fetchInviteStates = async () => {
-    const participantIDs = props.dinner.participants.map(participant => participant.id)
-    
+    const participantIDs = props.dinner.participants.map(
+      participant => participant.id,
+    );
+
     // get states
     const participantsSnap = await getDocs(
-      query(
-        collection(db, "Users"),
-        where("__name__", "in", participantIDs)
-      ),
-    )
+      query(collection(db, 'Users'), where('__name__', 'in', participantIDs)),
+    );
 
     // transform participant data!
-    setParticipants(participantsSnap.docs.map(participant => participant.data() as UserFirebase));
-  }
-
+    setParticipants(
+      participantsSnap.docs.map(
+        participant => participant.data() as UserFirebase,
+      ),
+    );
+  };
 
   useFocusEffect(
     useCallback(() => {
-      fetchInviteStates()
+      fetchInviteStates();
     }, []),
-  );  
+  );
 
   // leaves the dinner
   const leaveDinner = () => {
@@ -57,7 +69,7 @@ export const InviteScreen = (props: DinnerProps) => {
     setTimeout(() => {
       navigator.goBack();
     }, 200);
-  }
+  };
 
   return (
     <Frame>
@@ -69,19 +81,32 @@ export const InviteScreen = (props: DinnerProps) => {
             all participants eating preferences.
           </Text>
           {participants.map(participant => (
-            <InviteStatus dinnerID={props.dinner.id} participant={participant} key={participant.id} />
+            <InviteStatus
+              dinnerID={props.dinner.id}
+              participant={participant}
+              key={participant.id}
+            />
           ))}
         </View>
       ) : (
         <View>
           <Text style={typography.body}>
-          You joined the Dinner! Once all other participants have accepted their invitation, the Owner of this Dinner will start loading recipe proposals!
+            You joined the Dinner! Once all other participants have accepted
+            their invitation, the Owner of this Dinner will start loading recipe
+            proposals!
           </Text>
-          <InviteGrafic width={"100%"}></InviteGrafic>
-          <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => bottomSheet.current?.show()}></AppButton>
-          <BottomSheet height={125} ref={bottomSheet} >
+          <InviteGrafic width={'100%'}></InviteGrafic>
+          <AppButton
+            title="LEAVE DINNER"
+            type={AppButtonType.text}
+            onPress={() => bottomSheet.current?.show()}></AppButton>
+          <BottomSheet height={125} ref={bottomSheet}>
             <View style={style.bottomSheetView}>
-              <AppButton title='LEAVE DINNER' type={AppButtonType.text} onPress={() => leaveDinner()}/>
+              <AppButton
+                title="LEAVE DINNER"
+                type={AppButtonType.text}
+                onPress={() => leaveDinner()}
+              />
             </View>
           </BottomSheet>
         </View>
@@ -92,10 +117,10 @@ export const InviteScreen = (props: DinnerProps) => {
 
 const style = StyleSheet.create({
   bottomSheetView: {
-    height: "100%", 
-    display: 'flex', 
-    justifyContent: "flex-start", 
-    alignItems: "flex-start", 
-    paddingTop: 20
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    paddingTop: spacing.l,
   },
-})
+});

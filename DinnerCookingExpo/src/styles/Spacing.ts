@@ -1,23 +1,10 @@
-export enum Direction {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
-}
-export const spacings = (direction: Direction) => {
-  const defaultSpacing = 24;
-
-  switch (direction) {
-    case Direction.TOP:
-      return {marginTop: defaultSpacing};
-    case Direction.RIGHT:
-      return {marginRight: defaultSpacing};
-    case Direction.BOTTOM:
-      return {marginBottom: defaultSpacing};
-    case Direction.LEFT:
-      return {marginLeft: defaultSpacing};
-
-    default:
-      break;
-  }
+export const spacing = {
+  none: 0,
+  xxs: 4,
+  xs: 8,
+  s: 12,
+  m: 16,
+  l: 24,
+  xl: 28,
+  xxl: 40,
 };

@@ -1,3 +1,3 @@
 export const sizes = {
-  borderRadius: 4,
+  borderRadius: 8,
 };

@@ -5,20 +5,20 @@ import {
   DocumentReference,
   Timestamp,
 } from 'firebase/firestore/lite';
-import React, {useContext, useState} from 'react';
-import {AppButton} from '../../components/Button';
-import {Frame} from '../../components/Frame';
-import {AppInput} from '../../components/Input';
+import React, { useContext, useState } from 'react';
+import { AppButton } from '../../components/Button';
+import { Frame } from '../../components/Frame';
+import { AppInput } from '../../components/Input';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import UserContext from '../../contexts/UserContext';
-import {AppButtonType} from '../../interfaces/Button';
-import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import { AppButtonType } from '../../interfaces/Button';
+import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import {Text} from 'react-native';
-import {DinnerDetailScreenParams} from './DinnerDetails/index';
+import { Text } from 'react-native';
+import { DinnerDetailScreenParams } from './DinnerDetails/index';
 import { createDinner } from '../../utils/dinnerRequests';
 
-export const CreateParty = ({navigation}) => {
+export const CreateParty = ({ navigation }) => {
   const db = useContext(DatabaseContext).database;
   const userContext = useContext(UserContext);
 
@@ -74,7 +74,13 @@ export const CreateParty = ({navigation}) => {
     //   docData,
     // );
 
-    const createdDinner = await createDinner(db, participants, doc(db, 'Users', userContext.userData.uid), date, name)
+    const createdDinner = await createDinner(
+      db,
+      participants,
+      doc(db, 'Users', userContext.userData.uid),
+      date,
+      name,
+    );
 
     // remove create party from navigation stack and navigate to details screen
     navigation.popToTop();

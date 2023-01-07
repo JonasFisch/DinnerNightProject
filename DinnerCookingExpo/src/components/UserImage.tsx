@@ -1,15 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {colors} from '../styles/Color';
-import {alphabete} from '../utils/alphabete';
-import {typography} from '../styles/Typography';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { colors } from '../styles/Color';
+import { alphabete } from '../utils/alphabete';
+import { typography } from '../styles/Typography';
 import StorageContext from '../contexts/StorageContext';
-import {getDownloadURL, ref, StorageError} from 'firebase/storage';
-import {FirebaseError} from 'firebase/app';
+import { getDownloadURL, ref, StorageError } from 'firebase/storage';
+import { FirebaseError } from 'firebase/app';
 
 type UserImageProps = {
   imageUrl?: string;
   name: string;
+  style?: object;
 };
 
 const colorCollection = [
@@ -61,7 +62,7 @@ export const UserImage = (props: UserImageProps) => {
     colorCollection[letterIndex % colorCollection.length];
 
   return (
-    <View>
+    <View style={props.style}>
       {hasUserImage ? (
         <Image
           style={styles.image}
@@ -70,8 +71,8 @@ export const UserImage = (props: UserImageProps) => {
           }}
         />
       ) : (
-        <View style={[styles.alternative, {borderColor: alternativeColor}]}>
-          <Text style={[typography.subtitle2, {color: alternativeColor}]}>
+        <View style={[styles.alternative, { borderColor: alternativeColor }]}>
+          <Text style={[typography.subtitle2, { color: alternativeColor }]}>
             {props.name?.charAt(0).toUpperCase()}
           </Text>
         </View>
@@ -81,7 +82,7 @@ export const UserImage = (props: UserImageProps) => {
 };
 
 const styles = StyleSheet.create({
-  image: {width: 40, height: 40, borderRadius: 40},
+  image: { width: 40, height: 40, borderRadius: 40 },
   alternative: {
     width: 40,
     height: 40,

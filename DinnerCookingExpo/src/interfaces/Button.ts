@@ -1,5 +1,5 @@
-import {GestureResponderEvent} from 'react-native';
-import {SvgProps} from 'react-native-svg';
+import { GestureResponderEvent } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 
 export enum AppButtonType {
   primary = 'primary',

@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {colors} from '../styles/Color';
-import {AppButtonProps} from '../interfaces/Button';
-import {typography} from '../styles/Typography';
+import React, { useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { colors } from '../styles/Color';
+import { AppButtonProps } from '../interfaces/Button';
+import { typography } from '../styles/Typography';
+import { spacing } from '../styles/Spacing';
 
 const height = 56;
 export const AppButton = (props: AppButtonProps) => {
@@ -40,14 +41,14 @@ export const AppButton = (props: AppButtonProps) => {
         computedStyles.button,
         props.style,
         // eslint-disable-next-line react-native/no-inline-styles
-        {alignSelf: props.widthFitContent ? 'center' : 'auto'},
+        { alignSelf: props.widthFitContent ? 'center' : 'auto' },
       ]}>
       {props.logoSVG ? (
         // when the svg is not shown (properly) check if viewBox is set!
         <props.logoSVG
           height={30}
           width={30}
-          fill={colors.textWhite}
+          fill={colors.white}
           style={styles.layout.tinyLogo}
         />
       ) : null}
@@ -72,18 +73,18 @@ const styles = {
       borderStyle: 'solid',
       borderWidth: 1,
       flexDirection: 'row',
-      paddingHorizontal: 16,
+      paddingHorizontal: spacing.m,
       height,
     },
     defaultText: {
       ...typography.button,
-      color: colors.textWhite,
-      paddingVertical: 16,
+      color: colors.white,
+      paddingVertical: spacing.m,
     },
     tinyLogo: {
       width: 30,
       height: 30,
-      marginRight: 10,
+      marginRight: spacing.xs,
     },
   }),
   primary: StyleSheet.create({

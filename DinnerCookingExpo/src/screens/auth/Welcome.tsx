@@ -1,12 +1,13 @@
-import React, {useContext, useState} from 'react';
-import {NavigatorIOS, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {AppButton} from '../../components/Button';
-import {AppButtonType} from '../../interfaces/Button';
+import React, { useContext, useState } from 'react';
+import { NavigatorIOS, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { AppButton } from '../../components/Button';
+import { AppButtonType } from '../../interfaces/Button';
 import WelcomeGraphic from '../../assets/graphics/welcome.svg';
-import {Frame} from '../../components/Frame';
-import {typography} from '../../styles/Typography';
+import { Frame } from '../../components/Frame';
+import { typography } from '../../styles/Typography';
+import { spacing } from '../../styles/Spacing';
 
-export const WelcomeScreen = ({navigation}) => {
+export const WelcomeScreen = ({ navigation }) => {
   const navigateLogin = () => {
     navigation.push('Login');
   };
@@ -43,9 +44,9 @@ export const WelcomeScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   distanceBottom: {
-    marginBottom: 28,
+    marginBottom: spacing.xl,
   },
   buttonDistance: {
-    marginBottom: 16,
+    marginBottom: spacing.m,
   },
 });
