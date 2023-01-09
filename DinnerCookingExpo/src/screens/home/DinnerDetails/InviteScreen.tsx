@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useRef, useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Frame } from '../../../components/Frame';
 import { InviteStatus } from '../../../components/InviteStatus';
 import InviteGrafic from '../../../assets/graphics/invited.svg';
@@ -72,17 +72,28 @@ export const InviteScreen = (props: DinnerProps) => {
   };
 
   return (
-    <Frame>
+    <Frame withBottomNavBar={false} withSubPageHeader>
       {props.isAdmin ? (
-        <View>
-          <Text>
-            An invitation to your dinner was send to all participants. Once they
-            accept the invite, you can start loading recipe proposals, that fit
-            all participants eating preferences.
-          </Text>
-          {participants.map(participant => (
-            <InviteStatus participant={participant} key={participant.id} />
-          ))}
+        <View style={{ height: '100%' }}>
+          <Text style={typography.subtitle2}>Participants</Text>
+          <ScrollView>
+            <Text>
+              An invitation to your dinner was send to all participants. Once
+              they accept the invite, you can start loading recipe proposals,
+              that fit all participants eating preferences.
+            </Text>
+            {participants.map(participant => (
+              <InviteStatus
+                dinnerID={props.dinner.id ?? ''}
+                participant={participant}
+                key={participant.id}
+              />
+            ))}
+          </ScrollView>
+          <AppButton
+            title="LOAD RECEPIE PROPOSALS"
+            type={AppButtonType.primary}
+          />
         </View>
       ) : (
         <View>

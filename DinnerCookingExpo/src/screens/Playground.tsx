@@ -21,12 +21,13 @@ export const Playground = () => {
 
   return (
     <Frame>
-      <Tabs
+      <AppInput label='test' value='hallo' textContentType={'emailAddress'} keyboardType={'default'}  />
+      {/* <Tabs
         tabViews={[
           { node: <Text>Seite 1</Text>, title: 'In Progess' },
           { node: <Text>Seite 2</Text>, title: 'Archive' },
         ]}
-      />
+      /> */}
     </Frame>
   );
 

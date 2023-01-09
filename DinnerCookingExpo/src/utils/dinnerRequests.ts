@@ -47,6 +47,7 @@ export const fetchDinner = async (
     if (!dinnersSnap.data()) reject('cannot fetch dinner details.');
 
     const dinner = dinnersSnap.data() as DinnerFirebase;
+    dinner.id = dinnersSnap.id;
     resolve(dinner);
   });
 };

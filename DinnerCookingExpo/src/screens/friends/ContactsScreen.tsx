@@ -34,7 +34,7 @@ export const ContactsScreen = () => {
   ];
 
   return (
-    <Frame withBottomNavBar={true}>
+    <Frame withBottomNavBar>
       <Text style={[typography.h3]}>Contacts</Text>
       <Text style={[typography.subtitle2, styles.contactCount]}>
         {contacts.length} Contacts
@@ -46,7 +46,7 @@ export const ContactsScreen = () => {
         title="add contacts"
         type={AppButtonType.primary}
         logoSVG={AddIcon}
-        widthFitContent={true}
+        widthFitContent
       />
     </Frame>
   );

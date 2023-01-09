@@ -33,7 +33,7 @@ export const DinnerDetailScreen = () => {
 
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
-
+      
       setDinner(fetchedDinner);
     } catch (error) {
       console.log(error);

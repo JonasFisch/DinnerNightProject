@@ -30,7 +30,7 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore/lite';
-import { INITIAL_USER_DETAILS } from './src/interfaces/UserDetails';
+import { INITIAL_USER_DETAILS } from './src/interfaces/FirebaseSchema';
 import { Playground } from './src/screens/Playground';
 import { IntroWelcomeScreen } from './src/screens/intro/IntroWelcomeScreen';
 import { WelcomeScreen } from './src/screens/auth/Welcome';
