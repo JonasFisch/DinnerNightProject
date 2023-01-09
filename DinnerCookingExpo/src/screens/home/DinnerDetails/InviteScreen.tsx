@@ -84,7 +84,7 @@ export const InviteScreen = (props: DinnerProps) => {
             </Text>
             {participants.map(participant => (
               <InviteStatus
-                dinnerID={props.dinner.id}
+                dinnerID={props.dinner.id ?? ''}
                 participant={participant}
                 key={participant.id}
               />

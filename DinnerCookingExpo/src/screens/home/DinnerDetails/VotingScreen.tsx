@@ -1,6 +1,15 @@
 import React from 'react';
 import { Text } from 'react-native';
+import { Frame } from '../../../components/Frame';
 
-export const VotingScreen = () => {
-  return <Text>Voting Screen</Text>;
+type VotingScreenType = {
+  isAdmin: boolean;
+};
+
+export const VotingScreen = (props: VotingScreenType) => {
+  return (
+    <Frame withSubPageHeader>
+      <Text>Voting Screen</Text>
+    </Frame>
+  );
 };
