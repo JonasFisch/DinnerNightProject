@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../styles/Color';
 import { alphabete } from '../utils/alphabete';
 import { typography } from '../styles/Typography';
 import StorageContext from '../contexts/StorageContext';
 import { getDownloadURL, ref, StorageError } from 'firebase/storage';
-import { FirebaseError } from 'firebase/app';
 
 type UserImageProps = {
   imageUrl?: string;
   name: string;
+  small?: boolean;
   style?: object;
 };
 
@@ -65,14 +65,23 @@ export const UserImage = (props: UserImageProps) => {
     <View style={props.style}>
       {hasUserImage ? (
         <Image
-          style={styles.image}
+          style={[styles.image, props.small && styles.smallSize]}
           source={{
             uri: imageURL,
           }}
         />
       ) : (
-        <View style={[styles.alternative, { borderColor: alternativeColor }]}>
-          <Text style={[typography.subtitle2, { color: alternativeColor }]}>
+        <View
+          style={[
+            styles.alternative,
+            { borderColor: alternativeColor },
+            props.small && styles.smallSize,
+          ]}>
+          <Text
+            style={[
+              props.small ? typography.navBarActive : typography.subtitle2,
+              { color: alternativeColor },
+            ]}>
             {props.name?.charAt(0).toUpperCase()}
           </Text>
         </View>
@@ -90,5 +99,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
+  },
+  smallSize: {
+    height: 24,
+    width: 24,
   },
 });

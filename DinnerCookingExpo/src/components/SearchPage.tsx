@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { SelectableList } from './SelectableList';
 import { Frame } from './Frame';
 import { AppInput } from './Input';
 import { spacing } from '../styles/Spacing';
+import { Chip } from './Chip';
 
 export const SearchPage = () => {
   const allUsers = [
@@ -38,14 +39,27 @@ export const SearchPage = () => {
     setSelectedValues(newSelectedValues);
   };
 
+  const renderChip = ({ item }: { item: string }) => (
+    <Chip label={item} onPress={() => handleSelectionChange(item)} />
+  );
+
   return (
     <Frame forSearchPage>
       <AppInput
-        style={styles.searchInput}
         value={searchPhrase}
         onChangeText={setSearchPhrase}
         label={'Search'}
         clearable={true}></AppInput>
+      {selectedValues.length != 0 && (
+        <FlatList
+          data={selectedValues}
+          style={styles.selectedValuesList}
+          contentContainerStyle={styles.listContentContainer}
+          renderItem={renderChip}
+          horizontal
+        />
+      )}
+
       <SelectableList
         items={allUsers}
         searchPhrase={searchPhrase}
@@ -58,7 +72,13 @@ export const SearchPage = () => {
 };
 
 const styles = StyleSheet.create({
-  searchInput: {
-    marginBottom: spacing.s,
+  selectedValuesList: {
+    marginVertical: spacing.s,
+  },
+  listContentContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.xs,
   },
 });
