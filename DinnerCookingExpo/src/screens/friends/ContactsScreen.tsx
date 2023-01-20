@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { AppButtonType } from '../../interfaces/Button';
 import AddIcon from '../../assets/icons/add.svg';
@@ -9,8 +9,6 @@ import { typography } from '../../styles/Typography';
 import { spacing } from '../../styles/Spacing';
 import { SelectableList } from '../../components/SelectableList';
 import { colors } from '../../styles/Color';
-import { AppInput } from '../../components/Input';
-import { SelectableListItem } from '../../components/SelectableListItem';
 
 export const ContactsScreen = () => {
   const navigator = useNavigation();
@@ -44,7 +42,7 @@ export const ContactsScreen = () => {
       <Text style={[typography.subtitle2, styles.contactCount]}>
         {contacts.length} Contacts
       </Text>
-      <SelectableList values={contacts} isSelectable={false}></SelectableList>
+      <SelectableList items={contacts} isSelectable={false}></SelectableList>
       <AppButton
         style={styles.addButton}
         onPress={addContacts}

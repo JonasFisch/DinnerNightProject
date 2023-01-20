@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import { SelectableList } from './SelectableList';
 import { Frame } from './Frame';
 import { AppInput } from './Input';
 import { spacing } from '../styles/Spacing';
-import { SelectableListItem } from './SelectableListItem';
 
 export const SearchPage = () => {
   const allUsers = [
@@ -25,17 +23,9 @@ export const SearchPage = () => {
   ];
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
-  const [filteredUsers, setFilteredUsers] = React.useState(allUsers);
   const [searchPhrase, setSearchPhrase] = React.useState<string>('');
 
-  useEffect(() => {
-    let searchedUsers = allUsers.filter(username =>
-      username.toLowerCase().startsWith(searchPhrase.toLowerCase()),
-    );
-    setFilteredUsers([...searchedUsers]);
-  }, [searchPhrase]);
-
-  const handleToggle = (value: string) => {
+  const handleSelectionChange = (value: string) => {
     const isValueAlreadySelected = selectedValues.includes(value);
     let newSelectedValues = [...selectedValues];
     if (isValueAlreadySelected) {
@@ -48,15 +38,6 @@ export const SearchPage = () => {
     setSelectedValues(newSelectedValues);
   };
 
-  const renderItem = ({ item }: { item: string }) => (
-    <SelectableListItem
-      label={item}
-      isChecked={selectedValues.includes(item)}
-      onValueChanged={() => handleToggle(item)}
-      shouldRenderCheckbox={true}
-    />
-  );
-
   return (
     <Frame forSearchPage>
       <AppInput
@@ -65,7 +46,13 @@ export const SearchPage = () => {
         onChangeText={setSearchPhrase}
         label={'Search'}
         clearable={true}></AppInput>
-      <FlatList data={filteredUsers} renderItem={renderItem} />
+      <SelectableList
+        items={allUsers}
+        searchPhrase={searchPhrase}
+        isSelectable={true}
+        selectedItems={selectedValues}
+        onSelectionChanged={handleSelectionChange}
+      />
     </Frame>
   );
 };

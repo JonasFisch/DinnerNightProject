@@ -53,7 +53,6 @@ export const AppInput = (props: AppInputProps) => {
     setActive(false);
     if (props.onEndEdit) {
       props.onEndEdit(e);
-      console.log(e);
     }
   };
 
@@ -167,7 +166,6 @@ export const AppInput = (props: AppInputProps) => {
         onFocus={onFocus}
         onEndEditing={endEdit}
         onChangeText={text => {
-          console.log(text);
           props.onChangeText(text);
         }}
         value={props.value}
