@@ -53,6 +53,7 @@ export const AppInput = (props: AppInputProps) => {
     setActive(false);
     if (props.onEndEdit) {
       props.onEndEdit(e);
+      console.log(e);
     }
   };
 
@@ -158,14 +159,17 @@ export const AppInput = (props: AppInputProps) => {
   }
 
   return (
-    <View style={styles.inputWrapper}>
+    <View style={[styles.inputWrapper, props.style]}>
       {/* Label */}
       <Text style={[styles.label, ...labelStyles]}>{props.label}</Text>
       <TextInput
         style={[styles.textInput, ...inputStyles]}
         onFocus={onFocus}
         onEndEditing={endEdit}
-        onChangeText={props.onChangeText}
+        onChangeText={text => {
+          console.log(text);
+          props.onChangeText(text);
+        }}
         value={props.value}
         keyboardType={props.keyboardType}
         textContentType={props.textContentType}

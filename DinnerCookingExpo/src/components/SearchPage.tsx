@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { SelectableList } from './SelectableList';
 import { Frame } from './Frame';
 import { AppInput } from './Input';
+import { spacing } from '../styles/Spacing';
+import { SelectableListItem } from './SelectableListItem';
 
 export const SearchPage = () => {
   const allUsers = [
@@ -22,12 +25,19 @@ export const SearchPage = () => {
   ];
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
+  const [filteredUsers, setFilteredUsers] = React.useState(allUsers);
   const [searchPhrase, setSearchPhrase] = React.useState<string>('');
+
+  useEffect(() => {
+    let searchedUsers = allUsers.filter(username =>
+      username.toLowerCase().startsWith(searchPhrase.toLowerCase()),
+    );
+    setFilteredUsers([...searchedUsers]);
+  }, [searchPhrase]);
 
   const handleToggle = (value: string) => {
     const isValueAlreadySelected = selectedValues.includes(value);
     let newSelectedValues = [...selectedValues];
-
     if (isValueAlreadySelected) {
       newSelectedValues = newSelectedValues.filter(
         element => element !== value,
@@ -35,22 +45,33 @@ export const SearchPage = () => {
     } else {
       newSelectedValues.push(value);
     }
-
     setSelectedValues(newSelectedValues);
   };
 
+  const renderItem = ({ item }: { item: string }) => (
+    <SelectableListItem
+      label={item}
+      isChecked={selectedValues.includes(item)}
+      onValueChanged={() => handleToggle(item)}
+      shouldRenderCheckbox={true}
+    />
+  );
+
   return (
-    <Frame withSubPageHeader={true}>
+    <Frame forSearchPage>
       <AppInput
+        style={styles.searchInput}
         value={searchPhrase}
         onChangeText={setSearchPhrase}
         label={'Search'}
         clearable={true}></AppInput>
-      <SelectableList
-        values={allUsers}
-        isSelectable={true}
-        selectedValues={selectedValues}
-        onSelectionChanged={handleToggle}></SelectableList>
+      <FlatList data={filteredUsers} renderItem={renderItem} />
     </Frame>
   );
 };
+
+const styles = StyleSheet.create({
+  searchInput: {
+    marginBottom: spacing.s,
+  },
+});
