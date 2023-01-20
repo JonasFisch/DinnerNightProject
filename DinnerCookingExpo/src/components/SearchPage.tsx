@@ -5,8 +5,12 @@ import { Frame } from './Frame';
 import { AppInput } from './Input';
 import { spacing } from '../styles/Spacing';
 import { Chip } from './Chip';
+import { AppButton } from './Button';
+import { AppButtonType } from '../interfaces/Button';
+import CheckIcon from '../assets/icons/check.svg';
+import { useNavigation } from '@react-navigation/native';
 
-export const SearchPage = () => {
+export const SearchPage = ({ onSave }: { onSave: () => void }) => {
   const allUsers = [
     'Sabine Extralooooooooooooooooooooooooong',
     'Max Mustermann',
@@ -22,6 +26,8 @@ export const SearchPage = () => {
     'Peter Hans KLaus Jung',
     'Bernd Brot',
   ];
+
+  const navigator = useNavigation();
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
   const [searchPhrase, setSearchPhrase] = React.useState<string>('');
@@ -43,6 +49,11 @@ export const SearchPage = () => {
     <Chip label={item} onPress={() => handleSelectionChange(item)} />
   );
 
+  const saveContacts = () => {
+    onSave();
+    navigator.goBack();
+  };
+
   return (
     <Frame forSearchPage>
       <AppInput
@@ -59,13 +70,21 @@ export const SearchPage = () => {
           horizontal
         />
       )}
-
       <SelectableList
         items={allUsers}
         searchPhrase={searchPhrase}
         isSelectable={true}
         selectedItems={selectedValues}
         onSelectionChanged={handleSelectionChange}
+      />
+      <AppButton
+        type={AppButtonType.primary}
+        title="save selection"
+        iconOnly
+        onPress={saveContacts}
+        widthFitContent
+        logoSVG={CheckIcon}
+        style={styles.button}
       />
     </Frame>
   );
@@ -80,5 +99,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: spacing.xs,
+  },
+  button: {
+    position: 'absolute',
+    bottom: spacing.m,
+    right: spacing.m,
   },
 });

@@ -8,7 +8,7 @@ export enum AppButtonType {
 }
 
 export type AppButtonProps = {
-  onPress?: (event: GestureResponderEvent) => void;
+  onPress: (event: GestureResponderEvent) => void;
   title: string;
   type: AppButtonType;
   disabled?: boolean;
@@ -16,4 +16,5 @@ export type AppButtonProps = {
   logoSVG?: React.FC<SvgProps>;
   style?: {};
   widthFitContent?: boolean;
+  iconOnly?: boolean;
 };
