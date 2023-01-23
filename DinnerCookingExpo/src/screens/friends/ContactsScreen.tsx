@@ -28,32 +28,25 @@ export const ContactsScreen = () => {
   const [contacts, setContacts] = useState<SelectableListEntry[]>([]);
   const db = dbContext.database;
 
-  // refetch contacts on focus screen
   useEffect(() => {
     const resolveUserContacts = async () => {
-      try {
-        if (!userContext.userData) throw new Error('User not authenticated.');
+      if (!userContext.userData) throw new Error('User not authenticated.');
 
-        const contactsIds = userContext.userDetails.contacts;
+      const contactsIds = userContext.userDetails.contacts;
 
-        if (contactsIds.length == 0) return;
+      if (contactsIds.length == 0) return;
 
-        const fetchedContacts = await fetchUsers(db, contactsIds);
-        const contactsList: SelectableListEntry[] = fetchedContacts.map(
-          contact => ({
-            id: contact.id,
-            label: contact.name,
-            image: contact.imageUrl,
-          }),
-        );
-        setContacts(contactsList);
-      } catch (error) {
-        console.error(error);
-      }
+      const fetchedContacts = await fetchUsers(db, contactsIds);
+      const contactsList: SelectableListEntry[] = fetchedContacts.map(
+        contact => ({
+          id: contact.id,
+          label: contact.name,
+          image: contact.imageUrl,
+        }),
+      );
+      setContacts(contactsList);
     };
-
     resolveUserContacts().catch(console.error);
-    console.log('test');
   }, []);
 
   return (

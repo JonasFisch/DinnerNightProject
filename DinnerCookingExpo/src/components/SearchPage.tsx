@@ -10,58 +10,13 @@ import { AppButtonType } from '../interfaces/Button';
 import CheckIcon from '../assets/icons/check.svg';
 import { useNavigation } from '@react-navigation/native';
 
-export const SearchPage = ({ onSave }: { onSave: () => void }) => {
-  const allUsers: SelectableListEntry[] = [
-    {
-      id: '1',
-      label: 'Sabine Extralooooooooooooooooooooooooong',
-    },
-    {
-      id: '2',
-      label: 'Max Mustermann',
-    },
-    {
-      id: '3',
-      label: 'Jonas Test',
-    },
-    {
-      id: '4',
-      label: 'Faye Tester',
-    },
-    {
-      id: '5',
-      label: 'Saskia Bauer',
-    },
-    {
-      id: '6',
-      label: 'Lenzi Eins',
-    },
-    {
-      id: '7',
-      label: 'Maximilian Mustermann',
-    },
-    {
-      id: '8',
-      label: 'Sascha Meistermann',
-    },
-    {
-      id: '9',
-      label: 'Tobias Der Erste von und zu überhaupt',
-    },
-    {
-      id: '10',
-      label: 'Bernd Brot',
-    },
-    {
-      id: '11',
-      label: 'Sophia Sonnenschein',
-    },
-    {
-      id: '12',
-      label: 'Hans Klaus Peter Jung',
-    },
-  ];
-
+export const SearchPage = ({
+  listItems,
+  onSave,
+}: {
+  listItems: SelectableListEntry[];
+  onSave: () => void;
+}) => {
   const navigator = useNavigation();
 
   const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
@@ -106,7 +61,7 @@ export const SearchPage = ({ onSave }: { onSave: () => void }) => {
         />
       )}
       <SelectableList
-        items={allUsers}
+        items={listItems}
         searchPhrase={searchPhrase}
         isSelectable={true}
         selectedItems={selectedValues}
@@ -127,7 +82,8 @@ export const SearchPage = ({ onSave }: { onSave: () => void }) => {
 
 const styles = StyleSheet.create({
   selectedValuesList: {
-    marginVertical: spacing.s,
+    marginVertical: spacing.xs,
+    maxHeight: 50,
   },
   listContentContainer: {
     display: 'flex',
