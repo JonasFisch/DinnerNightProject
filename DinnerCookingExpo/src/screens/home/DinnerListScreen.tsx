@@ -17,7 +17,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { useCallback } from 'react';
-import { fetchDinners, fetchUsers } from '../../utils/dinnerRequests';
+import { fetchDinners, fetchParticipants } from '../../utils/dinnerRequests';
 import { DinnerFirebase } from '../../interfaces/FirebaseSchema';
 
 export const DinnerListScreen = () => {

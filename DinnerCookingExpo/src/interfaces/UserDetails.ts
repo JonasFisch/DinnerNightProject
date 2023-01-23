@@ -1,10 +1,10 @@
 import { UserFirebase } from './FirebaseSchema';
 
 const INITIAL_USER_DETAILS: UserFirebase = {
-  id: '',
   hasDoneIntro: false,
   name: '',
   imageUrl: '',
+  contacts: [],
 };
 
 export enum InviteState {

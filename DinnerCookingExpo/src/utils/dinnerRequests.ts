@@ -53,6 +53,50 @@ export const fetchDinner = async (
 
 export const fetchUsers = async (
   db: Firestore,
+  userIds: DocumentReference[],
+): Promise<UserFirebase[]> => {
+  return new Promise(async (resolve, reject) => {
+    if (userIds.length <= 0) resolve([]);
+
+    const usersSnap = await getDocs(
+      query(
+        collection(db, 'Users'),
+        where(
+          '__name__',
+          'in',
+          userIds.map(user => user.id),
+        ), // __name__ = id of the document n firestore
+      ),
+    );
+
+    if (usersSnap.docs.length < 0)
+      reject('there was an error while fetching users,');
+
+    resolve(
+      usersSnap.docs.map(fetchedUser => {
+        const user: UserFirebase = fetchedUser.data() as UserFirebase;
+        user.id = fetchedUser.id; // add the document id here as well!
+        return user;
+      }),
+    );
+  });
+};
+
+export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
+  return new Promise(async (resolve, reject) => {
+    const usersSnap = await getDocs(query(collection(db, 'Users')));
+    resolve(
+      usersSnap.docs.map(fetchedUser => {
+        const user: UserFirebase = fetchedUser.data() as UserFirebase;
+        user.id = fetchedUser.id; // add the document id here as well!
+        return user;
+      }),
+    );
+  });
+};
+
+export const fetchParticipants = async (
+  db: Firestore,
   participants: DocumentReference[],
 ): Promise<UserFirebase[]> => {
   return new Promise(async (resolve, reject) => {

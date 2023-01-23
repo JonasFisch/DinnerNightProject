@@ -24,7 +24,7 @@ export const SelectableList = ({
       item.toLowerCase().startsWith(searchPhrase.toLowerCase()),
     );
     setFilteredItems([...searchedItems]);
-  }, [searchPhrase]);
+  }, [searchPhrase, items]);
 
   const renderItem = ({ item }: { item: string }) => (
     <SelectableListItem

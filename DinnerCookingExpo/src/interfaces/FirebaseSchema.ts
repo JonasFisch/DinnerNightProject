@@ -28,6 +28,7 @@ type UserFirebase = {
   hasDoneIntro: boolean;
   imageUrl: string;
   name: string;
+  contacts: DocumentReference[];
 };
 
 export { DinnerState, DinnerFirebase, UserFirebase };
