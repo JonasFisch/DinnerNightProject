@@ -3,14 +3,15 @@ import { StyleSheet, Text } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { AppButtonType } from '../../interfaces/Button';
 import AddIcon from '../../assets/icons/add.svg';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Frame } from '../../components/Frame';
 import { typography } from '../../styles/Typography';
 import { spacing } from '../../styles/Spacing';
-import { SelectableList } from '../../components/SelectableList';
+import {
+  SelectableList,
+  SelectableListEntry,
+} from '../../components/SelectableList';
 import { colors } from '../../styles/Color';
-
-import { useCallback } from 'react';
 import { fetchUsers } from '../../utils/dinnerRequests';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import UserContext from '../../contexts/UserContext';
@@ -24,7 +25,7 @@ export const ContactsScreen = () => {
     navigator.navigate('AddContacts');
   };
 
-  const [contacts, setContacts] = useState<string[]>([]);
+  const [contacts, setContacts] = useState<SelectableListEntry[]>([]);
   const db = dbContext.database;
 
   // refetch contacts on focus screen
@@ -38,8 +39,12 @@ export const ContactsScreen = () => {
         if (contactsIds.length == 0) return;
 
         const fetchedContacts = await fetchUsers(db, contactsIds);
-        const contactsList: string[] = fetchedContacts.map(
-          contact => contact.name,
+        const contactsList: SelectableListEntry[] = fetchedContacts.map(
+          contact => ({
+            id: contact.id,
+            label: contact.name,
+            image: contact.imageUrl,
+          }),
         );
         setContacts(contactsList);
       } catch (error) {
@@ -48,6 +53,7 @@ export const ContactsScreen = () => {
     };
 
     resolveUserContacts().catch(console.error);
+    console.log('test');
   }, []);
 
   return (
