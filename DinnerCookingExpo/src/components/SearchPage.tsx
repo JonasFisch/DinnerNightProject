@@ -13,13 +13,16 @@ import { useNavigation } from '@react-navigation/native';
 export const SearchPage = ({
   listItems,
   onSave,
+  selectedItems,
 }: {
   listItems: SelectableListEntry[];
-  onSave: () => void;
+  onSave: (contacts: string[]) => void;
+  selectedItems: string[];
 }) => {
   const navigator = useNavigation();
 
-  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
+  const [selectedValues, setSelectedValues] =
+    React.useState<string[]>(selectedItems);
   const [searchPhrase, setSearchPhrase] = React.useState<string>('');
 
   const handleSelectionChange = (value: string) => {
@@ -40,7 +43,10 @@ export const SearchPage = ({
   );
 
   const saveContacts = () => {
-    onSave();
+    const currentlySelectedValues = listItems
+      .filter(item => selectedValues.includes(item.label))
+      .map(item => item.id);
+    onSave(currentlySelectedValues);
     navigator.goBack();
   };
 

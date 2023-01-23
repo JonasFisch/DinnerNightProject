@@ -2,10 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SearchPage } from '../../components/SearchPage';
 import UserContext from '../../contexts/UserContext';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import { fetchAllUsers } from '../../utils/dinnerRequests';
+import {
+  fetchAllUsers,
+  fetchUsers,
+  setContactsOfUser,
+} from '../../utils/dinnerRequests';
 import { SelectableListEntry } from '../../components/SelectableList';
+import { useNavigation } from '@react-navigation/native';
 
-export const AddContactsScreen = () => {
+export const AddContactsScreen = ({ route }) => {
+  const { contacts }: { contacts: SelectableListEntry[] } = route.params;
   const userContext = useContext(UserContext);
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
@@ -13,7 +19,7 @@ export const AddContactsScreen = () => {
   const [allUsers, setAllUsers] = useState<SelectableListEntry[]>([]);
 
   useEffect(() => {
-    const resolveUserContacts = async () => {
+    const resolveAllUsers = async () => {
       if (!userContext.userData) throw new Error('User not authenticated.');
       const currentUserId = userContext.userDetails.id;
 
@@ -27,12 +33,24 @@ export const AddContactsScreen = () => {
         }));
       setAllUsers(userList);
     };
-    resolveUserContacts().catch(console.error);
+    resolveAllUsers().catch(console.error);
   }, []);
+
+  const onSaveContacts = async (newContactIds: string[]) => {
+    try {
+      if (!userContext.userData) throw new Error('User not authenticated.');
+      await setContactsOfUser(db, userContext.userData.uid, newContactIds);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     allUsers.length != 0 && (
-      <SearchPage listItems={allUsers} onSave={() => {}}></SearchPage>
+      <SearchPage
+        listItems={allUsers}
+        selectedItems={contacts.map(contact => contact.label)}
+        onSave={onSaveContacts}></SearchPage>
     )
   );
 };

@@ -11,6 +11,8 @@ import {
   Timestamp,
   addDoc,
   getDoc,
+  getFirestore,
+  updateDoc,
 } from 'firebase/firestore/lite';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 
@@ -92,6 +94,21 @@ export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
         return user;
       }),
     );
+  });
+};
+
+export const setContactsOfUser = async (
+  db: Firestore,
+  userId: string,
+  contactIds: string[],
+): Promise<void> => {
+  return new Promise(async (resolve, reject) => {
+    if (!userId) reject();
+    const firestore = getFirestore(db.app);
+    const userRef = doc(firestore, 'Users/' + userId);
+    const contactRefs = contactIds.map(id => doc(firestore, 'Users/' + id));
+    await updateDoc(userRef, 'contacts', contactRefs);
+    resolve();
   });
 };
 

@@ -92,7 +92,7 @@ const App = () => {
     const userRef = doc(db, 'Users', userData.uid);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
-      setUserDetails(docSnap.data() as UserFirebase);
+      setUserDetails({ ...docSnap.data(), id: userData.uid } as UserFirebase);
     } else {
       // create new dataset for user
       await setDoc(userRef, INITIAL_USER_DETAILS).then(_data => {

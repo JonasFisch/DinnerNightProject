@@ -20,13 +20,15 @@ export const ContactsScreen = () => {
   const navigator = useNavigation();
   const userContext = useContext(UserContext);
   const dbContext = useContext(DatabaseContext);
-
-  const addContacts = () => {
-    navigator.navigate('AddContacts');
-  };
+  const db = dbContext.database;
 
   const [contacts, setContacts] = useState<SelectableListEntry[]>([]);
-  const db = dbContext.database;
+
+  const addContacts = () => {
+    navigator.navigate('AddContacts', {
+      contacts: contacts,
+    });
+  };
 
   useEffect(() => {
     const resolveUserContacts = async () => {
