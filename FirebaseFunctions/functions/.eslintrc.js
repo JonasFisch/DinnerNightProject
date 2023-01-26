@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
   root: true,
   env: {
@@ -17,10 +18,7 @@ module.exports = {
     project: ["tsconfig.json", "tsconfig.dev.json"],
     sourceType: "module",
   },
-  ignorePatterns: [
-    "/lib/**/*", // Ignore built files.
-  ],
-  plugins: [
+  plugins: [    
     "@typescript-eslint",
     "import",
   ],
@@ -28,4 +26,5 @@ module.exports = {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
   },
+  "ignorePatterns": ["lib/**/*"]
 };
