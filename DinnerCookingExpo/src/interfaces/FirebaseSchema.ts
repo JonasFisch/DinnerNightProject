@@ -47,4 +47,64 @@ type UserFirebase = {
   inviteStates: { [key: string]: InviteState };
 };
 
-export { DinnerState, DinnerFirebase, UserFirebase };
+type Recipe = {
+  aggregateLikes: number;
+  dishTypes: string[];
+  diets: string[];
+  image: string;
+  instructions: string;
+  readyInMinutes: number;
+  title: string;
+  vegan: boolean;
+  vegetarian: boolean;
+  servings: 4;
+  analyzedInstructions: [
+    {
+      name: string;
+      steps: [
+        {
+          number: number;
+          ingredients: [
+            {
+              image: string;
+              localizedName: string;
+              name: string;
+            },
+          ];
+          equipment: [
+            {
+              image: string;
+              localizedName: string;
+              name: string;
+            },
+          ];
+          step: string;
+        },
+      ];
+    },
+  ];
+  extendedIngredients: [
+    {
+      asile: string;
+      amount: number;
+      consistency: string;
+      measures: {
+        metric: {
+          amount: number;
+          unitLong: string;
+          unitShort: string;
+        };
+        us: {
+          amout: number;
+          unitLong: string;
+          unitShort: string;
+        };
+      };
+      meta: string[];
+      name: string;
+      nameClean: string;
+    },
+  ];
+};
+
+export { DinnerState, DinnerFirebase, UserFirebase, Recipe };

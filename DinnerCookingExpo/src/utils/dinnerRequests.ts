@@ -1,4 +1,8 @@
-import { DinnerState, UserFirebase } from './../interfaces/FirebaseSchema';
+import {
+  DinnerState,
+  Recipe,
+  UserFirebase,
+} from './../interfaces/FirebaseSchema';
 import { User } from 'firebase/auth';
 import {
   collection,
@@ -13,6 +17,8 @@ import {
   getDoc,
 } from 'firebase/firestore/lite';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
+import { DocumentData } from 'firebase/firestore';
+import { async } from '@firebase/util';
 
 export const fetchDinners = async (
   db: Firestore,
@@ -107,5 +113,18 @@ export const createDinner = async (
     const newDinnerDoc = await addDoc(collection(db, 'Dinners'), newDinner);
 
     resolve(newDinnerDoc);
+  });
+};
+
+export const fetchRecipe = async (
+  db: Firestore,
+  recipeReference: DocumentReference<DocumentData>,
+): Promise<Recipe> => {
+  return new Promise(async (resolve, reject) => {
+    const recipeSnap = await getDoc(recipeReference);
+    if (!recipeSnap.data()) reject('cannot fetch recipe.');
+
+    const recipe = recipeSnap.data() as Recipe;
+    resolve(recipe);
   });
 };

@@ -33,7 +33,7 @@ export const DinnerDetailScreen = () => {
 
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
-      
+
       setDinner(fetchedDinner);
     } catch (error) {
       console.log(error);
@@ -54,9 +54,9 @@ export const DinnerDetailScreen = () => {
 
   switch (state) {
     case DinnerState.INVITE:
-      return <InviteScreen dinner={dinner} isAdmin={isAdmin}></InviteScreen>;
+      return <InviteScreen dinner={dinner} isAdmin={isAdmin} />;
     case DinnerState.VOTING:
-      return <VotingScreen></VotingScreen>;
+      return <VotingScreen isAdmin={isAdmin} />;
     case DinnerState.COOKING:
       return <CookingScreen></CookingScreen>;
     case DinnerState.FINISHED:
