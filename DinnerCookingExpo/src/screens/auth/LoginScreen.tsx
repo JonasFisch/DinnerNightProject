@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-import UserContext from '../../contexts/UserContext';
-import { AuthErrorCodes, signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { useUserContext } from '../../contexts/UserContext';
+import { AuthErrorCodes } from 'firebase/auth';
 import { Frame } from '../../components/Frame';
 import { authStyles } from '../../styles/Auth.styles';
 import { typography } from '../../styles/Typography';
@@ -13,35 +13,23 @@ import { LineWithText } from '../../components/LineWithText';
 import { colors } from '../../styles/Color';
 
 export const LoginScreen = ({ navigation }) => {
-  const userContext = useContext(UserContext);
+  const userContext = useUserContext();
 
-  const [email, setEmail] = useState<string>('jon.fischerboy@gmail.com');
-  const [password, setPassword] = useState<string>('jonrocktrot');
+  const [email, setEmail] = useState<string>('katharina.blass@yahoo.de');
+  const [password, setPassword] = useState<string>('dinnernight1234');
   const [emailErrorText, setEmailErrorText] = useState<string>('');
   const [passwordErrorText, setPasswordErrorText] = useState<string>('');
 
   const onSubmitCredentials = async () => {
-    signInWithEmailAndPassword(userContext.auth, email, password)
-      .then(userData => {
-        userContext.setUserData(userData.user);
-      })
-      .catch((error: FirebaseError) => {
-        switch (error.code) {
-          case AuthErrorCodes.CREDENTIAL_MISMATCH:
-            setPasswordErrorText('Email or Password is wrong!');
-            break;
+    console.log('login', email, password);
+    await userContext.login(email, password);
 
-          case AuthErrorCodes.TIMEOUT:
-            setEmailErrorText(
-              'The request took too long please try again later!',
-            );
-            break;
-
-          default:
-            setEmailErrorText('unexpected error!');
-            break;
-        }
-      });
+    console.log('done');
+    console.log(
+      'user after login: ',
+      userContext.currentUser,
+      userContext.userDetails?.name,
+    );
   };
 
   const navigateRegister = () => {
@@ -109,6 +97,9 @@ export const LoginScreen = ({ navigation }) => {
               logoURI={
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png'
               }
+              onPress={() => {
+                /* TODO */
+              }}
             />
           </View>
           <View style={[authStyles.oAuthButton, authStyles.oAuthFacebook]}>
@@ -118,6 +109,9 @@ export const LoginScreen = ({ navigation }) => {
               logoURI={
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/150px-Facebook_f_logo_%282019%29.svg.png'
               }
+              onPress={() => {
+                /* TODO */
+              }}
             />
           </View>
         </View>

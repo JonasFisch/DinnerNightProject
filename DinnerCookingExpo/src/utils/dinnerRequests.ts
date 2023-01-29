@@ -86,13 +86,13 @@ export const fetchUsers = async (
 
 export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
   return new Promise(async (resolve, reject) => {
-    const usersSnap = await getDocs(query(collection(db, 'Users')));
+    const colRef = collection(db, 'Users');
+    const usersSnap = await getDocs(colRef);
     resolve(
-      usersSnap.docs.map(fetchedUser => {
-        const user: UserFirebase = fetchedUser.data() as UserFirebase;
-        user.id = fetchedUser.id; // add the document id here as well!
-        return user;
-      }),
+      usersSnap.docs.map(
+        fetchedUser =>
+          ({ ...fetchedUser.data(), id: fetchedUser.id } as UserFirebase),
+      ),
     );
   });
 };

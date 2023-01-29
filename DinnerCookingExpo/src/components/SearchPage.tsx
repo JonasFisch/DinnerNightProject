@@ -8,7 +8,6 @@ import { Chip } from './Chip';
 import { AppButton } from './Button';
 import { AppButtonType } from '../interfaces/Button';
 import CheckIcon from '../assets/icons/check.svg';
-import { useNavigation } from '@react-navigation/native';
 
 export const SearchPage = ({
   listItems,
@@ -19,8 +18,6 @@ export const SearchPage = ({
   onSave: (contacts: string[]) => void;
   selectedItems: string[];
 }) => {
-  const navigator = useNavigation();
-
   const [selectedValues, setSelectedValues] =
     React.useState<string[]>(selectedItems);
   const [searchPhrase, setSearchPhrase] = React.useState<string>('');
@@ -47,7 +44,6 @@ export const SearchPage = ({
       .filter(item => selectedValues.includes(item.label))
       .map(item => item.id);
     onSave(currentlySelectedValues);
-    navigator.goBack();
   };
 
   return (

@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import UserContext from '../../contexts/UserContext';
-import { AuthErrorCodes, createUserWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { useUserContext } from '../../contexts/UserContext';
+import { AuthErrorCodes } from 'firebase/auth';
 import { AppInput } from '../../components/Input';
 import { AppButton } from '../../components/Button';
 import { AppButtonType } from '../../interfaces/Button';
@@ -16,7 +16,7 @@ const passwordRules =
   'required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;';
 
 export const RegisterScreen = ({ navigation }) => {
-  const userContext = useContext(UserContext);
+  const userContext = useUserContext();
 
   const navigateLogin = () => {
     navigation.replace('Login');
@@ -32,41 +32,37 @@ export const RegisterScreen = ({ navigation }) => {
   // TODO: also use google + Github oauth!
   const register = () => {
     if (password === passwordConfirm) {
-      createUserWithEmailAndPassword(userContext.auth, email, password)
-        .then(userData => {
-          userContext.setUserData(userData.user);
-        })
-        .catch((error: FirebaseError) => {
-          // email already in use or other auth error
-          switch (error.code) {
-            case AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE:
-            case AuthErrorCodes.EMAIL_EXISTS:
-              setEmailErrorText('Email is already in use!');
-              break;
+      userContext.signup(email, password).catch((error: FirebaseError) => {
+        // email already in use or other auth error
+        switch (error.code) {
+          case AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE:
+          case AuthErrorCodes.EMAIL_EXISTS:
+            setEmailErrorText('Email is already in use!');
+            break;
 
-            case AuthErrorCodes.CREDENTIAL_MISMATCH:
-              setEmailErrorText('Passwords does not match!');
-              break;
+          case AuthErrorCodes.CREDENTIAL_MISMATCH:
+            setEmailErrorText('Passwords does not match!');
+            break;
 
-            case AuthErrorCodes.TIMEOUT:
-              setEmailErrorText(
-                'The request took too long please try again later!',
-              );
-              break;
+          case AuthErrorCodes.TIMEOUT:
+            setEmailErrorText(
+              'The request took too long please try again later!',
+            );
+            break;
 
-            case AuthErrorCodes.INVALID_EMAIL:
-              setEmailErrorText('Email is not valid.');
-              break;
+          case AuthErrorCodes.INVALID_EMAIL:
+            setEmailErrorText('Email is not valid.');
+            break;
 
-            case AuthErrorCodes.WEAK_PASSWORD:
-              // TODO: state password requirements here
-              setPasswordErrorText('password too weak.');
-              break;
-            default:
-              setEmailErrorText('unexpected error!');
-              break;
-          }
-        });
+          case AuthErrorCodes.WEAK_PASSWORD:
+            // TODO: state password requirements here
+            setPasswordErrorText('password too weak.');
+            break;
+          default:
+            setEmailErrorText('unexpected error!');
+            break;
+        }
+      });
     } else {
       setPasswordErrorText('Passwords does not match!');
     }
@@ -159,6 +155,9 @@ export const RegisterScreen = ({ navigation }) => {
               logoURI={
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png'
               }
+              onPress={() => {
+                /* TODO */
+              }}
             />
           </View>
           <View style={[authStyles.oAuthButton, authStyles.oAuthFacebook]}>
@@ -168,6 +167,9 @@ export const RegisterScreen = ({ navigation }) => {
               logoURI={
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/150px-Facebook_f_logo_%282019%29.svg.png'
               }
+              onPress={() => {
+                /* TODO */
+              }}
             />
           </View>
         </View>

@@ -1,27 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SearchPage } from '../../components/SearchPage';
-import UserContext from '../../contexts/UserContext';
+import { useUserContext } from '../../contexts/UserContext';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import {
-  fetchAllUsers,
-  fetchUsers,
-  setContactsOfUser,
-} from '../../utils/dinnerRequests';
+import { fetchAllUsers, setContactsOfUser } from '../../utils/dinnerRequests';
 import { SelectableListEntry } from '../../components/SelectableList';
 import { useNavigation } from '@react-navigation/native';
 
 export const AddContactsScreen = ({ route }) => {
   const { contacts }: { contacts: SelectableListEntry[] } = route.params;
-  const userContext = useContext(UserContext);
+  const userContext = useUserContext();
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
+  const navigator = useNavigation();
 
   const [allUsers, setAllUsers] = useState<SelectableListEntry[]>([]);
 
   useEffect(() => {
     const resolveAllUsers = async () => {
-      if (!userContext.userData) throw new Error('User not authenticated.');
-      const currentUserId = userContext.userDetails.id;
+      if (!userContext.currentUser) throw new Error('User not authenticated.');
+      const currentUserId = userContext.currentUser.uid;
 
       const fetchedUsers = await fetchAllUsers(db);
       const userList: SelectableListEntry[] = fetchedUsers
@@ -38,8 +35,14 @@ export const AddContactsScreen = ({ route }) => {
 
   const onSaveContacts = async (newContactIds: string[]) => {
     try {
-      if (!userContext.userData) throw new Error('User not authenticated.');
-      await setContactsOfUser(db, userContext.userData.uid, newContactIds);
+      if (!userContext.currentUser) throw new Error('User not authenticated.');
+      await setContactsOfUser(
+        db,
+        userContext.currentUser.uid,
+        newContactIds,
+      ).then(() => {
+        navigator.goBack();
+      });
     } catch (error) {
       console.error(error);
     }
