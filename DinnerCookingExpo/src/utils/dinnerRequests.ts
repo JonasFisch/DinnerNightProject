@@ -103,7 +103,6 @@ export const setContactsOfUser = async (
   contactIds: string[],
 ): Promise<void> => {
   return new Promise(async (resolve, reject) => {
-    if (!userId) reject();
     const firestore = getFirestore(db.app);
     const userRef = doc(firestore, 'Users/' + userId);
     const contactRefs = contactIds.map(id => doc(firestore, 'Users/' + id));

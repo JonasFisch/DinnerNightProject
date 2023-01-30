@@ -36,7 +36,10 @@ export const ContactsScreen = () => {
 
       const contactsIds = userContext.userDetails.contacts;
 
-      if (contactsIds.length == 0) return;
+      if (contactsIds.length == 0) {
+        setContacts([]);
+        return;
+      }
 
       const fetchedContacts = await fetchUsers(db, contactsIds);
       const contactsList: SelectableListEntry[] = fetchedContacts.map(
