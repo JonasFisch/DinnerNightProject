@@ -17,7 +17,7 @@ import {
   getDocs,
   query,
   where,
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 import {
   DinnerFirebase,
   UserFirebase,

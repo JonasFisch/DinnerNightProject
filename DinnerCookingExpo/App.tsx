@@ -26,7 +26,7 @@ import { StepScreen } from './src/screens/intro/StepScreen';
 import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
 
-import { getFirestore } from 'firebase/firestore/lite';
+import { getFirestore } from 'firebase/firestore';
 import { Playground } from './src/screens/Playground';
 import { IntroWelcomeScreen } from './src/screens/intro/IntroWelcomeScreen';
 import { WelcomeScreen } from './src/screens/auth/Welcome';
@@ -103,9 +103,6 @@ const App = () => {
   if (playground) {
     return <Playground></Playground>;
   }
-
-  // check if user is already authenticated
-  console.log(userContext.currentUser);
 
   return (
     <StorageContext.Provider

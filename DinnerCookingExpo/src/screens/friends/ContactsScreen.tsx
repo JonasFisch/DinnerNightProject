@@ -49,7 +49,7 @@ export const ContactsScreen = () => {
       setContacts(contactsList);
     };
     resolveUserContacts().catch(console.error);
-  }, []);
+  }, [userContext.userDetails?.contacts]);
 
   return (
     <Frame withBottomNavBar={true}>

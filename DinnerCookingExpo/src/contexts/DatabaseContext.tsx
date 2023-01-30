@@ -1,8 +1,8 @@
 import React from 'react';
-import { Firestore } from 'firebase/firestore/lite';
+import FirebaseFirestore from 'firebase/firestore';
 
 const DatabaseContext = React.createContext({
-  database: Firestore,
+  database: FirebaseFirestore,
 });
 
 export default DatabaseContext;

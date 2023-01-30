@@ -1,4 +1,4 @@
-import { doc, updateDoc } from 'firebase/firestore/lite';
+import { doc, updateDoc } from 'firebase/firestore';
 import React, { useContext } from 'react';
 import { View, Text, Button } from 'react-native';
 import DatabaseContext from '../../contexts/DatabaseContext';

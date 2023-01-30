@@ -4,7 +4,7 @@ import {
   doc,
   DocumentReference,
   Timestamp,
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
 import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';

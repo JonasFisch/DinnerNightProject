@@ -59,6 +59,7 @@ export const SearchPage = ({
           style={styles.selectedValuesList}
           contentContainerStyle={styles.listContentContainer}
           renderItem={renderChip}
+          keyExtractor={item => item}
           horizontal
         />
       )}

@@ -15,21 +15,28 @@ import { colors } from '../../styles/Color';
 export const LoginScreen = ({ navigation }) => {
   const userContext = useUserContext();
 
-  const [email, setEmail] = useState<string>('katharina.blass@yahoo.de');
-  const [password, setPassword] = useState<string>('dinnernight1234');
+  const [email, setEmail] = useState<string>('jon.fischerboy@gmail.com');
+  const [password, setPassword] = useState<string>('jonrocktrot');
   const [emailErrorText, setEmailErrorText] = useState<string>('');
   const [passwordErrorText, setPasswordErrorText] = useState<string>('');
 
-  const onSubmitCredentials = async () => {
-    console.log('login', email, password);
-    await userContext.login(email, password);
-
-    console.log('done');
-    console.log(
-      'user after login: ',
-      userContext.currentUser,
-      userContext.userDetails?.name,
-    );
+  const onSubmitCredentials = () => {
+    userContext.login(email, password).catch((error: FirebaseError) => {
+      switch (error.code) {
+        case AuthErrorCodes.INVALID_PASSWORD:
+        case AuthErrorCodes.CREDENTIAL_MISMATCH:
+          setPasswordErrorText('Email or Password is wrong!');
+          break;
+        case AuthErrorCodes.TIMEOUT:
+          setEmailErrorText(
+            'The request took too long please try again later!',
+          );
+          break;
+        default:
+          setEmailErrorText('unexpected error!');
+          break;
+      }
+    });
   };
 
   const navigateRegister = () => {

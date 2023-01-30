@@ -13,7 +13,7 @@ import {
   getDoc,
   getFirestore,
   updateDoc,
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 
 export const fetchDinners = async (

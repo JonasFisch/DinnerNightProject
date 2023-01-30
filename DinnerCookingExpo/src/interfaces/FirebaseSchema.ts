@@ -3,7 +3,7 @@ import {
   QueryDocumentSnapshot,
   SnapshotOptions,
 } from 'firebase/firestore';
-import { DocumentReference, Timestamp } from 'firebase/firestore/lite';
+import { DocumentReference, Timestamp } from 'firebase/firestore';
 
 enum DinnerState {
   INVITE,
