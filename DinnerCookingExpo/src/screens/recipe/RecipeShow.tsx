@@ -35,8 +35,8 @@ export const RecipeShow = () => {
   );
 
   return (
-    <Frame withBottomNavBar>
-      <ScrollView>
+    <ScrollView>
+      <Frame withBottomNavBar>
 
         <Image
           style={{ width: '100%', height: 200, borderRadius: 10 }}
@@ -72,7 +72,7 @@ export const RecipeShow = () => {
         </View>
 
         <Text>Recipe Screen! Yeahy (WIP)</Text>
-      </ScrollView>
-    </Frame>
+      </Frame>
+    </ScrollView>
   );
 };
