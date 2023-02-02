@@ -42,17 +42,13 @@ export const AppButton = (props: AppButtonProps) => {
         props.style,
         // eslint-disable-next-line react-native/no-inline-styles
         { alignSelf: props.widthFitContent ? 'center' : 'auto' },
+        props.iconOnly && styles.layout.iconButton,
       ]}>
-      {props.logoSVG ? (
+      {props.logoSVG && (
         // when the svg is not shown (properly) check if viewBox is set!
-        <props.logoSVG
-          height={30}
-          width={30}
-          fill={colors.white}
-          style={styles.layout.tinyLogo}
-        />
-      ) : null}
-      {!props.logoURI ? null : (
+        <props.logoSVG fill={colors.white} style={styles.layout.tinyLogo} />
+      )}
+      {props.logoURI && (
         <Image
           style={styles.layout.tinyLogo}
           source={{
@@ -60,7 +56,9 @@ export const AppButton = (props: AppButtonProps) => {
           }}
         />
       )}
-      <Text style={computedStyles.text}>{props.title}</Text>
+      {!props.iconOnly && (
+        <Text style={computedStyles.text}>{props.title}</Text>
+      )}
     </Pressable>
   );
 };
@@ -69,7 +67,7 @@ const styles = {
     default: {
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 4,
+      borderRadius: 8,
       borderStyle: 'solid',
       borderWidth: 1,
       flexDirection: 'row',
@@ -80,11 +78,14 @@ const styles = {
       ...typography.button,
       color: colors.white,
       paddingVertical: spacing.m,
+      marginLeft: spacing.xs,
     },
     tinyLogo: {
-      width: 30,
-      height: 30,
-      marginRight: spacing.xs,
+      width: 24,
+      height: 24,
+    },
+    iconButton: {
+      borderRadius: 50,
     },
   }),
   primary: StyleSheet.create({
@@ -142,4 +143,9 @@ const styles = {
       color: colors.disabled,
     },
   }),
+};
+
+AppButton.defaultProps = {
+  disabled: false,
+  iconOnly: false,
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { AppButtonType } from '../../interfaces/Button';
@@ -7,31 +7,49 @@ import { useNavigation } from '@react-navigation/native';
 import { Frame } from '../../components/Frame';
 import { typography } from '../../styles/Typography';
 import { spacing } from '../../styles/Spacing';
-import { SelectableList } from '../../components/SelectableList';
+import {
+  SelectableList,
+  SelectableListEntry,
+} from '../../components/SelectableList';
 import { colors } from '../../styles/Color';
+import { fetchUsers } from '../../utils/dinnerRequests';
+import DatabaseContext from '../../contexts/DatabaseContext';
+import UserContext from '../../contexts/UserContext';
 
 export const ContactsScreen = () => {
   const navigator = useNavigation();
+  const userContext = useContext(UserContext);
+  const dbContext = useContext(DatabaseContext);
+  const db = dbContext.database;
+
+  const [contacts, setContacts] = useState<SelectableListEntry[]>([]);
 
   const addContacts = () => {
-    navigator.navigate('AddContacts');
+    navigator.navigate('AddContacts', {
+      contacts: contacts,
+    });
   };
 
-  const contacts = [
-    'Sabine Extralooooooooooooooooooooooooong',
-    'Max Mustermann',
-    'Jonas Test',
-    'Faye Tester',
-    'Saskia Bauer',
-    'Oskar Lehmann',
-    'Leonie Richter',
-    'Tobias Der Erste von und zu überhaupt',
-    'Sascha Meistermann',
-    'Lenzi Eins',
-    'Maximilian Mustermann',
-    'Peter Hans KLaus Jung',
-    'Bernd Brot',
-  ];
+  useEffect(() => {
+    const resolveUserContacts = async () => {
+      if (!userContext.userData) throw new Error('User not authenticated.');
+
+      const contactsIds = userContext.userDetails.contacts;
+
+      if (contactsIds.length == 0) return;
+
+      const fetchedContacts = await fetchUsers(db, contactsIds);
+      const contactsList: SelectableListEntry[] = fetchedContacts.map(
+        contact => ({
+          id: contact.id,
+          label: contact.name,
+          image: contact.imageUrl,
+        }),
+      );
+      setContacts(contactsList);
+    };
+    resolveUserContacts().catch(console.error);
+  }, []);
 
   return (
     <Frame withBottomNavBar>
@@ -39,7 +57,10 @@ export const ContactsScreen = () => {
       <Text style={[typography.subtitle2, styles.contactCount]}>
         {contacts.length} Contacts
       </Text>
-      <SelectableList values={contacts} isSelectable={false}></SelectableList>
+
+      {contacts && (
+        <SelectableList items={contacts} isSelectable={false}></SelectableList>
+      )}
       <AppButton
         style={styles.addButton}
         onPress={addContacts}

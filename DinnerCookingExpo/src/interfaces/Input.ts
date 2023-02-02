@@ -45,4 +45,5 @@ export interface AppInputProps {
     | 'password'
     | 'newPassword'
     | 'oneTimeCode';
+  style?: object;
 }

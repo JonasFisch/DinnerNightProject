@@ -11,6 +11,7 @@ type SelectableListItem = {
   isChecked: boolean;
   onValueChanged: () => void;
   shouldRenderCheckbox: boolean;
+  imgUrl?: string;
 };
 
 export const SelectableListItem = ({
@@ -18,11 +19,15 @@ export const SelectableListItem = ({
   isChecked,
   onValueChanged,
   shouldRenderCheckbox,
+  imgUrl,
 }: SelectableListItem) => {
   return (
-    <Pressable key={label} style={styles.container} onPress={onValueChanged}>
+    <Pressable style={styles.container} onPress={onValueChanged}>
       <View style={styles.userWrapper}>
-        <UserImage name={label} style={styles.avatar}></UserImage>
+        <UserImage
+          name={label}
+          imageUrl={imgUrl}
+          style={styles.avatar}></UserImage>
         <Text style={[typography.body, styles.text]} numberOfLines={1}>
           {label}
         </Text>
