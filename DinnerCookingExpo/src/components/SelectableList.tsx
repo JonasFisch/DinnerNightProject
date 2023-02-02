@@ -36,14 +36,27 @@ export const SelectableList = ({
     setFilteredItems([...searchedItems]);
   }, [searchPhrase, items]);
 
+  const getUserImage = (label: string) => {
+    const labelItem = items.find(element => element.label == label);
+    if (labelItem && labelItem.image != '') {
+      return labelItem.image;
+    } else return undefined;
+  };
+
   const renderItem = ({ item }: { item: string }) => (
     <SelectableListItem
       label={item}
       isChecked={selectedItems.includes(item)}
       onValueChanged={() => onSelectionChanged(item)}
       shouldRenderCheckbox={isSelectable}
-      imgUrl={items.filter(i => i.label == item)[0].image}
+      imgUrl={getUserImage(item)}
     />
   );
-  return <FlatList data={filteredItems} renderItem={renderItem} />;
+  return (
+    <FlatList
+      data={filteredItems}
+      renderItem={renderItem}
+      keyExtractor={item => item}
+    />
+  );
 };

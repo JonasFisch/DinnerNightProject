@@ -9,7 +9,7 @@ import { spacing } from '../../styles/Spacing';
 import { DinnerList } from '../../components/DinnerList';
 import Logo from '../../assets/icons/add.svg';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import UserContext from '../../contexts/UserContext';
+import { useUserContext } from '../../contexts/UserContext';
 import {
   useFocusEffect,
   useNavigation,
@@ -35,15 +35,15 @@ export const DinnerListScreen = () => {
     new Map(),
   );
 
-  const userContext = useContext(UserContext);
+  const userContext = useUserContext();
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
 
   const resolveDinners = async () => {
     try {
-      if (!userContext.userData) throw new Error('User not authenticated.');
+      if (!userContext.currentUser) throw new Error('User not authenticated.');
 
-      const fetchedDinners = await fetchDinners(db, userContext.userData);
+      const fetchedDinners = await fetchDinners(db, userContext.currentUser);
       setDinners(fetchedDinners);
     } catch (error) {
       console.error(error);

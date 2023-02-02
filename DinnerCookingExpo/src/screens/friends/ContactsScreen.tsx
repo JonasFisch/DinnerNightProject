@@ -14,11 +14,11 @@ import {
 import { colors } from '../../styles/Color';
 import { fetchUsers } from '../../utils/dinnerRequests';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import UserContext from '../../contexts/UserContext';
+import { useUserContext } from '../../contexts/UserContext';
 
 export const ContactsScreen = () => {
   const navigator = useNavigation();
-  const userContext = useContext(UserContext);
+  const userContext = useUserContext();
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
 
@@ -32,11 +32,14 @@ export const ContactsScreen = () => {
 
   useEffect(() => {
     const resolveUserContacts = async () => {
-      if (!userContext.userData) throw new Error('User not authenticated.');
+      if (!userContext.userDetails) throw new Error('User not authenticated.');
 
       const contactsIds = userContext.userDetails.contacts;
 
-      if (contactsIds.length == 0) return;
+      if (contactsIds.length == 0) {
+        setContacts([]);
+        return;
+      }
 
       const fetchedContacts = await fetchUsers(db, contactsIds);
       const contactsList: SelectableListEntry[] = fetchedContacts.map(
@@ -49,7 +52,7 @@ export const ContactsScreen = () => {
       setContacts(contactsList);
     };
     resolveUserContacts().catch(console.error);
-  }, []);
+  }, [userContext.userDetails?.contacts]);
 
   return (
     <Frame withBottomNavBar>

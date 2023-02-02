@@ -1,4 +1,4 @@
-import { DocumentReference } from 'firebase/firestore/lite';
+import { DocumentReference } from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
 import {
   GestureResponderEvent,
