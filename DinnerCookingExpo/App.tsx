@@ -42,6 +42,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import StorageContext from './src/contexts/StorageContext';
 import { UserFirebase } from './src/interfaces/FirebaseSchema';
 import { AddContactsScreen } from './src/screens/friends/AddContactsScreen';
+import RecepieCarousel from './src/components/Carousel/RecepieCarousel';
+import { RecipeShow } from './src/screens/recipe/RecipeShow';
 
 // TODO: put this into config file
 const firebaseConfig = {
@@ -205,6 +207,7 @@ const App = () => {
                         }}
                         component={CreateParty}
                       />
+                      <AppStack.Screen name="Recipe" component={RecipeShow} />
                       {/* Sub Screens of Friends Screen */}
                       <AppStack.Screen
                         name="AddContacts"
