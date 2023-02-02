@@ -14,7 +14,6 @@ export const RecipeShow = () => {
 
   const db = useContext(DatabaseContext).database;
 
-  // TODO: fetch recipe data here!
   const resolveRecipe = async () => {
     try {
       const fetchedRecipe = await fetchRecipe(
@@ -36,41 +35,44 @@ export const RecipeShow = () => {
   );
 
   return (
-    <Frame withSubPageHeader withBottomNavBar>
-      <Image
-        style={{ width: '100%', height: 200, borderRadius: 10 }}
-        source={{
-          uri: recipe?.image,
-        }}
-      />
-      <Text>Title: {recipe?.title}</Text>
-      <Text>Cooking time: {recipe?.readyInMinutes} min</Text>
+    <Frame withBottomNavBar>
+      <ScrollView>
 
-      <View>
-        {/* TODO: add serving buttons here! */}
-        <Text style={typography.subtitle2}>Ingredients:</Text>
-        {recipe?.extendedIngredients.map(ingredient => {
-          return (
-            <Text>{`${Math.floor(ingredient.measures.metric.amount)} ${
-              ingredient.measures.metric.unitShort
-            } ${ingredient.name}`}</Text>
-          );
-        })}
-      </View>
+        <Image
+          style={{ width: '100%', height: 200, borderRadius: 10 }}
+          source={{
+            uri: recipe?.image,
+          }}
+        />
+        <Text>Title: {recipe?.title}</Text>
+        <Text>Cooking time: {recipe?.readyInMinutes} min</Text>
 
-      <View>
-        <Text style={typography.subtitle2}>Instructions:</Text>
-        {recipe?.analyzedInstructions[0].steps.map((step, index) => {
-          return (
-            <View>
-              <Text style={typography.subtitle2}>Step {step.number}</Text>
-              <Text>{step.step}</Text>
-            </View>
-          );
-        })}
-      </View>
+        <View>
+          {/* TODO: add serving buttons here! */}
+          <Text style={typography.subtitle2}>Ingredients:</Text>
+          {recipe?.extendedIngredients.map(ingredient => {
+            return (
+              <Text>{`${Math.floor(ingredient.measures.metric.amount)} ${
+                ingredient.measures.metric.unitShort
+              } ${ingredient.name}`}</Text>
+            );
+          })}
+        </View>
 
-      <Text>Recipe Screen! Yeahy (WIP)</Text>
+        <View>
+          <Text style={typography.subtitle2}>Instructions:</Text>
+          {recipe?.analyzedInstructions[0].steps.map((step, index) => {
+            return (
+              <View>
+                <Text style={typography.subtitle2}>Step {step.number}</Text>
+                <Text>{step.step}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        <Text>Recipe Screen! Yeahy (WIP)</Text>
+      </ScrollView>
     </Frame>
   );
 };
