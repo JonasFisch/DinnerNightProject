@@ -7,22 +7,22 @@ type Frameprops = {
   children?: ReactNode;
   withBottomNavBar?: boolean;
   withSubPageHeader?: boolean;
+  forSearchPage?: boolean;
 };
 
 export const Frame = ({
   children,
   withBottomNavBar = false,
   withSubPageHeader = false,
+  forSearchPage = false,
 }: Frameprops) => {
   return (
     <View
       style={[
         styles.base,
-        withBottomNavBar
-          ? styles.frameWithNavBar
-          : withSubPageHeader
-          ? styles.frameWithHeader
-          : styles.frameWithoutNavBar,
+        withBottomNavBar && styles.frameWithNavBar,
+        withSubPageHeader && styles.frameWithHeader,
+        forSearchPage && styles.searchPage,
       ]}>
       {children}
     </View>
@@ -32,19 +32,17 @@ export const Frame = ({
 const styles = StyleSheet.create({
   base: {
     paddingHorizontal: spacing.m,
-    backgroundColor: colors.white,
-  },
-  frameWithoutNavBar: {
     paddingVertical: spacing.xxl,
+    backgroundColor: colors.white,
+    flex: 1,
   },
   frameWithNavBar: {
-    paddingTop: spacing.xxl,
     paddingBottom: spacing.m,
-    flex: 1,
   },
   frameWithHeader: {
     paddingTop: spacing.m,
-    paddingBottom: spacing.m,
-    flex: 1,
+  },
+  searchPage: {
+    paddingVertical: spacing.m,
   },
 });

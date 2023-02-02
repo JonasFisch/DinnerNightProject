@@ -45,6 +45,7 @@ type UserFirebase = {
   imageUrl: string;
   name: string;
   inviteStates: { [key: string]: InviteState };
+  contacts: DocumentReference[];
 };
 
 type Recipe = {
