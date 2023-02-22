@@ -9,11 +9,9 @@ import { typography } from '../../../styles/Typography';
 import { BottomSheet, BottomSheetRef } from 'react-native-sheet';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DatabaseContext from '../../../contexts/DatabaseContext';
-import UserContext from '../../../contexts/UserContext';
+import { useUserContext } from '../../../contexts/UserContext';
 import {
   collection,
-  collectionGroup,
-  DocumentSnapshot,
   getDocs,
   query,
   where,
@@ -33,7 +31,7 @@ export const InviteScreen = (props: DinnerProps) => {
   const navigator = useNavigation();
   const bottomSheet = useRef<BottomSheetRef>(null);
   const db = useContext(DatabaseContext).database;
-  const userDetails = useContext(UserContext).userDetails;
+  const userDetails = useUserContext().userDetails;
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
 
   // get invite states

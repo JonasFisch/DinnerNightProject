@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import { CookingScreen } from './CookingScreen';
 import { VotingScreen } from './VotingScreen';
 import { InviteScreen } from './InviteScreen';
-import UserContext from '../../../contexts/UserContext';
 import {
   DinnerFirebase,
   DinnerState,
 } from '../../../interfaces/FirebaseSchema';
 import { fetchDinner } from '../../../utils/dinnerRequests';
+import { useUserContext } from '../../../contexts/UserContext';
 
 export type DinnerDetailScreenParams = {
   id: string;
@@ -22,7 +22,7 @@ export const DinnerDetailScreen = () => {
   const params = route.params as DinnerDetailScreenParams;
 
   const db = useContext(DatabaseContext).database;
-  const user = useContext(UserContext).userData;
+  const user = useUserContext().currentUser;
   const [dinner, setDinner] = useState<DinnerFirebase>();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
