@@ -152,11 +152,6 @@ const App = () => {
                             name="AddContacts"
                             component={AddContactsScreen}
                           />
-                          {/* Sub Screens of Friends Screen */}
-                          <AppStack.Screen
-                            name="AddContacts"
-                            component={AddContactsScreen}
-                          />
                           {/* Sub Screens of Settings Screen */}
                         </AppStack.Group>
                       ) : (
