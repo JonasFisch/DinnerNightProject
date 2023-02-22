@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { DocumentReference } from 'firebase/firestore';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
   GestureResponderEvent,
   StyleSheet,
@@ -33,7 +34,11 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
   };
 
   // fetch participants
-  resolveParticipants();
+  useFocusEffect(
+    useCallback(() => {
+      resolveParticipants();
+    }, []),
+  );
 
   return (
     <TouchableWithoutFeedback onPress={() => props.onPress(props.id)}>

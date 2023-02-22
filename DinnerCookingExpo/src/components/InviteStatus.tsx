@@ -2,8 +2,9 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { UserFirebase } from '../interfaces/FirebaseSchema';
 import { UserImage } from './UserImage';
-import CloseIcon from '../assets/icons/add.svg';
+import CloseIcon from '../assets/icons/close.svg';
 import { typography } from '../styles/Typography';
+import { colors } from '../styles/Color';
 
 type InviteStatusProps = {
   dinnerID: string;
@@ -29,20 +30,20 @@ export const InviteStatus = (props: InviteStatusProps) => {
 
   return (
     <View style={styles.card}>
-      <View style={styles.container}>
-        <View style={styles.userImageContainer}>
-          <UserImage
-            name={props.participant.name}
-            imageUrl={props.participant.imageUrl}
-          />
-          <Text
-            style={[typography.body2, styles.userName]}
-            ellipsizeMode="tail"
-            numberOfLines={1}>
-            {props.participant.name}
-          </Text>
-        </View>
-        <Text style={styles.inviteStatusText}>
+      <View style={styles.userImageContainer}>
+        <UserImage
+          name={props.participant.name}
+          imageUrl={props.participant.imageUrl}
+        />
+        <Text
+          style={[typography.body2, styles.userName]}
+          ellipsizeMode="tail"
+          numberOfLines={1}>
+          {props.participant.name}
+        </Text>
+      </View>
+      <View style={styles.inviteStatusText}>
+        <Text>
           {'invite status - '}
           <Text style={[styles.inviteStatus, inviteStyles[inviteState]]}>
             {inviteStateText[inviteState]}
@@ -50,7 +51,7 @@ export const InviteStatus = (props: InviteStatusProps) => {
         </Text>
       </View>
       <Pressable onPress={() => revertInvite()} style={styles.closeButton}>
-        <CloseIcon />
+        <CloseIcon fill={colors.text} />
       </Pressable>
     </View>
   );
@@ -64,17 +65,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 16,
   },
-  container: {
-    flexDirection: 'row',
-  },
   userImageContainer: {
     flexDirection: 'column',
     alignItems: 'center',
     width: 50,
   },
   inviteStatusText: {
-    marginTop: 10,
-    marginLeft: 5,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   },
   inviteStatus: {
     fontWeight: 'bold',
@@ -90,12 +89,12 @@ const styles = StyleSheet.create({
 // TODO: use dynamic colors! (waiting for Kathis changes to color pallett!)
 const inviteStyles = StyleSheet.create([
   {
-    color: '#888',
+    color: colors.disabled,
   },
   {
-    color: '#0f0',
+    color: colors.success,
   },
   {
-    color: '#f00',
+    color: colors.error,
   },
 ]);
