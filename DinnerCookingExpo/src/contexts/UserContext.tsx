@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import {
   Auth,
+  connectAuthEmulator,
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
@@ -44,11 +45,11 @@ export function useUserContext() {
   return useContext(UserContext);
 }
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
+export function UserProvider({ children, auth }: { children: React.ReactNode, auth: Auth }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userDetails, setUserDetails] = useState<UserFirebase | null>(null);
   const [loading, setLoading] = useState(true);
-  const auth: Auth = getAuth();
+  // const auth: Auth = getAuth();
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
 
@@ -95,7 +96,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
       }
     });
-    //logout();
+    // logout();
     return unsubscribe;
   }, []);
 

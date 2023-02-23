@@ -27,6 +27,9 @@ export const fetchDinners = async (
   userData: User,
 ): Promise<DinnerFirebase[]> => {
   return new Promise(async (resolve, reject) => {
+
+    console.log("IN FETCHING DINNERS");
+    
     // get data from firebase
     const dinnersSnap = await getDocs(
       query(
@@ -50,6 +53,8 @@ export const fetchDinner = async (
   db: Firestore,
   dinnerID: string,
 ): Promise<DinnerFirebase> => {
+  console.log("IN FETCHING SINGLE DINNER");
+
   return new Promise(async (resolve, reject) => {
     const dinnersSnap = await getDoc(doc(db, `Dinners/${dinnerID}`));
     if (!dinnersSnap.data()) reject('cannot fetch dinner details.');
@@ -64,6 +69,8 @@ export const fetchUsers = async (
   db: Firestore,
   userIds: DocumentReference[],
 ): Promise<UserFirebase[]> => {
+  console.log("IN FETCH USERS");
+
   return new Promise(async (resolve, reject) => {
     if (userIds.length <= 0) resolve([]);
 
@@ -92,6 +99,8 @@ export const fetchUsers = async (
 };
 
 export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
+  console.log("IN FETCH ALL USERS");
+
   return new Promise(async (resolve, reject) => {
     const colRef = collection(db, 'Users');
     const usersSnap = await getDocs(colRef);
@@ -109,6 +118,8 @@ export const setContactsOfUser = async (
   userId: string,
   contactIds: string[],
 ): Promise<void> => {
+  console.log("IN SET CONTACTS OF USER");
+
   return new Promise(async (resolve, reject) => {
     const firestore = getFirestore(db.app);
     const userRef = doc(firestore, 'Users/' + userId);
@@ -122,6 +133,9 @@ export const fetchParticipants = async (
   db: Firestore,
   participants: DocumentReference[],
 ): Promise<UserFirebase[]> => {
+
+  console.log("IN FETCH PARTICIPANTS");
+
   return new Promise(async (resolve, reject) => {
     // fetch participant data from firestore
 
@@ -158,6 +172,9 @@ export const createDinner = async (
   date: Date,
   name: string,
 ): Promise<DocumentReference> => {
+
+  console.log("IN CREATE DINNER");
+
   return new Promise(async (resolve, reject) => {
     const newDinner: DinnerFirebase = {
       date: Timestamp.fromDate(date),
@@ -180,6 +197,9 @@ export const fetchRecipe = async (
   db: Firestore,
   recipeReference: DocumentReference<DocumentData>,
 ): Promise<Recipe> => {
+
+  console.log("IN FETCH RECIPE");
+
   return new Promise(async (resolve, reject) => {
     const recipeSnap = await getDoc(recipeReference);
     if (!recipeSnap.data()) reject('cannot fetch recipe.');
