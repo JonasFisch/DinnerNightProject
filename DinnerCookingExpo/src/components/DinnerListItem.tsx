@@ -14,7 +14,7 @@ import { colors } from '../styles/Color';
 import { sizes } from '../styles/Sizes';
 import { spacing } from '../styles/Spacing';
 import { typography } from '../styles/Typography';
-import { fetchParticipants } from '../utils/dinnerRequests';
+import { fetchUsers } from '../utils/userRequests';
 import { Participants } from './Participants';
 
 type DinnerListItemProps = {
@@ -30,7 +30,7 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
   const db = useContext(DatabaseContext).database;
 
   const resolveParticipants = async () => {
-    setParticipants(await fetchParticipants(db, props.participants));
+    setParticipants(await fetchUsers(db, props.participants));
   };
 
   // fetch participants
