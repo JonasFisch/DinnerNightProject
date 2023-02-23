@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors } from '../styles/Color';
 import { spacing } from '../styles/Spacing';
 
@@ -8,6 +8,7 @@ type Frameprops = {
   withBottomNavBar?: boolean;
   withSubPageHeader?: boolean;
   forSearchPage?: boolean;
+  style?: StyleProp<ViewStyle>
 };
 
 export const Frame = ({
@@ -15,6 +16,7 @@ export const Frame = ({
   withBottomNavBar = false,
   withSubPageHeader = false,
   forSearchPage = false,
+  style = {}
 }: Frameprops) => {
   return (
     <View
@@ -23,6 +25,7 @@ export const Frame = ({
         withBottomNavBar && styles.frameWithNavBar,
         withSubPageHeader && styles.frameWithHeader,
         forSearchPage && styles.searchPage,
+        style
       ]}>
       {children}
     </View>

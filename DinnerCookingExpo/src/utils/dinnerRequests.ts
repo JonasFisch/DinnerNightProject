@@ -20,7 +20,6 @@ import {
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { DocumentData } from 'firebase/firestore';
-import { async } from '@firebase/util';
 
 export const fetchDinners = async (
   db: Firestore,
@@ -195,16 +194,12 @@ export const createDinner = async (
 
 export const fetchRecipe = async (
   db: Firestore,
-  recipeReference: DocumentReference<DocumentData>,
+  recipeID: string,
 ): Promise<Recipe> => {
-
   console.log("IN FETCH RECIPE");
 
-  return new Promise(async (resolve, reject) => {
-    const recipeSnap = await getDoc(recipeReference);
-    if (!recipeSnap.data()) reject('cannot fetch recipe.');
+  const recipeSnap = await getDoc(doc(db, `Recipes/${recipeID}`));
+  if (!recipeSnap.data()) throw new Error('cannot fetch recipe details.');
 
-    const recipe = recipeSnap.data() as Recipe;
-    resolve(recipe);
-  });
+  return recipeSnap.data() as Recipe;
 };

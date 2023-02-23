@@ -1,4 +1,4 @@
-import { GestureResponderEvent } from 'react-native';
+import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
 export enum AppButtonType {
@@ -14,7 +14,7 @@ export type AppButtonProps = {
   disabled?: boolean;
   logoURI?: string;
   logoSVG?: React.FC<SvgProps>;
-  style?: {};
+  style?: StyleProp<ViewStyle>;
   widthFitContent?: boolean;
   iconOnly?: boolean;
 };

@@ -9,9 +9,11 @@ import { InviteScreen } from './InviteScreen';
 import {
   DinnerFirebase,
   DinnerState,
+  UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
-import { fetchDinner } from '../../../utils/dinnerRequests';
+import { fetchDinner, fetchParticipants } from '../../../utils/dinnerRequests';
 import { useUserContext } from '../../../contexts/UserContext';
+import { WinnerScreen } from './WinnerScreen';
 
 export type DinnerDetailScreenParams = {
   id: string;
@@ -25,6 +27,7 @@ export const DinnerDetailScreen = () => {
   const user = useUserContext().currentUser;
   const [dinner, setDinner] = useState<DinnerFirebase>();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [participants, setParticipants] = useState<UserFirebase[]>([]);
 
   // fetch dinner details here
   const resolveDinner = async () => {
@@ -33,17 +36,27 @@ export const DinnerDetailScreen = () => {
 
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
-
       setDinner(fetchedDinner);
+      return fetchedDinner;
     } catch (error) {
       console.log(error);
     }
   };
 
+  const resolveParticipants = async (dinner: DinnerFirebase) => {
+    setParticipants(await fetchParticipants(db, dinner.participants));
+  };
+
   // refetch dinners on focus screen
   useFocusEffect(
     useCallback(() => {
-      resolveDinner();
+      resolveDinner().then(fetchedDinner => { 
+        if (fetchedDinner) {
+          resolveParticipants(fetchedDinner)
+        } else {
+          throw new Error("dinner was not fetched correctly!")
+        }
+      });
     }, []),
   );
 
@@ -56,9 +69,9 @@ export const DinnerDetailScreen = () => {
     case DinnerState.INVITE:
       return <InviteScreen dinner={dinner} isAdmin={isAdmin} />;
     case DinnerState.VOTING:
-      return <VotingScreen isAdmin={isAdmin} />;
+      return <VotingScreen isAdmin={isAdmin} dinner={dinner} participants={participants ?? []} />;
     case DinnerState.COOKING:
-      return <CookingScreen></CookingScreen>;
+      return <WinnerScreen isAdmin={isAdmin} dinner={dinner} participants={participants ?? []}  />
     case DinnerState.FINISHED:
       return <Text>Already Finished.</Text>;
     case DinnerState.LOADING:

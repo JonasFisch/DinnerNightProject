@@ -1,11 +1,13 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { doc } from 'firebase/firestore/lite';
-import { ref } from 'firebase/storage';
 import React, { useCallback, useContext, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
+import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
+import { Instruction } from '../../components/Instruction';
 import DatabaseContext from '../../contexts/DatabaseContext';
+import { AppButtonType } from '../../interfaces/Button';
 import { Recipe } from '../../interfaces/FirebaseSchema';
+import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
 import { fetchRecipe } from '../../utils/dinnerRequests';
 
@@ -18,7 +20,7 @@ export const RecipeShow = () => {
     try {
       const fetchedRecipe = await fetchRecipe(
         db,
-        doc(db, 'Recipes', 'ASvDTQnpXvHCNvrTOuCQ'),
+        "ASvDTQnpXvHCNvrTOuCQ"
       );
 
       setRecipe(fetchedRecipe);
@@ -36,8 +38,7 @@ export const RecipeShow = () => {
 
   return (
     <ScrollView>
-      <Frame withBottomNavBar>
-
+      <Frame withSubPageHeader>
         <Image
           style={{ width: '100%', height: 200, borderRadius: 10 }}
           source={{
@@ -47,14 +48,16 @@ export const RecipeShow = () => {
         <Text>Title: {recipe?.title}</Text>
         <Text>Cooking time: {recipe?.readyInMinutes} min</Text>
 
-        <View>
+        <View style={{marginBottom: spacing.l}}>
           {/* TODO: add serving buttons here! */}
+          {/* TODO: create component for servings here */}
           <Text style={typography.subtitle2}>Ingredients:</Text>
           {recipe?.extendedIngredients.map(ingredient => {
             return (
-              <Text>{`${Math.floor(ingredient.measures.metric.amount)} ${
-                ingredient.measures.metric.unitShort
-              } ${ingredient.name}`}</Text>
+              <Text style={typography.body}>{`${Math.floor(ingredient.measures.metric.amount)} ${
+                  ingredient.measures.metric.unitShort
+                } ${ingredient.name}`}
+              </Text>
             );
           })}
         </View>
@@ -64,14 +67,20 @@ export const RecipeShow = () => {
           {recipe?.analyzedInstructions[0].steps.map((step, index) => {
             return (
               <View>
-                <Text style={typography.subtitle2}>Step {step.number}</Text>
-                <Text>{step.step}</Text>
+                <Text style={[typography.overline, {marginTop: spacing.xs, marginBottom: spacing.xxs}]}>Step {step.number}</Text>
+                <Instruction>{step.step}</Instruction>
               </View>
             );
           })}
         </View>
 
-        <Text>Recipe Screen! Yeahy (WIP)</Text>
+        <AppButton 
+          // TODO: finish dinner action
+          onPress={() => {}} 
+          title={"FINISH DINNER"} 
+          type={AppButtonType.primary} 
+          style={{marginTop: spacing.l}}
+        />
       </Frame>
     </ScrollView>
   );
