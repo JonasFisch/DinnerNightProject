@@ -98,3 +98,13 @@ export const setContactsOfUser = async (
     resolve();
   });
 };
+
+export const finishIntroOfUser = async (
+  db: Firestore,
+  userId: string,
+): Promise<void> => {
+  console.log('IN FINISH USER INTRO');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, { hasDoneIntro: true });
+};

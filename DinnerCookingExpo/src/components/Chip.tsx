@@ -9,11 +9,12 @@ type ChipProps = {
   label: string;
   onPress: () => void;
   withAvatar?: boolean;
+  style?: Object;
 };
 
-export const Chip = ({ label, onPress, withAvatar = true }: ChipProps) => {
+export const Chip = ({ label, onPress, withAvatar = true, style }: ChipProps) => {
   return (
-    <Pressable onPress={onPress} style={styles.wrapper}>
+    <Pressable onPress={onPress} style={[styles.wrapper, style]}>
       {withAvatar && (
         <UserImage name={label} style={styles.avatar} small></UserImage>
       )}
