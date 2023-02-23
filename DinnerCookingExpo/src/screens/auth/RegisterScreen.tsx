@@ -23,49 +23,45 @@ export const RegisterScreen = ({ navigation }) => {
   };
 
   // states
-  const [email, setEmail] = useState<string>('jon.fischerboy@gmail.com');
-  const [password, setPassword] = useState<string>('jonrocktrot');
-  const [passwordConfirm, setPasswordConfirm] = useState<string>('jonrocktrot');
+  const [email, setEmail] = useState<string>('yixan77675@v2ssr.com');
+  const [password, setPassword] = useState<string>('test123');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('test123');
   const [passwordErrorText, setPasswordErrorText] = useState<string>('');
   const [emailErrorText, setEmailErrorText] = useState<string>('');
 
   // TODO: also use google + Github oauth!
   const register = () => {
-    if (password === passwordConfirm) {
-      userContext.signup(email, password).catch((error: FirebaseError) => {
-        // email already in use or other auth error
-        switch (error.code) {
-          case AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE:
-          case AuthErrorCodes.EMAIL_EXISTS:
-            setEmailErrorText('Email is already in use!');
-            break;
+    userContext.signup(email, password).catch((error: FirebaseError) => {
+      // email already in use or other auth error
+      switch (error.code) {
+        case AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE:
+        case AuthErrorCodes.EMAIL_EXISTS:
+          setEmailErrorText('Email is already in use!');
+          break;
 
-          case AuthErrorCodes.CREDENTIAL_MISMATCH:
-            setEmailErrorText('Passwords does not match!');
-            break;
+        case AuthErrorCodes.CREDENTIAL_MISMATCH:
+          setEmailErrorText('Passwords does not match!');
+          break;
 
-          case AuthErrorCodes.TIMEOUT:
-            setEmailErrorText(
-              'The request took too long please try again later!',
-            );
-            break;
+        case AuthErrorCodes.TIMEOUT:
+          setEmailErrorText(
+            'The request took too long please try again later!',
+          );
+          break;
 
-          case AuthErrorCodes.INVALID_EMAIL:
-            setEmailErrorText('Email is not valid.');
-            break;
+        case AuthErrorCodes.INVALID_EMAIL:
+          setEmailErrorText('Email is not valid.');
+          break;
 
-          case AuthErrorCodes.WEAK_PASSWORD:
-            // TODO: state password requirements here
-            setPasswordErrorText('password too weak.');
-            break;
-          default:
-            setEmailErrorText('unexpected error!');
-            break;
-        }
-      });
-    } else {
-      setPasswordErrorText('Passwords does not match!');
-    }
+        case AuthErrorCodes.WEAK_PASSWORD:
+          // TODO: state password requirements here
+          setPasswordErrorText('password too weak.');
+          break;
+        default:
+          setEmailErrorText('unexpected error!');
+          break;
+      }
+    });
   };
 
   const checkPasswords = () => {

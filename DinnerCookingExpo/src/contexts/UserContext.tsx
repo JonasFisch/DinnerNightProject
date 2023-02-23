@@ -12,6 +12,7 @@ import {
 import { UserFirebase } from '../interfaces/FirebaseSchema';
 import { doc, onSnapshot } from 'firebase/firestore';
 import DatabaseContext from './DatabaseContext';
+import { createUserDetails } from '../utils/userRequests';
 
 export type UserContextType = {
   currentUser: User | null;
@@ -46,6 +47,15 @@ export function useUserContext() {
 }
 
 export function UserProvider({ children, auth }: { children: React.ReactNode, auth: Auth }) {
+  const INITIAL_USER_DETAILS: UserFirebase = {
+    id: '',
+    hasDoneIntro: false,
+    name: '',
+    imageUrl: '',
+    inviteStates: {},
+    contacts: [],
+  };
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userDetails, setUserDetails] = useState<UserFirebase | null>(null);
   const [loading, setLoading] = useState(true);
@@ -87,6 +97,7 @@ export function UserProvider({ children, auth }: { children: React.ReactNode, au
       console.log('on Auth State changed');
       if (firebaseUser) {
         setCurrentUser(firebaseUser);
+        createUserDetails(db, firebaseUser.uid, INITIAL_USER_DETAILS);
         if (!userDetails) {
           registerListenerOnUserDetails(firebaseUser.uid);
         }
