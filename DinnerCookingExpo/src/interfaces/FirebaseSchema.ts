@@ -38,6 +38,9 @@ type UserFirebase = {
   name: string;
   inviteStates: { [key: string]: InviteState };
   contacts: DocumentReference[];
+  allergies: string[];
+  diets: string[];
+  unwantedIngredients: string[];
 };
 
 type Recipe = {

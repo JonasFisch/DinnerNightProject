@@ -46,7 +46,13 @@ export function useUserContext() {
   return useContext(UserContext);
 }
 
-export function UserProvider({ children, auth }: { children: React.ReactNode, auth: Auth }) {
+export function UserProvider({
+  children,
+  auth,
+}: {
+  children: React.ReactNode;
+  auth: Auth;
+}) {
   const INITIAL_USER_DETAILS: UserFirebase = {
     id: '',
     hasDoneIntro: false,
@@ -54,6 +60,9 @@ export function UserProvider({ children, auth }: { children: React.ReactNode, au
     imageUrl: '',
     inviteStates: {},
     contacts: [],
+    allergies: [],
+    diets: [],
+    unwantedIngredients: [],
   };
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
