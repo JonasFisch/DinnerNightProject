@@ -15,52 +15,115 @@ export const StepScreen = ({ navigation }) => {
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
 
-  const [allergies, setAllergies] = useState<string[]>(["soy", "nuts", "bananas", "tomatos", "mushrooms"]);
+  const [step, setStep] = useState<number>(0);
+
+  const [allergies, setAllergies] = useState<string[]>([
+    'soy',
+    'nuts',
+    'bananas',
+    'tomatos',
+    'mushrooms',
+  ]);
+
+  const [diets, setDiets] = useState<string[]>(['vegetarian']);
+
+  const [unwantedIngredients, setUnwantedIngredients] = useState<string[]>([
+    'apples',
+    'carrots',
+    'mushrooms',
+  ]);
+
+  const preferenceConfig = [
+    {
+      title: 'Allergies',
+      items: allergies,
+      changeHandler: setAllergies,
+    },
+    {
+      title: 'Diet',
+      items: diets,
+      changeHandler: setDiets,
+    },
+    {
+      title: 'Unwanted Ingredients',
+      items: unwantedIngredients,
+      changeHandler: setUnwantedIngredients,
+    },
+  ];
 
   const nextStep = () => {
-    // TODO: go to next Step with navigation.navigate('routename')
+    if (step == preferenceConfig.length - 1) {
+      // TODO: navigate to Finish Screen
+    } else {
+      setStep(step + 1);
+    }
+  };
+
+  const backStep = () => {
+    if (step == 0) {
+      // TODO: navigate to Welcome Screen
+    } else {
+      setStep(step - 1);
+    }
+  };
+
+  const NoItemsSpecified = () => {
+    preferenceConfig[step].changeHandler([]);
+    nextStep();
   };
 
   const finishIntro = async () => {
     if (!userContext.currentUser) {
-      throw new Error("user not authenticated");
+      throw new Error('user not authenticated');
     }
     await finishIntroOfUser(db, userContext.currentUser.uid);
   };
 
   const removeAllergie = (value: string) => {
-    const newAllergies = allergies.filter(
-      element => element !== value,
-    );
+    const newAllergies = allergies.filter(element => element !== value);
     setAllergies(newAllergies);
   };
 
-  const renderChip = item => (
-    <Chip withAvatar={false} style={styles.chip} label={item} onPress={() => removeAllergie(item)} />
+  const renderChip = (item: string) => (
+    <Chip
+      withAvatar={false}
+      key={item}
+      style={styles.chip}
+      label={item}
+      onPress={() => removeAllergie(item)}
+    />
   );
 
   return (
     <Frame>
       <View style={styles.contentWrapper}>
-        <Text style={[styles.headline, typography.h3]}>Specify Allergies</Text>
-        <Text style={typography.body}>
-          dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh
-          askjdhaksjdh askjd
+        <Text style={[styles.headline, typography.h3]}>
+          Specify {preferenceConfig[step].title}
         </Text>
-        <View style={styles.allergiesWrapper}>
-          {allergies.map(item => (<Chip withAvatar={false} style={styles.chip} label={item} onPress={() => removeAllergie(item)} />))}
-        </View>
+        <Text style={typography.body}>
+          dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh
+          askjd
+        </Text>
+        {preferenceConfig[step].items.length == 0 ? (
+          <Text style={[typography.overline, styles.noItemsText]}>
+            You haven't selected any {preferenceConfig[step].title}
+          </Text>
+        ) : (
+          <View style={styles.itemWrapper}>
+            {preferenceConfig[step].items.map(renderChip)}
+          </View>
+        )}
       </View>
       <View style={styles.buttonContainer}>
         <AppButton
-          onPress={() => { }}
-          title="I have no allergies"
+          onPress={NoItemsSpecified}
+          title={`No ${preferenceConfig[step].title}`}
           type={AppButtonType.text}
         />
         <View style={styles.horizontalButtonContainer}>
           <AppButton
             style={[styles.button, { marginRight: spacing.m }]}
-            onPress={() => { }}
+            onPress={backStep}
             title="back"
             type={AppButtonType.secondary}
           />
@@ -70,10 +133,10 @@ export const StepScreen = ({ navigation }) => {
             title="next"
             type={AppButtonType.primary}
           />
-        </View></View>
+        </View>
+      </View>
     </Frame>
   );
-
 };
 const styles = StyleSheet.create({
   contentWrapper: {
@@ -83,13 +146,13 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
   buttonContainer: {
-    display: "flex",
-    justifyContent: "space-between",
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   horizontalButtonContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: spacing.s,
   },
   button: {
@@ -98,10 +161,13 @@ const styles = StyleSheet.create({
   chip: {
     marginBottom: spacing.m,
   },
-  allergiesWrapper: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+  itemWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginTop: spacing.xl,
-
-  }
+  },
+  noItemsText: {
+    textAlign: 'center',
+    marginTop: spacing.xl,
+  },
 });
