@@ -22,7 +22,7 @@ export const AvatarList = (props: AvatarListProps) => {
   );
 
   return (
-    <FlatList data={props.participants} renderItem={renderAvatar} horizontal style={{flexDirection: "row"}} ItemSeparatorComponent={() => <View style={{width: 50}}></View>}/>
+    <FlatList data={props.participants} renderItem={renderAvatar} horizontal style={{flexDirection: "row"}} ItemSeparatorComponent={() => <View style={{width: 40}}></View>}/>
   ) 
 }
 

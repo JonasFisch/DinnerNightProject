@@ -19,35 +19,37 @@ import { Row } from '../../../components/Row';
 import { typography } from '../../../styles/Typography';
 import { sizes } from '../../../styles/Sizes';
 import { AvatarList } from '../../../components/AvatarList';
-import { DinnerFirebase, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import { DinnerFirebase, Recipe, UserFirebase } from '../../../interfaces/FirebaseSchema';
 
 type WinnerScreenType = {
   isAdmin: boolean;
   participants: UserFirebase[]
-  dinner?: DinnerFirebase ,
+  dinner?: DinnerFirebase,
 };
 
 export const WinnerScreen = (props: WinnerScreenType) => {
   const navigator = useNavigation();
 
+  const recipe = useState<Recipe>();
+
   return (
     <Frame withSubPageHeader>
       <ScrollView style={{marginBottom: spacing.l}}>
-        <Row spaceBetween>
-          <Text style={typography.subtitle2}>Participants</Text>
+        <Row spaceBetween style={{marginBottom: spacing.s}}>
+          <Text style={[typography.subtitle2]}>Participants</Text>
           <Row style={{alignItems: "flex-end"}}>
             <Text style={typography.overline}>0 / 4</Text>
             <Text style={typography.body2}>{" "}voted</Text>
           </Row>
         </Row>
         <AvatarList participants={props.participants} />
-        <Row spaceBetween style={{marginBottom: spacing.m}}>
+        <Row spaceBetween style={{marginBottom: spacing.s}}>
           <Text style={typography.subtitle2}>
             Winner Recipe
           </Text>
         </Row>
         <View style={{ width: '100%', height: 250 }}>
-            <CarouselItem name="Vegetarian Lasagne" selected={false} />    
+            <CarouselItem name="Vegetarian Lasagne" selected={false} hideSelected voting={{total: 4, voted: 3}} duration={1} level={"Easy"} />    
         </View>
         <View style={{marginTop: spacing.m}}>
           <Text style={typography.overline}>
@@ -70,7 +72,9 @@ export const WinnerScreen = (props: WinnerScreenType) => {
           style={{flex: 1}}
           title="COOK"
           type={AppButtonType.primary}
-          onPress={() => navigator.navigate('Recipe')}
+          onPress={() => navigator.navigate('Recipe', {
+            recipe
+          })}
         />
       </View>
     </Frame>

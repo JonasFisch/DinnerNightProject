@@ -1,3 +1,4 @@
+import { Ingredients } from './../components/Ingredients';
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -48,6 +49,27 @@ type UserFirebase = {
   contacts: DocumentReference[];
 };
 
+export type Ingredient = {
+  asile: string;
+  amount: number;
+  consistency: string;
+  measures: {
+    metric: {
+      amount: number;
+      unitLong: string;
+      unitShort: string;
+    };
+    us: {
+      amout: number;
+      unitLong: string;
+      unitShort: string;
+    };
+  };
+  meta: string[];
+  name: string;
+  nameClean: string;
+}
+
 type Recipe = {
   aggregateLikes: number;
   dishTypes: string[];
@@ -58,7 +80,7 @@ type Recipe = {
   title: string;
   vegan: boolean;
   vegetarian: boolean;
-  servings: 4;
+  servings: number;
   analyzedInstructions: [
     {
       name: string;
@@ -84,28 +106,7 @@ type Recipe = {
       ];
     },
   ];
-  extendedIngredients: [
-    {
-      asile: string;
-      amount: number;
-      consistency: string;
-      measures: {
-        metric: {
-          amount: number;
-          unitLong: string;
-          unitShort: string;
-        };
-        us: {
-          amout: number;
-          unitLong: string;
-          unitShort: string;
-        };
-      };
-      meta: string[];
-      name: string;
-      nameClean: string;
-    },
-  ];
+  extendedIngredients: Ingredient[];
 };
 
 export { DinnerState, DinnerFirebase, UserFirebase, Recipe };

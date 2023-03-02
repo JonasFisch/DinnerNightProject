@@ -1,9 +1,11 @@
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import React, { useCallback, useContext, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
+import { Ingredients } from '../../components/Ingredients';
 import { Instruction } from '../../components/Instruction';
+import { Row } from '../../components/Row';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { Recipe } from '../../interfaces/FirebaseSchema';
@@ -13,6 +15,7 @@ import { fetchRecipe } from '../../utils/dinnerRequests';
 
 export const RecipeShow = () => {
   const [recipe, setRecipe] = useState<Recipe>();
+  const route = useRoute()
 
   const db = useContext(DatabaseContext).database;
 
@@ -39,27 +42,22 @@ export const RecipeShow = () => {
   return (
     <ScrollView>
       <Frame withSubPageHeader>
+        <Text style={[typography.h4, {textAlign: "center", marginBottom: spacing.m}]}>{recipe?.title}</Text>
         <Image
-          style={{ width: '100%', height: 200, borderRadius: 10 }}
+          style={{ width: '100%', height: 200, borderRadius: 10, marginBottom: spacing.xs }}
           source={{
             uri: recipe?.image,
           }}
         />
-        <Text>Title: {recipe?.title}</Text>
-        <Text>Cooking time: {recipe?.readyInMinutes} min</Text>
+
+        <Row spaceBetween style={{marginBottom: spacing.m}}>
+          <Text style={typography.body}>Level: easy</Text>
+          <Text style={typography.body}>Cooking time: {recipe?.readyInMinutes} min</Text>
+        </Row>
 
         <View style={{marginBottom: spacing.l}}>
-          {/* TODO: add serving buttons here! */}
-          {/* TODO: create component for servings here */}
-          <Text style={typography.subtitle2}>Ingredients:</Text>
-          {recipe?.extendedIngredients.map(ingredient => {
-            return (
-              <Text style={typography.body}>{`${Math.floor(ingredient.measures.metric.amount)} ${
-                  ingredient.measures.metric.unitShort
-                } ${ingredient.name}`}
-              </Text>
-            );
-          })}
+          <Text style={[typography.subtitle2, {marginBottom: spacing.s}]}>Ingredients:</Text>
+          <Ingredients ingredients={recipe?.extendedIngredients ?? []} servings={recipe?.servings ?? 0} />
         </View>
 
         <View>
