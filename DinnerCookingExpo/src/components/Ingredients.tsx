@@ -26,6 +26,10 @@ export const Ingredients = (props: IngredientsProps) => {
 		else setServings(num)
 	}
 
+	useEffect(() => {
+		setServings(props.servings)
+	}, [props.servings])
+
 	return <View>
 		<Row spaceBetween style={{flexDirection: "row", alignItems: "center", marginBottom: spacing.m}}>
 			<CircleIconWrapper onPress={() => {updateServings(servings - 1)}}>

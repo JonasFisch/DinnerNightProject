@@ -3,7 +3,6 @@ import { Text } from 'react-native';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
-import { CookingScreen } from './CookingScreen';
 import { VotingScreen } from './VotingScreen';
 import { InviteScreen } from './InviteScreen';
 import {
@@ -11,7 +10,8 @@ import {
   DinnerState,
   UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
-import { fetchDinner, fetchParticipants } from '../../../utils/dinnerRequests';
+import { fetchDinner } from '../../../utils/dinnerRequests';
+import { fetchUsers } from '../../../utils/userRequests';
 import { useUserContext } from '../../../contexts/UserContext';
 import { WinnerScreen } from './WinnerScreen';
 
@@ -44,7 +44,7 @@ export const DinnerDetailScreen = () => {
   };
 
   const resolveParticipants = async (dinner: DinnerFirebase) => {
-    setParticipants(await fetchParticipants(db, dinner.participants));
+    setParticipants(await fetchUsers(db, dinner.participants));
   };
 
   // refetch dinners on focus screen
