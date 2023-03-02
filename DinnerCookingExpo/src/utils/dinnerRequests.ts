@@ -1,8 +1,4 @@
-import {
-  DinnerState,
-  Recipe,
-  UserFirebase,
-} from './../interfaces/FirebaseSchema';
+import { DinnerState, Recipe } from './../interfaces/FirebaseSchema';
 import { User } from 'firebase/auth';
 import {
   collection,
@@ -15,8 +11,6 @@ import {
   Timestamp,
   addDoc,
   getDoc,
-  getFirestore,
-  updateDoc,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { DocumentData } from 'firebase/firestore';
@@ -26,9 +20,8 @@ export const fetchDinners = async (
   userData: User,
 ): Promise<DinnerFirebase[]> => {
   return new Promise(async (resolve, reject) => {
+    console.log('IN FETCHING DINNERS');
 
-    console.log("IN FETCHING DINNERS");
-    
     // get data from firebase
     const dinnersSnap = await getDocs(
       query(
@@ -52,7 +45,7 @@ export const fetchDinner = async (
   db: Firestore,
   dinnerID: string,
 ): Promise<DinnerFirebase> => {
-  console.log("IN FETCHING SINGLE DINNER");
+  console.log('IN FETCHING SINGLE DINNER');
 
   return new Promise(async (resolve, reject) => {
     const dinnersSnap = await getDoc(doc(db, `Dinners/${dinnerID}`));
@@ -64,106 +57,6 @@ export const fetchDinner = async (
   });
 };
 
-export const fetchUsers = async (
-  db: Firestore,
-  userIds: DocumentReference[],
-): Promise<UserFirebase[]> => {
-  console.log("IN FETCH USERS");
-
-  return new Promise(async (resolve, reject) => {
-    if (userIds.length <= 0) resolve([]);
-
-    const usersSnap = await getDocs(
-      query(
-        collection(db, 'Users'),
-        where(
-          '__name__',
-          'in',
-          userIds.map(user => user.id),
-        ), // __name__ = id of the document n firestore
-      ),
-    );
-
-    if (usersSnap.docs.length < 0)
-      reject('there was an error while fetching users,');
-
-    resolve(
-      usersSnap.docs.map(fetchedUser => {
-        const user: UserFirebase = fetchedUser.data() as UserFirebase;
-        user.id = fetchedUser.id; // add the document id here as well!
-        return user;
-      }),
-    );
-  });
-};
-
-export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
-  console.log("IN FETCH ALL USERS");
-
-  return new Promise(async (resolve, reject) => {
-    const colRef = collection(db, 'Users');
-    const usersSnap = await getDocs(colRef);
-    resolve(
-      usersSnap.docs.map(
-        fetchedUser =>
-          ({ ...fetchedUser.data(), id: fetchedUser.id } as UserFirebase),
-      ),
-    );
-  });
-};
-
-export const setContactsOfUser = async (
-  db: Firestore,
-  userId: string,
-  contactIds: string[],
-): Promise<void> => {
-  console.log("IN SET CONTACTS OF USER");
-
-  return new Promise(async (resolve, reject) => {
-    const firestore = getFirestore(db.app);
-    const userRef = doc(firestore, 'Users/' + userId);
-    const contactRefs = contactIds.map(id => doc(firestore, 'Users/' + id));
-    await updateDoc(userRef, 'contacts', contactRefs);
-    resolve();
-  });
-};
-
-export const fetchParticipants = async (
-  db: Firestore,
-  participants: DocumentReference[],
-): Promise<UserFirebase[]> => {
-
-  console.log("IN FETCH PARTICIPANTS");
-
-  return new Promise(async (resolve, reject) => {
-    // fetch participant data from firestore
-
-    if (participants.length <= 0) resolve([]);
-
-    const participantsSnap = await getDocs(
-      query(
-        collection(db, 'Users'),
-        where(
-          '__name__',
-          'in',
-          participants.map(participant => participant.id),
-        ), // __name__ = id of the document n firestore
-      ),
-    );
-
-    if (participantsSnap.docs.length < 0)
-      reject('there was an error while fetching participants,');
-
-    resolve(
-      participantsSnap.docs.map(participant => {
-        const user: UserFirebase = participant.data() as UserFirebase;
-        user.id = participant.id; // add the document id here as well!
-        return user;
-      }),
-    );
-  });
-};
-
 export const createDinner = async (
   db: Firestore,
   participants: DocumentReference[],
@@ -171,8 +64,7 @@ export const createDinner = async (
   date: Date,
   name: string,
 ): Promise<DocumentReference> => {
-
-  console.log("IN CREATE DINNER");
+  console.log('IN CREATE DINNER');
 
   return new Promise(async (resolve, reject) => {
     const newDinner: DinnerFirebase = {

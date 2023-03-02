@@ -12,7 +12,7 @@ import {
   SelectableListEntry,
 } from '../../components/SelectableList';
 import { colors } from '../../styles/Color';
-import { fetchUsers } from '../../utils/dinnerRequests';
+import { fetchUsers } from '../../utils/userRequests';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { useUserContext } from '../../contexts/UserContext';
 
