@@ -8,7 +8,11 @@ import { useUserContext } from '../../contexts/UserContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
-import { finishIntroOfUser } from '../../utils/userRequests';
+import {
+  setAllergiesOfUser,
+  setDietsOfUser,
+  setUnwantedIngredientsOfUser,
+} from '../../utils/userRequests';
 
 export const StepScreen = ({ navigation }) => {
   const userContext = useUserContext();
@@ -51,10 +55,30 @@ export const StepScreen = ({ navigation }) => {
     },
   ];
 
+  const savePreferences = async () => {
+    if (!userContext.currentUser) {
+      throw new Error('user not authenticated');
+    }
+    Promise.all([
+      await setAllergiesOfUser(db, userContext.currentUser.uid, allergies),
+      await setDietsOfUser(db, userContext.currentUser.uid, diets),
+      await setUnwantedIngredientsOfUser(
+        db,
+        userContext.currentUser.uid,
+        unwantedIngredients,
+      ),
+    ]);
+  };
+
   const nextStep = () => {
     if (step == preferenceConfig.length - 1) {
-      navigation.navigate('Finish');
-      // TODO: save preferences
+      savePreferences()
+        .then(() => {
+          navigation.navigate('Finish');
+        })
+        .catch(error => {
+          console.log('error during setting of eating preferences: ', error);
+        });
     } else {
       setStep(step + 1);
     }
@@ -62,20 +86,22 @@ export const StepScreen = ({ navigation }) => {
 
   const backStep = () => {
     if (step == 0) {
-      // TODO: navigate to Welcome Screen
+      navigation.navigate('Welcome');
     } else {
       setStep(step - 1);
     }
   };
 
-  const NoItemsSpecified = () => {
+  const noItemsSpecified = () => {
     preferenceConfig[step].changeHandler([]);
     nextStep();
   };
 
-  const removeAllergie = (value: string) => {
-    const newAllergies = allergies.filter(element => element !== value);
-    setAllergies(newAllergies);
+  const removeItem = (value: string) => {
+    const newItems = preferenceConfig[step].items.filter(
+      element => element !== value,
+    );
+    preferenceConfig[step].changeHandler(newItems);
   };
 
   const renderChip = (item: string) => (
@@ -84,7 +110,7 @@ export const StepScreen = ({ navigation }) => {
       key={item}
       style={styles.chip}
       label={item}
-      onPress={() => removeAllergie(item)}
+      onPress={() => removeItem(item)}
     />
   );
 
@@ -110,7 +136,7 @@ export const StepScreen = ({ navigation }) => {
       </View>
       <View style={styles.buttonContainer}>
         <AppButton
-          onPress={NoItemsSpecified}
+          onPress={noItemsSpecified}
           title={`No ${preferenceConfig[step].title}`}
           type={AppButtonType.text}
         />
