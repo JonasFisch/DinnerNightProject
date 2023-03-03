@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { AppButtonType } from '../interfaces/Button';
 import { spacing } from '../styles/Spacing';
@@ -24,7 +24,9 @@ export const ImageLayout = ({
 }: ImageLayoutProps) => {
   return (
     <Frame>
-      <ImageSVG width={'100%'} />
+      <View style={styles.imageWrapper}>
+        <ImageSVG width={'100%'} />
+      </View>
       <Text style={typography.h3}>{headline}</Text>
       <Text style={[typography.body, styles.description]}>{description}</Text>
       <AppButton
@@ -39,5 +41,9 @@ export const ImageLayout = ({
 const styles = StyleSheet.create({
   description: {
     marginVertical: spacing.xl,
+  },
+  imageWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
