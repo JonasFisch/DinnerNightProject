@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { Chip } from '../../components/Chip';
@@ -21,21 +21,9 @@ export const StepScreen = ({ navigation }) => {
 
   const [step, setStep] = useState<number>(0);
 
-  const [allergies, setAllergies] = useState<string[]>([
-    'soy',
-    'nuts',
-    'bananas',
-    'tomatos',
-    'mushrooms',
-  ]);
-
-  const [diets, setDiets] = useState<string[]>(['vegetarian']);
-
-  const [unwantedIngredients, setUnwantedIngredients] = useState<string[]>([
-    'apples',
-    'carrots',
-    'mushrooms',
-  ]);
+  const [allergies, setAllergies] = useState<string[]>([]);
+  const [diets, setDiets] = useState<string[]>([]);
+  const [unwantedIngredients, setUnwantedIngredients] = useState<string[]>([]);
 
   const preferenceConfig = [
     {
@@ -113,6 +101,16 @@ export const StepScreen = ({ navigation }) => {
       onPress={() => removeItem(item)}
     />
   );
+
+  useEffect(() => {
+    if (!userContext.userDetails) {
+      return;
+    }
+
+    setAllergies(userContext.userDetails.allergies);
+    setDiets(userContext.userDetails.diets);
+    setUnwantedIngredients(userContext.userDetails.unwantedIngredients);
+  });
 
   return (
     <Frame>
