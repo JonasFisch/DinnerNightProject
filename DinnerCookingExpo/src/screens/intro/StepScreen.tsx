@@ -53,7 +53,8 @@ export const StepScreen = ({ navigation }) => {
 
   const nextStep = () => {
     if (step == preferenceConfig.length - 1) {
-      // TODO: navigate to Finish Screen
+      navigation.navigate('Finish');
+      // TODO: save preferences
     } else {
       setStep(step + 1);
     }
@@ -70,13 +71,6 @@ export const StepScreen = ({ navigation }) => {
   const NoItemsSpecified = () => {
     preferenceConfig[step].changeHandler([]);
     nextStep();
-  };
-
-  const finishIntro = async () => {
-    if (!userContext.currentUser) {
-      throw new Error('user not authenticated');
-    }
-    await finishIntroOfUser(db, userContext.currentUser.uid);
   };
 
   const removeAllergie = (value: string) => {
