@@ -46,6 +46,7 @@ import { RecipeShow } from './src/screens/recipe/RecipeShow';
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { setupEmulators } from './Firebase';
 import { IntroFinishScreen } from './src/screens/intro/IntroFinishScreen';
+import { AddAllergiesScreen } from './src/screens/preferences/AddAllergiesScreen';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAcAK7yLBd7J_saiXDEoDjFBsmsqsVBI0k',
@@ -160,6 +161,11 @@ const App = () => {
                           <AppStack.Screen
                             name="Steps"
                             component={StepScreen}
+                          />
+                          <AppStack.Screen
+                            name="AddAllergies"
+                            component={AddAllergiesScreen}
+                            options={{ headerShown: true }}
                           />
                           <AppStack.Screen
                             name="Finish"

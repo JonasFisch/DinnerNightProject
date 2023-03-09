@@ -85,6 +85,7 @@ export const AppInput = (props: AppInputProps) => {
   const onFocus = () => {
     transformLabelBorder();
     setActive(true);
+    props.customOnFokus && props.customOnFokus();
   };
 
   // calulcate style sheet

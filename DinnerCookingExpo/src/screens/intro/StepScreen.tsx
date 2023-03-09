@@ -3,6 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { Chip } from '../../components/Chip';
 import { Frame } from '../../components/Frame';
+import { AppInput } from '../../components/Input';
+import { SelectableListEntry } from '../../components/SelectableList';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { useUserContext } from '../../contexts/UserContext';
 import { AppButtonType } from '../../interfaces/Button';
@@ -13,6 +15,7 @@ import {
   setDietsOfUser,
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
+import { AddAllergiesScreen } from '../preferences/AddAllergiesScreen';
 
 export const StepScreen = ({ navigation }) => {
   const userContext = useUserContext();
@@ -102,11 +105,22 @@ export const StepScreen = ({ navigation }) => {
     />
   );
 
+  const handleSearchInputFocus = () => {
+    const listItems: SelectableListEntry[] = allergies.map(item => ({
+      id: item,
+      label: item,
+    }));
+    navigation.navigate('AddAllergies', {
+      allergies: listItems,
+    });
+  };
+
   useEffect(() => {
     if (!userContext.userDetails) {
       return;
     }
 
+    // TODO: check if anything needs to be saved
     setAllergies(userContext.userDetails.allergies);
     setDiets(userContext.userDetails.diets);
     setUnwantedIngredients(userContext.userDetails.unwantedIngredients);
@@ -122,6 +136,13 @@ export const StepScreen = ({ navigation }) => {
           dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh
           askjd
         </Text>
+        <AppInput
+          value={''}
+          onChangeText={() => {}}
+          customOnFokus={handleSearchInputFocus}
+          label={'Search'}
+          clearable={true}
+        />
         {preferenceConfig[step].items.length == 0 ? (
           <Text style={[typography.overline, styles.noItemsText]}>
             You haven't selected any {preferenceConfig[step].title}
