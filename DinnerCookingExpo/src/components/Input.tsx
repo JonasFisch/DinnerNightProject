@@ -43,7 +43,8 @@ export const AppInput = (props: AppInputProps) => {
   }, [props.hideable, props.value, active]);
 
   // activate layout animations
-  LayoutAnimation.spring();
+  // REMOVED because: this causes an error in the Searchpage: when adding a searchphrase some items in the filteredlist are not loaded correctly because of animations && also causes flickering when tabbing on the chips on the Searchpage
+  //LayoutAnimation.spring();
 
   // change label back to normal
   const endEdit = e => {
