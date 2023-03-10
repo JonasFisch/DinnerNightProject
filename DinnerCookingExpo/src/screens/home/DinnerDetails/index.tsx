@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Text } from 'react-native';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import { CookingScreen } from './CookingScreen';
@@ -12,14 +12,15 @@ import {
 } from '../../../interfaces/FirebaseSchema';
 import { fetchDinner } from '../../../utils/dinnerRequests';
 import { useUserContext } from '../../../contexts/UserContext';
+import ParamList from '../../../utils/ParameterDefinitions';
 
 export type DinnerDetailScreenParams = {
   id: string;
 };
 
 export const DinnerDetailScreen = () => {
-  const route = useRoute();
-  const params = route.params as DinnerDetailScreenParams;
+  const route = useRoute<RouteProp<ParamList, 'DinnerDetailScreen'>>();
+  const id: string = route.params.id;
 
   const db = useContext(DatabaseContext).database;
   const user = useUserContext().currentUser;
@@ -29,7 +30,7 @@ export const DinnerDetailScreen = () => {
   // fetch dinner details here
   const resolveDinner = async () => {
     try {
-      const fetchedDinner = await fetchDinner(db, params.id);
+      const fetchedDinner = await fetchDinner(db, id);
 
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);

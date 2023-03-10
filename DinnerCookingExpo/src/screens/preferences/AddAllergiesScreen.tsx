@@ -4,11 +4,12 @@ import { useUserContext } from '../../contexts/UserContext';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { setAllergiesOfUser } from '../../utils/userRequests';
 import { SelectableListEntry } from '../../components/SelectableList';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import ParamList from '../../utils/ParameterDefinitions';
 
-export const AddAllergiesScreen = ({ route }) => {
-  // TODO: const route = useRoute()
-  const { allergies }: { allergies: SelectableListEntry[] } = route.params;
+export const AddAllergiesScreen = () => {
+  const route = useRoute<RouteProp<ParamList, 'AddAllergiesScreen'>>();
+  const allergies: SelectableListEntry[] = route.params.allergies;
   const userContext = useUserContext();
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
