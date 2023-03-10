@@ -15,7 +15,6 @@ import {
   setDietsOfUser,
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
-import { AddAllergiesScreen } from '../preferences/AddAllergiesScreen';
 
 export const StepScreen = ({ navigation }) => {
   const userContext = useUserContext();
@@ -47,6 +46,7 @@ export const StepScreen = ({ navigation }) => {
   ];
 
   const savePreferences = async () => {
+    // TODO: check if anything needs to be saved
     if (!userContext.currentUser) {
       throw new Error('user not authenticated');
     }
@@ -120,11 +120,10 @@ export const StepScreen = ({ navigation }) => {
       return;
     }
 
-    // TODO: check if anything needs to be saved
     setAllergies(userContext.userDetails.allergies);
     setDiets(userContext.userDetails.diets);
     setUnwantedIngredients(userContext.userDetails.unwantedIngredients);
-  });
+  }, [userContext.userDetails]);
 
   return (
     <Frame>
@@ -137,6 +136,7 @@ export const StepScreen = ({ navigation }) => {
           askjd
         </Text>
         <AppInput
+          style={styles.input}
           value={''}
           onChangeText={() => {}}
           customOnFokus={handleSearchInputFocus}
@@ -203,10 +203,12 @@ const styles = StyleSheet.create({
   itemWrapper: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: spacing.xl,
   },
   noItemsText: {
     textAlign: 'center',
     marginTop: spacing.xl,
+  },
+  input: {
+    marginVertical: spacing.xl,
   },
 });
