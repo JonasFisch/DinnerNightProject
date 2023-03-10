@@ -5,6 +5,7 @@ import { Chip } from '../../components/Chip';
 import { Frame } from '../../components/Frame';
 import { AppInput } from '../../components/Input';
 import { SelectableListEntry } from '../../components/SelectableList';
+import { Stepper } from '../../components/Stepper';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { useUserContext } from '../../contexts/UserContext';
 import { AppButtonType } from '../../interfaces/Button';
@@ -135,6 +136,11 @@ export const StepScreen = ({ navigation }) => {
   return (
     <Frame>
       <View style={styles.contentWrapper}>
+        <Stepper
+          currentStep={step}
+          totalStepCount={3}
+          onCurrentStepChange={() => {}}
+          style={styles.stepper}></Stepper>
         <Text style={[styles.headline, typography.h3]}>
           Specify {preferenceConfig[step].title}
         </Text>
@@ -189,7 +195,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headline: {
-    marginBottom: spacing.xl,
+    marginVertical: spacing.xl,
   },
   buttonContainer: {
     display: 'flex',
@@ -216,5 +222,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginVertical: spacing.xl,
+  },
+  stepper: {
+    marginTop: spacing.s,
   },
 });
