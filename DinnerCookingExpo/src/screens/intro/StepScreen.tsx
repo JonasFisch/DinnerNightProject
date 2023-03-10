@@ -15,6 +15,7 @@ import {
   setDietsOfUser,
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
+import { EatingPreferenceType } from '../preferences/AddEatingPreferenceScreen';
 
 export const StepScreen = ({ navigation }) => {
   const userContext = useUserContext();
@@ -32,16 +33,19 @@ export const StepScreen = ({ navigation }) => {
       title: 'Allergies',
       items: allergies,
       changeHandler: setAllergies,
+      type: EatingPreferenceType.allergies,
     },
     {
       title: 'Diet',
       items: diets,
       changeHandler: setDiets,
+      type: EatingPreferenceType.diets,
     },
     {
       title: 'Unwanted Ingredients',
       items: unwantedIngredients,
       changeHandler: setUnwantedIngredients,
+      type: EatingPreferenceType.unwantedIngredients,
     },
   ];
 
@@ -106,12 +110,15 @@ export const StepScreen = ({ navigation }) => {
   );
 
   const handleSearchInputFocus = () => {
-    const listItems: SelectableListEntry[] = allergies.map(item => ({
-      id: item,
-      label: item,
-    }));
-    navigation.navigate('AddAllergies', {
-      allergies: listItems,
+    const listItems: SelectableListEntry[] = preferenceConfig[step].items.map(
+      item => ({
+        id: item,
+        label: item,
+      }),
+    );
+    navigation.navigate('AddEatingPreferences', {
+      type: preferenceConfig[step].type,
+      preselectedItems: listItems,
     });
   };
 
@@ -206,7 +213,6 @@ const styles = StyleSheet.create({
   },
   noItemsText: {
     textAlign: 'center',
-    marginTop: spacing.xl,
   },
   input: {
     marginVertical: spacing.xl,
