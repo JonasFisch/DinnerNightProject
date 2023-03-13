@@ -5,7 +5,7 @@ import {
   DocumentReference,
   Timestamp,
 } from 'firebase/firestore';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
 import { AppInput } from '../../components/Input';
@@ -17,6 +17,7 @@ import { Platform, Text, View } from 'react-native';
 import { DinnerDetailScreenParams } from './DinnerDetails/index';
 import { createDinner } from '../../utils/dinnerRequests';
 import { UserContext, useUserContext } from '../../contexts/UserContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const CreateParty = ({ navigation }) => {
   const db = useContext(DatabaseContext).database;
@@ -25,7 +26,7 @@ export const CreateParty = ({ navigation }) => {
   const [name, setName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date(Date.now()));
   const [mode, setMode] = useState<any>('date');
-  const [show, setShow] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(true);
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -40,7 +41,6 @@ export const CreateParty = ({ navigation }) => {
   const showMode = (currentMode: string) => {
     if (Platform.OS === 'android') {
       setShow(false);
-      // for iOS, add a button that closes the picker
     }
     setMode(currentMode);
   };
@@ -56,6 +56,10 @@ export const CreateParty = ({ navigation }) => {
     showMode('time');
     setShow(true);
   };
+
+  useEffect(() => {
+    showMode('date');
+  }, []);
 
   /*
 
