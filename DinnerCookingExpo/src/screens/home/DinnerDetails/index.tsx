@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Text } from 'react-native';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import { VotingScreen } from './VotingScreen';
@@ -14,14 +14,15 @@ import { fetchDinner } from '../../../utils/dinnerRequests';
 import { fetchUsers } from '../../../utils/userRequests';
 import { useUserContext } from '../../../contexts/UserContext';
 import { WinnerScreen } from './WinnerScreen';
+import ParamList from '../../../utils/ParameterDefinitions';
 
 export type DinnerDetailScreenParams = {
   id: string;
 };
 
 export const DinnerDetailScreen = () => {
-  const route = useRoute();
-  const params = route.params as DinnerDetailScreenParams;
+  const route = useRoute<RouteProp<ParamList, 'DinnerDetailScreen'>>();
+  const id: string = route.params.id;
 
   const db = useContext(DatabaseContext).database;
   const user = useUserContext().currentUser;
@@ -32,7 +33,7 @@ export const DinnerDetailScreen = () => {
   // fetch dinner details here
   const resolveDinner = async () => {
     try {
-      const fetchedDinner = await fetchDinner(db, params.id);
+      const fetchedDinner = await fetchDinner(db, id);
 
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
@@ -50,11 +51,11 @@ export const DinnerDetailScreen = () => {
   // refetch dinners on focus screen
   useFocusEffect(
     useCallback(() => {
-      resolveDinner().then(fetchedDinner => { 
+      resolveDinner().then(fetchedDinner => {
         if (fetchedDinner) {
-          resolveParticipants(fetchedDinner)
+          resolveParticipants(fetchedDinner);
         } else {
-          throw new Error("dinner was not fetched correctly!")
+          throw new Error('dinner was not fetched correctly!');
         }
       });
     }, []),
@@ -69,9 +70,21 @@ export const DinnerDetailScreen = () => {
     case DinnerState.INVITE:
       return <InviteScreen dinner={dinner} isAdmin={isAdmin} />;
     case DinnerState.VOTING:
-      return <VotingScreen isAdmin={isAdmin} dinner={dinner} participants={participants ?? []} />;
+      return (
+        <VotingScreen
+          isAdmin={isAdmin}
+          dinner={dinner}
+          participants={participants ?? []}
+        />
+      );
     case DinnerState.COOKING:
-      return <WinnerScreen isAdmin={isAdmin} dinner={dinner} participants={participants ?? []}  />
+      return (
+        <WinnerScreen
+          isAdmin={isAdmin}
+          dinner={dinner}
+          participants={participants ?? []}
+        />
+      );
     case DinnerState.FINISHED:
       return <Text>Already Finished.</Text>;
     case DinnerState.LOADING:

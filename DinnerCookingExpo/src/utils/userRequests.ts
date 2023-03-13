@@ -98,3 +98,57 @@ export const setContactsOfUser = async (
     resolve();
   });
 };
+
+export const setAllergiesOfUser = async (
+  db: Firestore,
+  userId: string,
+  allergies: string[],
+): Promise<void> => {
+  console.log('IN SET ALLERGIES OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'allergies', allergies);
+};
+
+export const setDietsOfUser = async (
+  db: Firestore,
+  userId: string,
+  diets: string[],
+): Promise<void> => {
+  console.log('IN SET DIETS OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'diets', diets);
+};
+
+export const setUnwantedIngredientsOfUser = async (
+  db: Firestore,
+  userId: string,
+  ingredients: string[],
+): Promise<void> => {
+  console.log('IN SET UNWANTED INGREDIENTS OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'unwantedIngredients', ingredients);
+};
+
+export const setNameOfUser = async (
+  db: Firestore,
+  userId: string,
+  name: string,
+): Promise<void> => {
+  console.log('IN SET NAME OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'name', name);
+};
+
+export const finishIntroOfUser = async (
+  db: Firestore,
+  userId: string,
+): Promise<void> => {
+  console.log('IN FINISH USER INTRO');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, { hasDoneIntro: true });
+};

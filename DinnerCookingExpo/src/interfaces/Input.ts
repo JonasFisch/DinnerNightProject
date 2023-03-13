@@ -16,6 +16,7 @@ export interface AppInputProps {
   onEndEdit?:
     | ((e: NativeSyntheticEvent<TextInputEndEditingEventData>) => void)
     | undefined;
+  customOnFokus?: () => void;
   textContentType:
     | 'none'
     | 'URL'
