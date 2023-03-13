@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SBItem } from './SBItem';
 import { CarouselItem } from './CarouselItem';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 const recepies = [
@@ -42,10 +43,10 @@ const RecepieCarousel = () => {
   } as const;
 
   const [selected, setSelected] = React.useState<number>(0);
+  const navigator = useNavigation();
 
   const navigateExpandPage = (index: number) => {
-    // TODO: WIP
-    console.log('navigating to expanded recepie page');
+    navigator.navigate('Recipe');
   };
 
   return (
@@ -101,6 +102,7 @@ const RecepieCarousel = () => {
                   alignSelf: 'center',
                 }
           }>
+            {/* TODO: pagination */}
           {/* {recepies.map((backgroundColor, index) => {
             return (
               <PaginationItem

@@ -57,7 +57,7 @@ export const typography = {
     fontFamily: 'ExoRegular',
   },
   body2: {
-    fontSize: 10,
+    fontSize: 12,
     lineHeight: 13,
     letterSpacing: 0.15,
     fontFamily: 'ExoRegular',
@@ -69,6 +69,8 @@ export const typography = {
     fontFamily: 'ExoRegular',
     textDecorationLine: 'underline',
   },
+  // is not used in ios
+  // TODO: @kathi fix font size for android
   navBar: {
     fontSize: 12,
     lineHeight: 16,

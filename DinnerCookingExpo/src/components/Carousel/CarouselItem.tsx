@@ -12,12 +12,14 @@ import OpenIcon from '../../assets/icons/open_in_new.svg';
 import { typography } from '../../styles/Typography';
 import { colors } from '../../styles/Color';
 import { RadioButton } from '../RadioButton';
-
+import { spacing } from '../../styles/Spacing';
 type CarouselItemProps = {
-  level?: string;
-  duration?: number;
   name: string;
   selected: boolean;
+  voting?: { total: number, voted: number };
+  level?: string;
+  duration?: number;
+  hideSelected?: boolean;
   onThumbnailPressed?: (event: GestureResponderEvent) => void;
   onExpandClicked?: (event: GestureResponderEvent) => void;
 };
@@ -35,18 +37,29 @@ export const CarouselItem = (props: CarouselItemProps) => {
       </Pressable>
       <Pressable style={styles.footer} onPress={props.onExpandClicked}>
         <View style={styles.description}>
-          <Text style={typography.subtitle2}>{props.name}</Text>
+          <Text style={[typography.subtitle2, {marginBottom: spacing.xxs}]}>{props.name}</Text>
           <Text style={typography.body2}>
             Level: {props.level}, Duration: {props.duration}h
           </Text>
         </View>
-        <OpenIcon width={24} height={24} style={{ fill: colors.textLight }} />
+        {
+          props.voting ? 
+            <View style={styles.voting}>
+              <Text style={[typography.overline, {marginBottom: spacing.xxs}]}>{`${props.voting.voted} / ${props.voting.total}`}</Text>
+              <Text style={typography.body2}>Votes</Text>
+            </View>
+          : 
+            <OpenIcon width={24} height={24} style={{ fill: colors.textLight }} />
+        }
       </Pressable>
-      <View style={styles.radioWrapper}>
-        <RadioButton
-          selected={props.selected}
-          onPress={props.onThumbnailPressed}></RadioButton>
-      </View>
+      {
+        !props.hideSelected &&
+          <View style={styles.radioWrapper}>
+            <RadioButton
+              selected={props.selected}
+              onPress={props.onThumbnailPressed}></RadioButton>
+          </View>
+      }
     </View>
   );
 };
@@ -88,4 +101,9 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: sizes.borderRadius - 2,
   },
+  voting: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });

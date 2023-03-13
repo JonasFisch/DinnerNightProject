@@ -12,6 +12,7 @@ import DatabaseContext from '../../../contexts/DatabaseContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import {
   collection,
+  Firestore,
   getDocs,
   query,
   where,
@@ -21,6 +22,7 @@ import {
   UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
 import { spacing } from '../../../styles/Spacing';
+import { leaveDinner } from '../../../utils/dinnerRequests';
 
 type DinnerProps = {
   dinner: DinnerFirebase;
@@ -48,7 +50,11 @@ export const InviteScreen = (props: DinnerProps) => {
     // transform participant data!
     setParticipants(
       participantsSnap.docs.map(
-        participant => participant.data() as UserFirebase,
+        participant => {
+          const data = participant.data() as UserFirebase;
+          data.id = participant.id;
+          return data;
+        }
       ),
     );
   };
@@ -59,10 +65,12 @@ export const InviteScreen = (props: DinnerProps) => {
     }, []),
   );
 
-  // leaves the dinner
-  const leaveDinner = () => {
+  // current user leaves dinner
+  const leaveDinnerSelf = () => {
     // TODO: send request to Firebase
     bottomSheet.current?.hide();
+
+    leaveDinner(db, props.dinner.id, userDetails?.id);
 
     setTimeout(() => {
       navigator.goBack();
@@ -85,6 +93,7 @@ export const InviteScreen = (props: DinnerProps) => {
                 dinnerID={props.dinner.id ?? ''}
                 participant={participant}
                 key={participant.id}
+                onRevertInvite={() => leaveDinner(db, props.dinner.id, participant.id)}
               />
             ))}
           </ScrollView>
@@ -110,7 +119,7 @@ export const InviteScreen = (props: DinnerProps) => {
               <AppButton
                 title="LEAVE DINNER"
                 type={AppButtonType.text}
-                onPress={() => leaveDinner()}
+                onPress={() => leaveDinnerSelf()}
               />
             </View>
           </BottomSheet>

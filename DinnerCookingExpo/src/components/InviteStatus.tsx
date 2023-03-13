@@ -9,6 +9,7 @@ import { colors } from '../styles/Color';
 type InviteStatusProps = {
   dinnerID: string;
   participant: UserFirebase;
+  onRevertInvite: () => {};
 };
 
 const inviteStateText = ['PENDING', 'ACCEPTED', 'REJECTED'];
@@ -16,17 +17,12 @@ const inviteStateText = ['PENDING', 'ACCEPTED', 'REJECTED'];
 export const InviteStatus = (props: InviteStatusProps) => {
   // TODO: use invite users function to invite people on a central point in the requests.ts
   const inviteState = props.participant.inviteStates[props.dinnerID];
-  console.log(inviteState);
   if (inviteState === undefined) {
     console.error(
       'No invite state provided for dinner with ID of ' + props.dinnerID,
     );
     return null;
   }
-
-  const revertInvite = () => {
-    console.log('revert invite here!');
-  };
 
   return (
     <View style={styles.card}>
@@ -50,7 +46,7 @@ export const InviteStatus = (props: InviteStatusProps) => {
           </Text>
         </Text>
       </View>
-      <Pressable onPress={() => revertInvite()} style={styles.closeButton}>
+      <Pressable onPress={() => props.onRevertInvite()} style={styles.closeButton}>
         <CloseIcon fill={colors.text} />
       </Pressable>
     </View>
