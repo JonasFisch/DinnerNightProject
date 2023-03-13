@@ -13,7 +13,7 @@ import DatabaseContext from '../../contexts/DatabaseContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { Text } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { DinnerDetailScreenParams } from './DinnerDetails/index';
 import { createDinner } from '../../utils/dinnerRequests';
 import { UserContext, useUserContext } from '../../contexts/UserContext';
@@ -24,6 +24,40 @@ export const CreateParty = ({ navigation }) => {
 
   const [name, setName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date(Date.now()));
+  const [mode, setMode] = useState<any>('date');
+  const [show, setShow] = useState<boolean>(false);
+
+  const onChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined,
+  ) => {
+    if (selectedDate == undefined) return;
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode: string) => {
+    if (Platform.OS === 'android') {
+      setShow(false);
+      // for iOS, add a button that closes the picker
+    }
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    console.log('show datepicker');
+    showMode('date');
+    setShow(true);
+  };
+
+  const showTimepicker = () => {
+    console.log('show timepicker');
+    showMode('time');
+    setShow(true);
+  };
+
+  /*
 
   const setNewDate = (
     _event: DateTimePickerEvent,
@@ -43,9 +77,9 @@ export const CreateParty = ({ navigation }) => {
   ) => {
     // only extract time from given date
     if (newDate) {
-      const clonedDate = new Date(date);
-      clonedDate.setTime(newDate.getTime());
-      setDate(clonedDate);
+      const clonedTime = new Date(time);
+      clonedTime.setTime(newDate.getTime());
+      setTime(clonedTime);
     } else console.error('Unexpected Error while setting time.');
   };
 
@@ -55,13 +89,16 @@ export const CreateParty = ({ navigation }) => {
       return;
     }
 
+    const finalDate = date;
+    finalDate.setTime(time.getTime());
+
     const participants: DocumentReference[] = [];
 
     const createdDinner = await createDinner(
       db,
       participants,
       doc(db, 'Users', userContext.currentUser?.uid),
-      date,
+      finalDate,
       name,
     );
 
@@ -72,8 +109,10 @@ export const CreateParty = ({ navigation }) => {
     } as DinnerDetailScreenParams);
   };
 
+  */
+
   return (
-    <Frame>
+    /*<Frame>
       <AppInput
         label="Dinner name"
         value={name}
@@ -86,18 +125,39 @@ export const CreateParty = ({ navigation }) => {
       <Text>{date.toLocaleTimeString()}</Text>
 
       <RNDateTimePicker
+        style={{ width: 200, height: 200, backgroundColor: 'green' }}
         value={date}
         minimumDate={new Date(Date.now())}
         onChange={setNewDate}
       />
-
-      <RNDateTimePicker value={date} mode="time" onChange={setNewTime} />
 
       <AppButton
         title="create dinner"
         type={AppButtonType.primary}
         onPress={createParty}
       />
-    </Frame>
+    </Frame>*/
+    <View>
+      <AppButton
+        onPress={showDatepicker}
+        title="Show date picker!"
+        type={AppButtonType.primary}
+      />
+      <AppButton
+        onPress={() => showTimepicker()}
+        title="Show time picker!"
+        type={AppButtonType.primary}
+      />
+      <Text>selected: {date.toLocaleString()}</Text>
+      {show && (
+        <RNDateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          onChange={onChange}
+        />
+      )}
+    </View>
   );
 };
