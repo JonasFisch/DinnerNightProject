@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { UserFirebase } from '../interfaces/FirebaseSchema';
+import { InviteState, UserFirebase } from '../interfaces/FirebaseSchema';
 import { UserImage } from './UserImage';
 import CloseIcon from '../assets/icons/close.svg';
 import { typography } from '../styles/Typography';
@@ -8,21 +8,16 @@ import { colors } from '../styles/Color';
 
 type InviteStatusProps = {
   dinnerID: string;
-  participant: UserFirebase;
+  participant?: UserFirebase;
+  inviteState: InviteState;
   onRevertInvite: () => {};
 };
 
 const inviteStateText = ['PENDING', 'ACCEPTED', 'REJECTED'];
 
 export const InviteStatus = (props: InviteStatusProps) => {
-  // TODO: use invite users function to invite people on a central point in the requests.ts
-  const inviteState = props.participant.inviteStates[props.dinnerID];
-  if (inviteState === undefined) {
-    console.error(
-      'No invite state provided for dinner with ID of ' + props.dinnerID,
-    );
-    return null;
-  }
+
+  if (!props.participant) return null
 
   return (
     <View style={styles.card}>
@@ -41,8 +36,8 @@ export const InviteStatus = (props: InviteStatusProps) => {
       <View style={styles.inviteStatusText}>
         <Text>
           {'invite status - '}
-          <Text style={[styles.inviteStatus, inviteStyles[inviteState]]}>
-            {inviteStateText[inviteState]}
+          <Text style={[styles.inviteStatus, inviteStyles[props.inviteState]]}>
+            {inviteStateText[props.inviteState]}
           </Text>
         </Text>
       </View>

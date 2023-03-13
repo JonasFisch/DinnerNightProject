@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import DatabaseContext from '../contexts/DatabaseContext';
-import { UserFirebase } from '../interfaces/FirebaseSchema';
+import { InviteState, UserFirebase } from '../interfaces/FirebaseSchema';
 import { colors } from '../styles/Color';
 import { sizes } from '../styles/Sizes';
 import { spacing } from '../styles/Spacing';
@@ -21,7 +21,7 @@ type DinnerListItemProps = {
   id: string;
   title: string;
   creationDate: Date;
-  participants: DocumentReference[];
+  participants: {user: DocumentReference, inviteState: InviteState}[];
   onPress: (data: string) => void;
 };
 
@@ -30,7 +30,7 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
   const db = useContext(DatabaseContext).database;
 
   const resolveParticipants = async () => {
-    setParticipants(await fetchUsers(db, props.participants));
+    setParticipants(await fetchUsers(db, props.participants.map(participant => participant.user)));
   };
 
   // fetch participants

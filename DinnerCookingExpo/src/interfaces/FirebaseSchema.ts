@@ -28,7 +28,10 @@ type DinnerFirebase = {
   admin: DocumentReference;
   date: Timestamp;
   name: string;
-  participants: DocumentReference[];
+  participants: {
+    user: DocumentReference;
+    inviteState: number;
+  }[]
   state: number;
 };
 
@@ -37,7 +40,7 @@ type UserFirebase = {
   hasDoneIntro: boolean;
   imageUrl: string;
   name: string;
-  inviteStates: { [key: string]: InviteState };
+  dinners: DocumentReference[];
   contacts: DocumentReference[];
   allergies: string[];
   diets: string[];

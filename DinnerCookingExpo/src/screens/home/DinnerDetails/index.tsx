@@ -45,7 +45,7 @@ export const DinnerDetailScreen = () => {
   };
 
   const resolveParticipants = async (dinner: DinnerFirebase) => {
-    setParticipants(await fetchUsers(db, dinner.participants));
+    setParticipants(await fetchUsers(db, dinner.participants.map(participant => participant.user)));
   };
 
   // refetch dinners on focus screen

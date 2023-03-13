@@ -31,9 +31,9 @@ export const DinnerListScreen = () => {
   };
 
   const [dinners, setDinners] = useState<DinnerFirebase[]>([]);
-  const [participantsMap, setParticipantsMap] = useState<ParticipantMap>(
-    new Map(),
-  );
+  // const [participantsMap, setParticipantsMap] = useState<ParticipantMap>(
+  //   new Map(),
+  // );
 
   const userContext = useUserContext();
   const dbContext = useContext(DatabaseContext);
@@ -43,7 +43,7 @@ export const DinnerListScreen = () => {
     try {
       if (!userContext.currentUser) throw new Error('User not authenticated.');
 
-      const fetchedDinners = await fetchDinners(db, userContext.currentUser);
+      const fetchedDinners = await fetchDinners(db, userContext.userDetails);
       setDinners(fetchedDinners);
     } catch (error) {
       console.error(error);
