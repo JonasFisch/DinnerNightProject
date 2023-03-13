@@ -22,7 +22,7 @@ import {
   UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
 import { spacing } from '../../../styles/Spacing';
-import { leaveDinner } from '../../../utils/dinnerRequests';
+import { leaveDinner, loadRecipesForDinner } from '../../../utils/dinnerRequests';
 
 type DinnerProps = {
   dinner: DinnerFirebase;
@@ -100,6 +100,9 @@ export const InviteScreen = (props: DinnerProps) => {
           <AppButton
             title="LOAD RECEPIE PROPOSALS"
             type={AppButtonType.primary}
+            onPress={() => {
+              loadRecipesForDinner(db, null);
+            }}
           />
         </View>
       ) : (

@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "axios": "^1.2.5",
-    "firebase-functions": "^4.0.2"
+    "firebase-functions": "^4.2.1"
   }
 }

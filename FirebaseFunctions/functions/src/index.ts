@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
 import * as https from "https";
+import * as admin from "firebase-admin";
 
 /* eslint-disable */
-const admin = require("firebase-admin");
+
 admin.initializeApp();
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
@@ -45,22 +46,33 @@ exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
 
   const body = request.body
 
-  const diets: string[] = body.diets
-  const allergies: string[] = body.allergies
+  const diets: string[] = body.diets ?? []
+  const allergies: string[] = body.allergies ?? []
 
-  // const recipes = await fetchRandomRecipes(1, diets, allergies);
+  let recipes = []
+  try {
+    recipes = await fetchRandomRecipes(1, diets, allergies);
+  } catch (error) {
+    console.log(error);
+    response.status(500).send({error})
+    return;
+  }
 
-  // console.log(recipes);
+  console.log(recipes);
 
-  // for (const recipe of recipes) {
-  //   admin.firestore().collection("Recipes").add({
-  //     ...recipe,
-  //   });
-  // }
-  console.log(diets);
-  console.log(allergies);
+  const recipeData = [];
+  for (const recipe of recipes) {
+    recipeData.push(await admin.firestore().collection("Recipes").add({
+      ...recipe,
+    }));
+  }
   
-  response.send("success");
+  // console.log(diets);
+  // console.log(allergies);
+  
+  response.send({
+    recipes: recipeData.map(recipe => recipe.id)
+  });
 });
 
 // export const inviteToParty =

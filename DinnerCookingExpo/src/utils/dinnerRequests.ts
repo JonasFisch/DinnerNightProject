@@ -136,3 +136,20 @@ export const leaveDinner = async (db: Firestore, dinnerID: string, userID: strin
 export const fetchRecipesForDinner = (db: Firestore, dinnerID: string) => {
   
 }
+
+
+export const loadRecipesForDinner = async (db: Firestore, dinner: DocumentReference) => {
+  const response = await fetch("https://us-central1-dinnercookingplanner.cloudfunctions.net/fetchRecipes", {
+    method: "POST",
+    body: JSON.stringify({
+      diets: ["vegetarian", "vegan"],
+      allergies: ["mushroom"]
+    })
+  })
+  console.log(await response.json());
+
+  // TODO: set references of received recipe id in dinner
+
+  // TODO: return if everything succeded
+}
+
