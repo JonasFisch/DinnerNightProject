@@ -68,7 +68,6 @@ export const StepScreen = ({ navigation }) => {
   ];
 
   const savePreferences = async () => {
-    // TODO: check if anything needs to be saved
     if (!userContext.currentUser) {
       throw new Error('user not authenticated');
     }
@@ -115,7 +114,6 @@ export const StepScreen = ({ navigation }) => {
 
   const noItemsSpecified = () => {
     preferenceConfig[step].changeHandler([]);
-    nextStep();
   };
 
   const removeItem = (value: string) => {
