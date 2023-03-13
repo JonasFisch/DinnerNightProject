@@ -31,7 +31,9 @@ type DinnerFirebase = {
   participants: {
     user: DocumentReference;
     inviteState: number;
-  }[]
+    vote?: DocumentReference | null;
+  }[];
+  recipes: DocumentReference[];
   state: number;
 };
 

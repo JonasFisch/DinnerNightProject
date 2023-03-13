@@ -23,11 +23,11 @@ const spoonacularAPI = {
   baseURL: "https://api.spoonacular.com",
 };
 
-const fetchRandomRecipes = async (count: number) : Promise<any[]> => {
+export const fetchRandomRecipes = async (count: number, diets: string[], allergies: string[]) : Promise<any[]> => {
   return new Promise((resolve, reject) => {       
     https.get(
         `${spoonacularAPI.baseURL}/recipes/random?` + 
-      `apiKey=${spoonacularAPI.key}&number=${count}&tags=vegetarian,dessert`
+      `apiKey=${spoonacularAPI.key}&number=${count}&tags=${[...diets, ...allergies].join(",") ?? ""},`
         , (res) => {
           let body = "";
           res.on("data", (d) => body += d);
@@ -41,17 +41,25 @@ const fetchRandomRecipes = async (count: number) : Promise<any[]> => {
         });
   });
 };
-// TODO: only allow as admin
 exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
-  const recipes = await fetchRandomRecipes(1);
 
-  console.log(recipes);
+  const body = request.body
 
-  for (const recipe of recipes) {
-    admin.firestore().collection("Recipes").add({
-      ...recipe,
-    });
-  }
+  const diets: string[] = body.diets
+  const allergies: string[] = body.allergies
+
+  // const recipes = await fetchRandomRecipes(1, diets, allergies);
+
+  // console.log(recipes);
+
+  // for (const recipe of recipes) {
+  //   admin.firestore().collection("Recipes").add({
+  //     ...recipe,
+  //   });
+  // }
+  console.log(diets);
+  console.log(allergies);
+  
   response.send("success");
 });
 
