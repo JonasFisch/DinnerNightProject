@@ -1,4 +1,9 @@
-import { DinnerState, InviteState, Recipe, UserFirebase } from './../interfaces/FirebaseSchema';
+import {
+  DinnerState,
+  InviteState,
+  Recipe,
+  UserFirebase,
+} from './../interfaces/FirebaseSchema';
 import { User } from 'firebase/auth';
 import {
   collection,
@@ -23,11 +28,17 @@ export const fetchDinners = async (
   return new Promise(async (resolve, reject) => {
     console.log('IN FETCHING DINNERS');
 
+    if (!userDetails.dinners) return;
+
     // get data from firebase
     const dinnersSnap = await getDocs(
       query(
         collection(db, 'Dinners'),
-        where('__name__', 'in', userDetails.dinners.map(dinner => dinner.id)),
+        where(
+          '__name__',
+          'in',
+          userDetails.dinners.map(dinner => dinner.id),
+        ),
       ),
     );
 
@@ -64,7 +75,7 @@ export const createDinner = async (
   self: DocumentReference,
   date: Date,
   name: string,
- ) => {
+) => {
   console.log('IN CREATE DINNER');
 
   const newDinner: DinnerFirebase = {
@@ -73,13 +84,13 @@ export const createDinner = async (
     participants: [
       {
         user: self, // self
-        inviteState: InviteState.PENDING
+        inviteState: InviteState.PENDING,
       },
       ...participants.map(participant => {
         return {
           user: participant,
           inviteState: InviteState.PENDING,
-        }
+        };
       }),
     ],
     admin: self,
@@ -87,19 +98,19 @@ export const createDinner = async (
   };
 
   const dinner = await addDoc(collection(db, 'Dinners'), newDinner);
-  
+
   // update user to diner references
-  const userPromises = []
+  const userPromises = [];
   for (const participant of [self, ...participants]) {
     const participantSnap = await getDoc(participant);
-    const participantData = participantSnap.data() as UserFirebase
-    const dinners = participantData?.dinners ?? []
-    dinners.push(dinner)
+    const participantData = participantSnap.data() as UserFirebase;
+    const dinners = participantData?.dinners ?? [];
+    dinners.push(dinner);
 
-    userPromises.push(updateDoc(participant, {dinners}))
+    userPromises.push(updateDoc(participant, { dinners }));
   }
-  
-  await Promise.all(userPromises)
+
+  await Promise.all(userPromises);
 
   return dinner;
 };
@@ -108,7 +119,7 @@ export const fetchRecipe = async (
   db: Firestore,
   recipeID: string,
 ): Promise<Recipe> => {
-  console.log("IN FETCH RECIPE");
+  console.log('IN FETCH RECIPE');
 
   const recipeSnap = await getDoc(doc(db, `Recipes/${recipeID}`));
   if (!recipeSnap.data()) throw new Error('cannot fetch recipe details.');
@@ -116,20 +127,24 @@ export const fetchRecipe = async (
   return recipeSnap.data() as Recipe;
 };
 
-export const leaveDinner = async (db: Firestore, dinnerID: string, userID: string) => {
-  console.log("in leave Dinner");
-  
+export const leaveDinner = async (
+  db: Firestore,
+  dinnerID: string,
+  userID: string,
+) => {
+  console.log('in leave Dinner');
+
   const dinnersSnap = await getDoc(doc(db, `Dinners/${dinnerID}`));
   if (!dinnersSnap.data()) throw new Error('cannot fetch dinner details.');
 
   const dinner = dinnersSnap.data() as DinnerFirebase;
 
-  const newParticipants = dinner.participants.filter(participant => participant.id != userID)  
+  const newParticipants = dinner.participants.filter(
+    participant => participant.id != userID,
+  );
 
-  updateDoc(doc(db, `Dinners/${dinnerID}`), {participants: newParticipants})
-}
+  updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants });
+};
 
 // TODO: call the cloud function here to fetch recipes according to the invited users preferences !
-export const fetchRecipesForDinner = (db: Firestore, dinnerID: string) => {
-  
-}
+export const fetchRecipesForDinner = (db: Firestore, dinnerID: string) => {};
