@@ -87,7 +87,7 @@ export const InviteScreen = (props: DinnerProps) => {
               they accept the invite, you can start loading recipe proposals,
               that fit all participants eating preferences.
             </Text>
-            {props.dinner.participants.map(participant => (
+            {props.dinner.participants.filter(p => p.user.id !== userDetails?.id).map(participant => (
               <InviteStatus
                 dinnerID={props.dinner.id ?? ''}
                 inviteState={participant.inviteState}

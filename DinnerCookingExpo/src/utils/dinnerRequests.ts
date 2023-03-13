@@ -72,16 +72,19 @@ export const createDinner = async (
     name,
     participants: [
       {
-        user: self, // self
-        inviteState: InviteState.PENDING
+        user: self,
+        inviteState: InviteState.ACCEPTED,
+        vote: null
       },
       ...participants.map(participant => {
         return {
           user: participant,
           inviteState: InviteState.PENDING,
+          vote: null,
         }
       }),
     ],
+    recipes: [],
     admin: self,
     state: DinnerState.INVITE,
   };
