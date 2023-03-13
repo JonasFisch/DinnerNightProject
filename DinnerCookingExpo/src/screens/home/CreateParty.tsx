@@ -34,7 +34,7 @@ export const CreateParty = ({ navigation }) => {
   ) => {
     if (selectedDate == undefined) return;
     const currentDate = selectedDate;
-    setShow(false);
+    if (Platform.OS === 'android') setShow(false);    
     setDate(currentDate);
   };
 
