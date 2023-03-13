@@ -14,6 +14,7 @@ import { typography } from '../../styles/Typography';
 import {
   setAllergiesOfUser,
   setDietsOfUser,
+  setNameOfUser,
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
 import { EatingPreferenceType } from '../preferences/AddEatingPreferenceScreen';
@@ -29,21 +30,37 @@ export const StepScreen = ({ navigation }) => {
   const [diets, setDiets] = useState<string[]>([]);
   const [unwantedIngredients, setUnwantedIngredients] = useState<string[]>([]);
 
+  const [username, setUsername] = useState<string>('');
+
   const preferenceConfig = [
     {
+      title: 'Username',
+      description:
+        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
+      items: [],
+      changeHandler: () => {},
+      type: null,
+    },
+    {
       title: 'Allergies',
+      description:
+        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
       items: allergies,
       changeHandler: setAllergies,
       type: EatingPreferenceType.allergies,
     },
     {
       title: 'Diet',
+      description:
+        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
       items: diets,
       changeHandler: setDiets,
       type: EatingPreferenceType.diets,
     },
     {
       title: 'Unwanted Ingredients',
+      description:
+        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
       items: unwantedIngredients,
       changeHandler: setUnwantedIngredients,
       type: EatingPreferenceType.unwantedIngredients,
@@ -55,7 +72,15 @@ export const StepScreen = ({ navigation }) => {
     if (!userContext.currentUser) {
       throw new Error('user not authenticated');
     }
+    if (
+      userContext.userDetails?.name == username &&
+      userContext.userDetails?.allergies == allergies &&
+      userContext.userDetails?.diets == diets &&
+      userContext.userDetails?.unwantedIngredients == unwantedIngredients
+    )
+      return;
     Promise.all([
+      await setNameOfUser(db, userContext.currentUser.uid, username),
       await setAllergiesOfUser(db, userContext.currentUser.uid, allergies),
       await setDietsOfUser(db, userContext.currentUser.uid, diets),
       await setUnwantedIngredientsOfUser(
@@ -128,6 +153,7 @@ export const StepScreen = ({ navigation }) => {
       return;
     }
 
+    setUsername(userContext.userDetails.name);
     setAllergies(userContext.userDetails.allergies);
     setDiets(userContext.userDetails.diets);
     setUnwantedIngredients(userContext.userDetails.unwantedIngredients);
@@ -138,40 +164,55 @@ export const StepScreen = ({ navigation }) => {
       <View style={styles.contentWrapper}>
         <Stepper
           currentStep={step}
-          totalStepCount={3}
+          totalStepCount={4}
           onCurrentStepChange={() => {}}
           style={styles.stepper}></Stepper>
         <Text style={[styles.headline, typography.h3]}>
-          Specify {preferenceConfig[step].title}
+          {step == 0
+            ? "What's your name?"
+            : 'Specify' + preferenceConfig[step].title}
         </Text>
         <Text style={typography.body}>
-          dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh
-          askjd
+          {preferenceConfig[step].description}
         </Text>
-        <AppInput
-          style={styles.input}
-          value={''}
-          onChangeText={() => {}}
-          customOnFokus={handleSearchInputFocus}
-          label={'Search'}
-          clearable={true}
-        />
-        {preferenceConfig[step].items.length == 0 ? (
-          <Text style={[typography.overline, styles.noItemsText]}>
-            You haven't selected any {preferenceConfig[step].title}
-          </Text>
+        {step == 0 ? (
+          <AppInput
+            style={styles.input}
+            value={username}
+            onChangeText={setUsername}
+            label={'Username'}
+            clearable={true}
+          />
         ) : (
-          <View style={styles.itemWrapper}>
-            {preferenceConfig[step].items.map(renderChip)}
+          <View>
+            <AppInput
+              style={styles.input}
+              value={''}
+              onChangeText={() => {}}
+              customOnFokus={handleSearchInputFocus}
+              label={'Search'}
+              clearable={true}
+            />
+            {preferenceConfig[step].items.length == 0 ? (
+              <Text style={[typography.overline, styles.noItemsText]}>
+                You haven't selected any {preferenceConfig[step].title}
+              </Text>
+            ) : (
+              <View style={styles.itemWrapper}>
+                {preferenceConfig[step].items.map(renderChip)}
+              </View>
+            )}
           </View>
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <AppButton
-          onPress={noItemsSpecified}
-          title={`No ${preferenceConfig[step].title}`}
-          type={AppButtonType.text}
-        />
+        {step > 0 && (
+          <AppButton
+            onPress={noItemsSpecified}
+            title={`No ${preferenceConfig[step].title}`}
+            type={AppButtonType.text}
+          />
+        )}
         <View style={styles.horizontalButtonContainer}>
           <AppButton
             style={[styles.button, { marginRight: spacing.m }]}

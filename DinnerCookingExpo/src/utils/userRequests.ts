@@ -132,6 +132,17 @@ export const setUnwantedIngredientsOfUser = async (
   await updateDoc(userRef, 'unwantedIngredients', ingredients);
 };
 
+export const setNameOfUser = async (
+  db: Firestore,
+  userId: string,
+  name: string,
+): Promise<void> => {
+  console.log('IN SET NAME OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'name', name);
+};
+
 export const finishIntroOfUser = async (
   db: Firestore,
   userId: string,
