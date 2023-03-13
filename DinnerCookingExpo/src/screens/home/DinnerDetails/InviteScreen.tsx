@@ -39,7 +39,7 @@ export const InviteScreen = (props: DinnerProps) => {
   // get invite states
   const fetchInviteStates = async () => {
     const participantIDs = props.dinner.participants.map(
-      participant => participant.id,
+      participant => participant.user.id,
     );
 
     // get states
@@ -67,7 +67,6 @@ export const InviteScreen = (props: DinnerProps) => {
 
   // current user leaves dinner
   const leaveDinnerSelf = () => {
-    // TODO: send request to Firebase
     bottomSheet.current?.hide();
 
     leaveDinner(db, props.dinner.id, userDetails?.id);
@@ -88,12 +87,13 @@ export const InviteScreen = (props: DinnerProps) => {
               they accept the invite, you can start loading recipe proposals,
               that fit all participants eating preferences.
             </Text>
-            {participants.map(participant => (
+            {props.dinner.participants.map(participant => (
               <InviteStatus
                 dinnerID={props.dinner.id ?? ''}
-                participant={participant}
-                key={participant.id}
-                onRevertInvite={() => leaveDinner(db, props.dinner.id, participant.id)}
+                inviteState={participant.inviteState}
+                participant={participants.find(p => p.id == participant.user.id)}
+                key={participant.user.id}
+                onRevertInvite={() => leaveDinner(db, props.dinner.id, participant.user.id)}
               />
             ))}
           </ScrollView>

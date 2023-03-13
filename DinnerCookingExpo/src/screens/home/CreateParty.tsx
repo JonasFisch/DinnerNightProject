@@ -10,17 +10,17 @@ import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
 import { AppInput } from '../../components/Input';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import UserContext from '../../contexts/UserContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { Text } from 'react-native';
 import { DinnerDetailScreenParams } from './DinnerDetails/index';
 import { createDinner } from '../../utils/dinnerRequests';
+import { UserContext, useUserContext } from '../../contexts/UserContext';
 
 export const CreateParty = ({ navigation }) => {
   const db = useContext(DatabaseContext).database;
-  const userContext = useContext(UserContext);
+  const userContext = useUserContext();
 
   const [name, setName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date(Date.now()));
@@ -50,34 +50,17 @@ export const CreateParty = ({ navigation }) => {
   };
 
   const createParty = async () => {
-    if (!userContext.userData?.uid) {
+    if (!userContext.currentUser?.uid) {
       console.error('user not authenticated');
       return;
     }
 
     const participants: DocumentReference[] = [];
-    // const userSelfRef = doc(db, 'Users', userContext.userData.uid);
-
-    // const docData: Dinner = {
-    //   date: Timestamp.fromDate(date),
-    //   name,
-    //   participants: [
-    //     userSelfRef, // self
-    //     ...participants,
-    //   ],
-    //   admin: userSelfRef,
-    //   state: DinnerState.INVITE,
-    // };
-
-    // const newDoc = await addDoc(
-    //   collection(db, 'Dinners'),
-    //   docData,
-    // );
 
     const createdDinner = await createDinner(
       db,
       participants,
-      doc(db, 'Users', userContext.userData.uid),
+      doc(db, 'Users', userContext.currentUser?.uid),
       date,
       name,
     );
