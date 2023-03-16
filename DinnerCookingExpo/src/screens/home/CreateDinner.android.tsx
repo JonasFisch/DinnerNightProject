@@ -21,6 +21,23 @@ import { useFocusEffect } from '@react-navigation/native';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
 
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 export const CreateDinner = ({ navigation }) => {
   const db = useContext(DatabaseContext).database;
   const userContext = useUserContext();
@@ -29,17 +46,13 @@ export const CreateDinner = ({ navigation }) => {
   const [date, setDate] = useState<Date>(new Date(Date.now()));
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState<boolean>(false);
-  const [isAndroid, setIsAndroid] = useState<boolean>(false);
 
   const triggerDatePicker = (mode: string) => {
     setMode(mode);
     setShow(true);
   };
 
-  const onChange = (
-    event: DateTimePickerEvent,
-    selectedDate: Date | undefined,
-  ) => {
+  const handleDateChange = (selectedDate: Date | undefined) => {
     if (selectedDate == undefined) return;
     if (mode == 'date') {
       const newDate = selectedDate.getDate();
@@ -52,7 +65,14 @@ export const CreateDinner = ({ navigation }) => {
       newDateTime.setTime(newTime);
       setDate(newDateTime);
     }
-    setShow(false);
+  };
+
+  const formatDate = (d: Date) => {
+    const year = d.getFullYear();
+    const date = d.getDate();
+    const monthName = months[d.getMonth()];
+    const dayName = days[d.getDay()];
+    return `${dayName}, ${date} ${monthName} ${year}`;
   };
 
   return (
@@ -65,13 +85,15 @@ export const CreateDinner = ({ navigation }) => {
       <View style={styles.dateWrapper}>
         <Text style={[typography.subtitle2, styles.dateLabel]}>Date:</Text>
         <Pressable onPress={() => triggerDatePicker('date')}>
-          <Text style={typography.body}>{date.toLocaleDateString()}</Text>
+          <Text style={typography.body}>{formatDate(date)}</Text>
         </Pressable>
       </View>
       <View style={styles.dateWrapper}>
         <Text style={[typography.subtitle2, styles.dateLabel]}>Time:</Text>
         <Pressable onPress={() => triggerDatePicker('time')}>
-          <Text style={typography.body}>{date.toLocaleTimeString()}</Text>
+          <Text style={typography.body}>
+            {date.toLocaleTimeString().substring(0, 5)} Uhr
+          </Text>
         </Pressable>
       </View>
       {show && (
@@ -82,7 +104,7 @@ export const CreateDinner = ({ navigation }) => {
           is24Hour={true}
           onChange={(e, date) => {
             setShow(false);
-            onChange(e, date);
+            handleDateChange(date);
           }}
         />
       )}
@@ -93,6 +115,7 @@ export const CreateDinner = ({ navigation }) => {
 const styles = StyleSheet.create({
   nameInput: {
     marginBottom: spacing.xl,
+    marginTop: spacing.s,
   },
   dateWrapper: {
     display: 'flex',
