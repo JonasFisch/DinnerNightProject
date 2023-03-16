@@ -13,13 +13,22 @@ import DatabaseContext from '../../contexts/DatabaseContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { DinnerDetailScreenParams } from './DinnerDetails/index';
 import { createDinner } from '../../utils/dinnerRequests';
 import { UserContext, useUserContext } from '../../contexts/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
+import { Chip } from '../../components/Chip';
+import { ChipList } from '../../components/ChipList';
 
 const months = [
   'January',
@@ -46,6 +55,7 @@ export const CreateDinner = ({ navigation }) => {
   const [date, setDate] = useState<Date>(new Date(Date.now()));
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState<boolean>(false);
+  const [participants, setParticipants] = useState<string[]>([]);
 
   const triggerDatePicker = (mode: string) => {
     setMode(mode);
@@ -75,6 +85,19 @@ export const CreateDinner = ({ navigation }) => {
     return `${dayName}, ${date} ${monthName} ${year}`;
   };
 
+  const handleSelectionChange = (value: string) => {
+    const isValueAlreadySelected = participants.includes(value);
+    let newSelectedValues = [...participants];
+    if (isValueAlreadySelected) {
+      newSelectedValues = newSelectedValues.filter(
+        element => element !== value,
+      );
+    } else {
+      newSelectedValues.push(value);
+    }
+    setParticipants(newSelectedValues);
+  };
+
   return (
     <Frame withSubPageHeader>
       <AppInput
@@ -96,6 +119,15 @@ export const CreateDinner = ({ navigation }) => {
           </Text>
         </Pressable>
       </View>
+      <Text style={[typography.subtitle2]}>Participants</Text>
+      <Text style={[typography.body]}>Invite your friends to the dinner</Text>
+      <ChipList
+        items={participants}
+        onPress={handleSelectionChange}
+        onAdd={() => {}}
+        withAvatar
+        withAddButton
+        emptyListText="No one invited"></ChipList>
       {show && (
         <RNDateTimePicker
           testID="dateTimePicker"
@@ -124,5 +156,15 @@ const styles = StyleSheet.create({
   },
   dateLabel: {
     marginRight: spacing.l,
+  },
+  selectedValuesList: {
+    marginVertical: spacing.xs,
+    maxHeight: 50,
+  },
+  listContentContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.xs,
   },
 });
