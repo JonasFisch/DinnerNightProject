@@ -27,7 +27,7 @@ export const DinnerListScreen = () => {
   const route = useRoute();
 
   const navigateCreateDinner = () => {
-    navigation.navigate('CreateParty');
+    navigation.navigate('CreateDinner');
   };
 
   const [dinners, setDinners] = useState<DinnerFirebase[]>([]);
