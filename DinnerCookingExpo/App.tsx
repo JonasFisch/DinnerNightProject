@@ -47,6 +47,7 @@ import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { setupEmulators } from './Firebase';
 import { IntroFinishScreen } from './src/screens/intro/IntroFinishScreen';
 import { AddEatingPreferenceScreen } from './src/screens/preferences/AddEatingPreferenceScreen';
+import { AddDinnerParticipantsScreen } from './src/screens/AddDinnerParticipants';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAcAK7yLBd7J_saiXDEoDjFBsmsqsVBI0k',
@@ -138,6 +139,10 @@ const App = () => {
                               headerTitleStyle: typography.h4,
                             }}
                             component={CreateDinner}
+                          />
+                          <AppStack.Screen
+                            name="AddDinnerParticipants"
+                            component={AddDinnerParticipantsScreen}
                           />
                           <AppStack.Screen
                             name="Recipe"

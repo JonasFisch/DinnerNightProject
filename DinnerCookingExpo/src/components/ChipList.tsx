@@ -5,14 +5,14 @@ import { spacing } from '../styles/Spacing';
 import { AppButton } from './Button';
 import { Chip } from './Chip';
 import AddIcon from '../assets/icons/add.svg';
+import { SelectableListEntry } from './SelectableList';
 
 type ChipListProps = {
-  items: string[];
-  onPress: (item: string) => void;
+  items: SelectableListEntry[];
+  onPress: (item: SelectableListEntry) => void;
   withAvatar?: boolean;
   withAddButton?: boolean;
   onAdd?: () => void;
-  emptyListText?: string;
 };
 
 export const ChipList = ({
@@ -21,12 +21,14 @@ export const ChipList = ({
   withAvatar = false,
   withAddButton = false,
   onAdd = () => {},
-  emptyListText,
 }: ChipListProps) => {
-  const [renderItems, setRenderItems] = useState<string[]>(items);
+  const [renderItems, setRenderItems] = useState<string[]>(
+    items.map(e => e.label),
+  );
 
   const addButton = (
     <AppButton
+      key={'addButton'}
       type={AppButtonType.primary}
       title="save"
       iconOnly
@@ -36,43 +38,45 @@ export const ChipList = ({
     />
   );
 
-  const renderChip = ({ item }: { item: string }) => {
+  const renderChip = (item: string, index: number) => {
     if (item == 'addButtonToBeRendered') {
       return addButton;
     }
 
-    return <Chip label={item} onPress={() => onPress(item)} withAvatar />;
+    return (
+      <Chip
+        key={index}
+        label={item}
+        onPress={() => onPress(items[index])}
+        style={styles.chip}
+        withAvatar
+      />
+    );
   };
 
   useEffect(() => {
-    if (!withAddButton) return;
-    setRenderItems([...items, 'addButtonToBeRendered']);
-  }, []);
+    if (withAddButton) {
+      setRenderItems([...items.map(e => e.label), 'addButtonToBeRendered']);
+    } else {
+      setRenderItems([...items.map(e => e.label)]);
+    }
+  }, [items]);
 
-  return items.length != 0 && emptyListText ? (
-    <FlatList
-      data={renderItems}
-      style={styles.selectedValuesList}
-      contentContainerStyle={styles.listContentContainer}
-      renderItem={renderChip}
-      keyExtractor={item => item}
-      horizontal
-    />
+  return items.length > 0 ? (
+    <View style={styles.itemWrapper}>{renderItems.map(renderChip)}</View>
   ) : (
     <View style={styles.noItemsWrapper}>{addButton}</View>
   );
 };
 
 const styles = StyleSheet.create({
-  selectedValuesList: {
-    marginVertical: spacing.xs,
-    maxHeight: 50,
+  itemWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginVertical: spacing.s,
   },
-  listContentContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.xs,
+  chip: {
+    marginBottom: spacing.m,
   },
   button: {
     height: 40,

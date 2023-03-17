@@ -24,11 +24,12 @@ import {
 import { DinnerDetailScreenParams } from './DinnerDetails/index';
 import { createDinner } from '../../utils/dinnerRequests';
 import { UserContext, useUserContext } from '../../contexts/UserContext';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
 import { Chip } from '../../components/Chip';
 import { ChipList } from '../../components/ChipList';
+import { SelectableListEntry } from '../../components/SelectableList';
 
 const months = [
   'January',
@@ -50,12 +51,15 @@ const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export const CreateDinner = ({ navigation }) => {
   const db = useContext(DatabaseContext).database;
   const userContext = useUserContext();
+  const navigator = useNavigation();
 
   const [name, setName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date(Date.now()));
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState<boolean>(false);
-  const [participants, setParticipants] = useState<string[]>([]);
+  const [participants, setParticipants] = useState<SelectableListEntry[]>([
+    { id: 'test', label: 'test' },
+  ]);
 
   const triggerDatePicker = (mode: string) => {
     setMode(mode);
@@ -85,17 +89,30 @@ export const CreateDinner = ({ navigation }) => {
     return `${dayName}, ${date} ${monthName} ${year}`;
   };
 
-  const handleSelectionChange = (value: string) => {
-    const isValueAlreadySelected = participants.includes(value);
+  const handleSelectionChange = (participant: SelectableListEntry) => {
+    const isValueAlreadySelected = participants.find(
+      element => element.id === participant.id,
+    );
     let newSelectedValues = [...participants];
     if (isValueAlreadySelected) {
       newSelectedValues = newSelectedValues.filter(
-        element => element !== value,
+        element => element.id !== participant.id,
       );
     } else {
-      newSelectedValues.push(value);
+      newSelectedValues.push(participant);
     }
     setParticipants(newSelectedValues);
+  };
+
+  const triggerSearchPage = () => {
+    navigator.navigate('AddDinnerParticipants', {
+      participants: participants,
+      onSave: onAddParticipants,
+    });
+  };
+
+  const onAddParticipants = (participants: SelectableListEntry[]) => {
+    setParticipants(participants);
   };
 
   return (
@@ -124,10 +141,9 @@ export const CreateDinner = ({ navigation }) => {
       <ChipList
         items={participants}
         onPress={handleSelectionChange}
-        onAdd={() => {}}
+        onAdd={triggerSearchPage}
         withAvatar
-        withAddButton
-        emptyListText="No one invited"></ChipList>
+        withAddButton></ChipList>
       {show && (
         <RNDateTimePicker
           testID="dateTimePicker"
