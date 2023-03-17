@@ -50,6 +50,7 @@ export const ChipList = ({
         onPress={() => onPress(items[index])}
         style={styles.chip}
         withAvatar
+        imageUrl={items[index].image}
       />
     );
   };

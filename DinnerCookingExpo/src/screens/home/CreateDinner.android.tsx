@@ -57,9 +57,7 @@ export const CreateDinner = ({ navigation }) => {
   const [date, setDate] = useState<Date>(new Date(Date.now()));
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState<boolean>(false);
-  const [participants, setParticipants] = useState<SelectableListEntry[]>([
-    { id: 'test', label: 'test' },
-  ]);
+  const [participants, setParticipants] = useState<SelectableListEntry[]>([]);
 
   const triggerDatePicker = (mode: string) => {
     setMode(mode);
@@ -137,7 +135,9 @@ export const CreateDinner = ({ navigation }) => {
         </Pressable>
       </View>
       <Text style={[typography.subtitle2]}>Participants</Text>
-      <Text style={[typography.body]}>Invite your friends to the dinner</Text>
+      <Text style={[typography.body, styles.description]}>
+        Invite your friends to the dinner
+      </Text>
       <ChipList
         items={participants}
         onPress={handleSelectionChange}
@@ -172,6 +172,9 @@ const styles = StyleSheet.create({
   },
   dateLabel: {
     marginRight: spacing.l,
+  },
+  description: {
+    marginTop: spacing.xs,
   },
   selectedValuesList: {
     marginVertical: spacing.xs,
