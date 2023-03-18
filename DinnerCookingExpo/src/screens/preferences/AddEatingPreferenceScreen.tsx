@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { SearchPage } from '../../components/SearchPage';
 import { useUserContext } from '../../contexts/UserContext';
 import DatabaseContext from '../../contexts/DatabaseContext';
@@ -8,7 +8,12 @@ import {
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
 import { SelectableListEntry } from '../../components/SelectableList';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import ParamList from '../../utils/ParameterDefinitions';
 
 export enum EatingPreferenceType {
@@ -100,6 +105,12 @@ export const AddEatingPreferenceScreen = () => {
       console.error(`error during saving ${preferenceType}: `, error);
     }
   };
+
+  useEffect(() => {
+    navigator.setOptions({
+      title: `${preferenceType}`,
+    });
+  });
 
   return (
     config[preferenceType].allOptions.length != 0 && (

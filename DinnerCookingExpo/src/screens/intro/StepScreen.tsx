@@ -50,7 +50,7 @@ export const StepScreen = ({ navigation }) => {
       type: EatingPreferenceType.allergies,
     },
     {
-      title: 'Diet',
+      title: 'Diets',
       description:
         'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
       items: diets,
@@ -168,7 +168,7 @@ export const StepScreen = ({ navigation }) => {
         <Text style={[styles.headline, typography.h3]}>
           {step == 0
             ? "What's your name?"
-            : 'Specify' + preferenceConfig[step].title}
+            : 'Specify ' + preferenceConfig[step].title}
         </Text>
         <Text style={typography.body}>
           {preferenceConfig[step].description}
