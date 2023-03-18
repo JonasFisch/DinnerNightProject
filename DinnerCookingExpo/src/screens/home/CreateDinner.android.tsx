@@ -1,35 +1,20 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  DocumentReference,
-  Timestamp,
-} from 'firebase/firestore';
-import React, { useContext, useState, useEffect } from 'react';
+import { doc } from 'firebase/firestore';
+import React, { useContext, useState } from 'react';
 import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
 import { AppInput } from '../../components/Input';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { AppButtonType } from '../../interfaces/Button';
-import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import {
-  FlatList,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { DinnerDetailScreenParams } from './DinnerDetails/index';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { createDinner } from '../../utils/dinnerRequests';
-import { UserContext, useUserContext } from '../../contexts/UserContext';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useUserContext } from '../../contexts/UserContext';
+import { useNavigation } from '@react-navigation/native';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
-import { Chip } from '../../components/Chip';
 import { ChipList } from '../../components/ChipList';
 import { SelectableListEntry } from '../../components/SelectableList';
+import CheckIcon from '../../assets/icons/check.svg';
 
 const months = [
   'January',
@@ -113,6 +98,23 @@ export const CreateDinner = ({ navigation }) => {
     setParticipants(participants);
   };
 
+  const saveDinner = () => {
+    if (!userContext.currentUser) throw new Error('User not authenticated');
+
+    const userRef = doc(db, 'Users', userContext.currentUser?.uid);
+    const participantsRefs = participants.map(user =>
+      doc(db, 'Users', user.id),
+    );
+
+    createDinner(db, participantsRefs, userRef, date, name)
+      .then(() => {
+        navigator.goBack();
+      })
+      .catch(error => {
+        console.error('error during creating dinner: ', error);
+      });
+  };
+
   return (
     <Frame withSubPageHeader>
       <AppInput
@@ -156,6 +158,16 @@ export const CreateDinner = ({ navigation }) => {
           }}
         />
       )}
+      <AppButton
+        type={AppButtonType.primary}
+        title="save selection"
+        iconOnly
+        onPress={saveDinner}
+        widthFitContent
+        logoSVG={CheckIcon}
+        style={styles.button}
+        disabled={name ? false : true}
+      />
     </Frame>
   );
 };
@@ -185,5 +197,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: spacing.xs,
+  },
+  button: {
+    position: 'absolute',
+    bottom: spacing.m,
+    right: spacing.m,
   },
 });
