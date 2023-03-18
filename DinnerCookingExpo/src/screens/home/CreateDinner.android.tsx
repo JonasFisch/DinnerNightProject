@@ -175,7 +175,7 @@ export const CreateDinner = ({ navigation }) => {
 const styles = StyleSheet.create({
   nameInput: {
     marginBottom: spacing.xl,
-    marginTop: spacing.s,
+    marginTop: spacing.xs,
   },
   dateWrapper: {
     display: 'flex',

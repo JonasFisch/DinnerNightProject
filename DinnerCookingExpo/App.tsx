@@ -136,7 +136,6 @@ const App = () => {
                             name="CreateDinner"
                             options={{
                               headerTitle: 'Create Dinner',
-                              headerTitleStyle: typography.h4,
                             }}
                             component={CreateDinner}
                           />
