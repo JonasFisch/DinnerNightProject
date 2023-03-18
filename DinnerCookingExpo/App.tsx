@@ -34,7 +34,7 @@ import {
 import { Playground } from './src/screens/Playground';
 import { IntroWelcomeScreen } from './src/screens/intro/IntroWelcomeScreen';
 import { WelcomeScreen } from './src/screens/auth/Welcome';
-import { CreateParty } from './src/screens/home/CreateParty';
+import { CreateDinner } from './src/screens/home/CreateDinner';
 import DatabaseContext from './src/contexts/DatabaseContext';
 import { typography } from './src/styles/Typography';
 import { useFonts } from 'expo-font';
@@ -47,6 +47,7 @@ import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { setupEmulators } from './Firebase';
 import { IntroFinishScreen } from './src/screens/intro/IntroFinishScreen';
 import { AddEatingPreferenceScreen } from './src/screens/preferences/AddEatingPreferenceScreen';
+import { AddDinnerParticipantsScreen } from './src/screens/AddDinnerParticipants';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAcAK7yLBd7J_saiXDEoDjFBsmsqsVBI0k',
@@ -132,12 +133,15 @@ const App = () => {
                             component={DinnerDetailScreen}
                           />
                           <AppStack.Screen
-                            name="CreateParty"
+                            name="CreateDinner"
                             options={{
                               headerTitle: 'Create Dinner',
-                              headerTitleStyle: typography.h4,
                             }}
-                            component={CreateParty}
+                            component={CreateDinner}
+                          />
+                          <AppStack.Screen
+                            name="AddDinnerParticipants"
+                            component={AddDinnerParticipantsScreen}
                           />
                           <AppStack.Screen
                             name="Recipe"

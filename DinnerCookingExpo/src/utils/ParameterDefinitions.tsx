@@ -12,6 +12,10 @@ type ParamList = {
     type: EatingPreferenceType;
     preselectedItems: SelectableListEntry[];
   };
+  AddDinnerParticipantsScreen: {
+    participants: SelectableListEntry[];
+    onSave: (items: SelectableListEntry[]) => void;
+  };
 };
 
 export default ParamList;
