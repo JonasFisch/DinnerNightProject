@@ -1,14 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { ChipList } from '../../components/ChipList';
 import { Frame } from '../../components/Frame';
+import { SelectableListEntry } from '../../components/SelectableList';
 import { UserImage } from '../../components/UserImage';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { useUserContext } from '../../contexts/UserContext';
 import { colors } from '../../styles/Color';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
+import { EatingPreferenceType } from '../preferences/AddEatingPreferenceScreen';
 
 export const SettingScreen = () => {
   const userContext = useUserContext();
@@ -16,29 +18,26 @@ export const SettingScreen = () => {
   const db = dbContext.database;
   const navigator = useNavigation();
 
-  if (!userContext.userDetails) throw new Error('user not authenticated');
+  const [username, setUsername] = useState<string>('Username');
+  const [image, setImage] = useState<string>();
+  const [allergies, setAllergies] = useState<SelectableListEntry[]>([]);
+  const [diets, setDiets] = useState<SelectableListEntry[]>([]);
+  const [unwantedIngredients, setUnwantedIngredients] = useState<
+    SelectableListEntry[]
+  >([]);
 
   const eatingPreferences = [
     {
-      title: 'Allergies',
-      items: userContext.userDetails.allergies.map(item => ({
-        id: item,
-        label: item,
-      })),
+      title: EatingPreferenceType.allergies,
+      items: allergies,
     },
     {
-      title: 'Diets',
-      items: userContext.userDetails.diets.map(item => ({
-        id: item,
-        label: item,
-      })),
+      title: EatingPreferenceType.diets,
+      items: diets,
     },
     {
-      title: 'Unwanted Ingredients',
-      items: userContext.userDetails.unwantedIngredients.map(item => ({
-        id: item,
-        label: item,
-      })),
+      title: EatingPreferenceType.unwantedIngredients,
+      items: unwantedIngredients,
     },
   ];
 
@@ -51,6 +50,38 @@ export const SettingScreen = () => {
     });
   };
 
+  const togglePreferencesPage = (index: number) => {
+    navigator.navigate('AddEatingPreferences', {
+      type: eatingPreferences[index].title,
+      preselectedItems: eatingPreferences[index].items,
+    });
+  };
+
+  useEffect(() => {
+    if (!userContext.userDetails) throw new Error('user not authenticated');
+
+    setUsername(userContext.userDetails.name);
+    setImage(userContext.userDetails.imageUrl);
+    setAllergies(
+      userContext.userDetails.allergies.map(item => ({
+        id: item,
+        label: item,
+      })),
+    );
+    setDiets(
+      userContext.userDetails.diets.map(item => ({
+        id: item,
+        label: item,
+      })),
+    );
+    setUnwantedIngredients(
+      userContext.userDetails.unwantedIngredients.map(item => ({
+        id: item,
+        label: item,
+      })),
+    );
+  }, [userContext.userDetails]);
+
   return (
     <Frame withBottomNavBar>
       <Text style={[typography.h3]}>Profile</Text>
@@ -58,26 +89,26 @@ export const SettingScreen = () => {
         <View style={styles.userDetailsWrapper}>
           <UserImage
             customSize={120}
-            name={userContext.userDetails.name}></UserImage>
+            imageUrl={image}
+            name={username}></UserImage>
           <Pressable
             style={styles.usernameWrapper}
             onPress={toggleUsernamePage}>
-            <Text style={[typography.h4, styles.username]}>
-              {userContext.userDetails.name}
-            </Text>
+            <Text style={[typography.h4, styles.username]}>{username}</Text>
             <Text style={[typography.body]}>
               {userContext.currentUser?.email}
             </Text>
           </Pressable>
         </View>
         <View style={styles.divider} />
-        {eatingPreferences.map(preference => (
-          <View style={styles.preferenceWrapper} key={preference.title}>
+        {eatingPreferences.map((preference, index) => (
+          <View key={preference.title}>
             <Text style={[typography.subtitle2]}>{preference.title}</Text>
+            <Text>Specify all your {preference.title.toLowerCase()}</Text>
             <ChipList
               items={preference.items}
               onPress={() => {}}
-              onAdd={() => {}}
+              onAdd={() => togglePreferencesPage(index)}
               withAvatar
               withAddButton></ChipList>
           </View>
@@ -102,11 +133,9 @@ const styles = StyleSheet.create({
   divider: {
     borderBottomColor: colors.shadow,
     borderBottomWidth: 1,
+    marginBottom: spacing.l,
   },
   label: {
     marginBottom: spacing.s,
-  },
-  preferenceWrapper: {
-    marginTop: spacing.l,
   },
 });

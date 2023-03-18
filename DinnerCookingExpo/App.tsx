@@ -161,6 +161,10 @@ const App = () => {
                               headerTitle: 'Edit Username',
                             }}
                           />
+                          <AppStack.Screen
+                            name="AddEatingPreferences"
+                            component={AddEatingPreferenceScreen}
+                          />
                         </AppStack.Group>
                       ) : (
                         <AppStack.Group

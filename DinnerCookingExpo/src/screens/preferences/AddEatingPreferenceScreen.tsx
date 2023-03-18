@@ -90,7 +90,7 @@ export const AddEatingPreferenceScreen = () => {
     },
   };
 
-  const onSaveAllergies = async (newItemsIds: string[]) => {
+  const onSave = async (newItemsIds: string[]) => {
     const newItems: string[] = config[preferenceType].allOptions
       .filter(item => newItemsIds.includes(item.id))
       .map(item => item.label);
@@ -110,14 +110,14 @@ export const AddEatingPreferenceScreen = () => {
     navigator.setOptions({
       title: `${preferenceType}`,
     });
-  });
+  }, []);
 
   return (
     config[preferenceType].allOptions.length != 0 && (
       <SearchPage
         listItems={config[preferenceType].allOptions}
         selectedItems={preselectedItems.map(item => item.label)}
-        onSave={onSaveAllergies}></SearchPage>
+        onSave={onSave}></SearchPage>
     )
   );
 };
