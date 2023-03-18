@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { SearchPage } from '../../components/SearchPage';
 import { useUserContext } from '../../contexts/UserContext';
 import DatabaseContext from '../../contexts/DatabaseContext';
@@ -8,7 +8,12 @@ import {
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
 import { SelectableListEntry } from '../../components/SelectableList';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import ParamList from '../../utils/ParameterDefinitions';
 
 export enum EatingPreferenceType {
@@ -85,7 +90,7 @@ export const AddEatingPreferenceScreen = () => {
     },
   };
 
-  const onSaveAllergies = async (newItemsIds: string[]) => {
+  const onSave = async (newItemsIds: string[]) => {
     const newItems: string[] = config[preferenceType].allOptions
       .filter(item => newItemsIds.includes(item.id))
       .map(item => item.label);
@@ -101,12 +106,18 @@ export const AddEatingPreferenceScreen = () => {
     }
   };
 
+  useEffect(() => {
+    navigator.setOptions({
+      title: `${preferenceType}`,
+    });
+  }, []);
+
   return (
     config[preferenceType].allOptions.length != 0 && (
       <SearchPage
         listItems={config[preferenceType].allOptions}
         selectedItems={preselectedItems.map(item => item.label)}
-        onSave={onSaveAllergies}></SearchPage>
+        onSave={onSave}></SearchPage>
     )
   );
 };

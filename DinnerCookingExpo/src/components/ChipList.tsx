@@ -22,9 +22,7 @@ export const ChipList = ({
   withAddButton = false,
   onAdd = () => {},
 }: ChipListProps) => {
-  const [renderItems, setRenderItems] = useState<string[]>(
-    items.map(e => e.label),
-  );
+  const [renderItems, setRenderItems] = useState<string[]>([]);
 
   const addButton = (
     <AppButton
@@ -42,6 +40,9 @@ export const ChipList = ({
     if (item == 'addButtonToBeRendered') {
       return addButton;
     }
+
+    // needed to fix a rerendering bug
+    if (items.length <= index) return;
 
     return (
       <Chip
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
   button: {
     height: 40,
     width: 40,
+    marginBottom: spacing.m,
   },
   noItemsWrapper: {
     display: 'flex',

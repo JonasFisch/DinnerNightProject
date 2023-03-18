@@ -6,7 +6,7 @@ const palette = {
   lightPurple: ' #DFD5F9',
   offBlack: '#1D1D1D',
   offWhite: '#FFFBFE',
-  grey: '#E7E7E7',
+  grey: '#BBBBBB',
   darkGrey: '#777777',
   lightGrey: '#E7E7E7',
   green: '#0C7A2B',
