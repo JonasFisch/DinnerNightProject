@@ -10,6 +10,11 @@ import { useUserContext } from '../../contexts/UserContext';
 import { colors } from '../../styles/Color';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
+import {
+  setAllergiesOfUser,
+  setDietsOfUser,
+  setUnwantedIngredientsOfUser,
+} from '../../utils/userRequests';
 import { EatingPreferenceType } from '../preferences/AddEatingPreferenceScreen';
 
 export const SettingScreen = () => {
@@ -30,14 +35,17 @@ export const SettingScreen = () => {
     {
       title: EatingPreferenceType.allergies,
       items: allergies,
+      updateHandler: setAllergiesOfUser,
     },
     {
       title: EatingPreferenceType.diets,
       items: diets,
+      updateHandler: setDietsOfUser,
     },
     {
       title: EatingPreferenceType.unwantedIngredients,
       items: unwantedIngredients,
+      updateHandler: setUnwantedIngredientsOfUser,
     },
   ];
 
@@ -55,6 +63,18 @@ export const SettingScreen = () => {
       type: eatingPreferences[index].title,
       preselectedItems: eatingPreferences[index].items,
     });
+  };
+
+  const deleteItem = (index: number, item: SelectableListEntry) => {
+    if (!userContext.currentUser) throw new Error('user not authenticated');
+    const newItems = eatingPreferences[index].items
+      .filter(element => element.label !== item.label)
+      .map(element => element.label);
+    eatingPreferences[index].updateHandler(
+      db,
+      userContext.currentUser.uid,
+      newItems,
+    );
   };
 
   useEffect(() => {
@@ -107,7 +127,7 @@ export const SettingScreen = () => {
             <Text>Specify all your {preference.title.toLowerCase()}</Text>
             <ChipList
               items={preference.items}
-              onPress={() => {}}
+              onPress={item => deleteItem(index, item)}
               onAdd={() => togglePreferencesPage(index)}
               withAvatar
               withAddButton></ChipList>
