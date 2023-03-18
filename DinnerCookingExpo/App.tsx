@@ -48,6 +48,7 @@ import { setupEmulators } from './Firebase';
 import { IntroFinishScreen } from './src/screens/intro/IntroFinishScreen';
 import { AddEatingPreferenceScreen } from './src/screens/preferences/AddEatingPreferenceScreen';
 import { AddDinnerParticipantsScreen } from './src/screens/AddDinnerParticipants';
+import { EditUsernameScreen } from './src/screens/settings/EditUsernameScreen';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAcAK7yLBd7J_saiXDEoDjFBsmsqsVBI0k',
@@ -153,6 +154,13 @@ const App = () => {
                             component={AddContactsScreen}
                           />
                           {/* Sub Screens of Settings Screen */}
+                          <AppStack.Screen
+                            name="EditUsername"
+                            component={EditUsernameScreen}
+                            options={{
+                              headerTitle: 'Edit Username',
+                            }}
+                          />
                         </AppStack.Group>
                       ) : (
                         <AppStack.Group

@@ -16,6 +16,10 @@ type ParamList = {
     participants: SelectableListEntry[];
     onSave: (items: SelectableListEntry[]) => void;
   };
+  EditUsernameScreen: {
+    userId: string;
+    name: string;
+  };
 };
 
 export default ParamList;
