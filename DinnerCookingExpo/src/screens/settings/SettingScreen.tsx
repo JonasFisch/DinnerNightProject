@@ -108,7 +108,7 @@ export const SettingScreen = () => {
       <ScrollView>
         <View style={styles.userDetailsWrapper}>
           <UserImage
-            customSize={120}
+            customSize={100}
             imageUrl={image}
             name={username}></UserImage>
           <Pressable
@@ -124,7 +124,9 @@ export const SettingScreen = () => {
         {eatingPreferences.map((preference, index) => (
           <View key={preference.title}>
             <Text style={[typography.subtitle2]}>{preference.title}</Text>
-            <Text>Specify all your {preference.title.toLowerCase()}</Text>
+            <Text style={[typography.body, { marginVertical: spacing.xxs }]}>
+              Specify all your {preference.title.toLowerCase()}
+            </Text>
             <ChipList
               items={preference.items}
               onPress={item => deleteItem(index, item)}
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   username: {
-    marginTop: spacing.l,
+    marginTop: spacing.m,
     marginBottom: spacing.xxs,
   },
   divider: {
