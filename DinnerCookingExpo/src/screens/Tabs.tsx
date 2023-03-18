@@ -33,10 +33,10 @@ export const Tabs = () => {
         initialParams={{ needsUpdate: true }}
       />
       <Tab.Screen
-        name="Preferences"
+        name="Profile"
         component={SettingScreen}
         options={{
-          tabBarLabel: 'Preferences',
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => <SettingsIcon color={color} />,
         }}
       />
