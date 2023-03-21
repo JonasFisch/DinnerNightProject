@@ -21,6 +21,7 @@ import {
   DinnerFirebase,
   ParticipantMap,
 } from '../../interfaces/FirebaseSchema';
+import { onSnapshot } from 'firebase/firestore';
 
 export const DinnerListScreen = () => {
   const navigation = useNavigation();
@@ -39,26 +40,21 @@ export const DinnerListScreen = () => {
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;
 
-  const resolveDinners = async () => {
-    try {
-      if (!userContext.currentUser) throw new Error('User not authenticated.');
+  const listenToParticipatedDinners = () => {
+    if (!userContext.currentUser) throw new Error('User not authenticated.');
 
-      const fetchedDinners = await fetchDinners(
-        db,
-        userContext.currentUser.uid,
-      );
-      setDinners(fetchedDinners);
-    } catch (error) {
-      console.error(error);
-    }
+    return fetchDinners(
+      db,
+      userContext.currentUser.uid,
+      (fetchedDinners: DinnerFirebase[]) => setDinners(fetchedDinners),
+    );
   };
 
-  // refetch dinners on focus screen
-  useFocusEffect(
-    useCallback(() => {
-      resolveDinners();
-    }, []),
-  );
+  useEffect(() => {
+    const unsubscribe = listenToParticipatedDinners();
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <Frame>

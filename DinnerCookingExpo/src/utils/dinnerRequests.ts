@@ -17,14 +17,17 @@ import {
   addDoc,
   getDoc,
   Query,
+  onSnapshot,
+  Unsubscribe,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { DocumentData, updateDoc } from 'firebase/firestore';
 
-export const fetchDinners = async (
+export const fetchDinners = (
   db: Firestore,
   userId: string,
-): Promise<DinnerFirebase[]> => {
+  onHandleSnapshot: (dinners: DinnerFirebase[]) => void,
+): Unsubscribe => {
   console.log('IN FETCHING DINNERS');
 
   const userRef = doc(db, 'Users/' + userId);
@@ -34,17 +37,21 @@ export const fetchDinners = async (
     dinnerCollection,
     where('participants', 'array-contains', userRef),
   );
-  const dinnersSnap = await getDocs(q);
 
-  console.log(dinnersSnap.docs[0].id);
+  const unsubscribe = onSnapshot(q, querySnapshot => {
+    console.log(querySnapshot);
+    onHandleSnapshot(
+      querySnapshot.docs.map(
+        dinner =>
+          ({
+            ...dinner.data(),
+            id: dinner.id,
+          } as DinnerFirebase),
+      ),
+    );
+  });
 
-  return dinnersSnap.docs.map(
-    dinner =>
-      ({
-        ...dinner.data(),
-        id: dinner.id,
-      } as DinnerFirebase),
-  );
+  return unsubscribe;
 };
 
 export const fetchDinner = async (
