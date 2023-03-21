@@ -43,7 +43,10 @@ export const DinnerListScreen = () => {
     try {
       if (!userContext.currentUser) throw new Error('User not authenticated.');
 
-      const fetchedDinners = await fetchDinners(db, userContext.userDetails);
+      const fetchedDinners = await fetchDinners(
+        db,
+        userContext.currentUser.uid,
+      );
       setDinners(fetchedDinners);
     } catch (error) {
       console.error(error);

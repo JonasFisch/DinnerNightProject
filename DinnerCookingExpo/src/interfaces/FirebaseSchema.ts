@@ -28,11 +28,10 @@ type DinnerFirebase = {
   admin: DocumentReference;
   date: Timestamp;
   name: string;
-  participants: {
-    user: DocumentReference;
-    inviteState: number;
-  }[]
+  inviteStates: Record<string, InviteState>;
+  participants: DocumentReference[];
   state: number;
+  votes: Record<string, number>;
 };
 
 type UserFirebase = {
@@ -66,7 +65,7 @@ export type Ingredient = {
   meta: string[];
   name: string;
   nameClean: string;
-}
+};
 
 type Recipe = {
   aggregateLikes: number;

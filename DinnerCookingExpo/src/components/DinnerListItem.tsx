@@ -21,7 +21,7 @@ type DinnerListItemProps = {
   id: string;
   title: string;
   creationDate: Date;
-  participants: {user: DocumentReference, inviteState: InviteState}[];
+  participants: DocumentReference[];
   onPress: (data: string) => void;
 };
 
@@ -30,7 +30,7 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
   const db = useContext(DatabaseContext).database;
 
   const resolveParticipants = async () => {
-    setParticipants(await fetchUsers(db, props.participants.map(participant => participant.user)));
+    setParticipants(await fetchUsers(db, props.participants));
   };
 
   // fetch participants

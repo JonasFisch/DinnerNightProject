@@ -12,6 +12,7 @@ import DatabaseContext from '../../../contexts/DatabaseContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import {
   collection,
+  DocumentReference,
   Firestore,
   getDocs,
   query,
@@ -23,6 +24,7 @@ import {
 } from '../../../interfaces/FirebaseSchema';
 import { spacing } from '../../../styles/Spacing';
 import { leaveDinner } from '../../../utils/dinnerRequests';
+import { fetchUsers } from '../../../utils/userRequests';
 
 type DinnerProps = {
   dinner: DinnerFirebase;
@@ -35,33 +37,16 @@ export const InviteScreen = (props: DinnerProps) => {
   const db = useContext(DatabaseContext).database;
   const userDetails = useUserContext().userDetails;
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
+  const inviteStates = props.dinner.inviteStates;
 
-  // get invite states
-  const fetchInviteStates = async () => {
-    const participantIDs = props.dinner.participants.map(
-      participant => participant.user.id,
-    );
-
-    // get states
-    const participantsSnap = await getDocs(
-      query(collection(db, 'Users'), where('__name__', 'in', participantIDs)),
-    );
-
-    // transform participant data!
-    setParticipants(
-      participantsSnap.docs.map(
-        participant => {
-          const data = participant.data() as UserFirebase;
-          data.id = participant.id;
-          return data;
-        }
-      ),
-    );
+  const fetchParticipants = async () => {
+    const participants = await fetchUsers(db, props.dinner.participants);
+    setParticipants(participants);
   };
 
   useFocusEffect(
     useCallback(() => {
-      fetchInviteStates();
+      fetchParticipants();
     }, []),
   );
 
@@ -80,22 +65,31 @@ export const InviteScreen = (props: DinnerProps) => {
     <Frame withBottomNavBar={false} withSubPageHeader>
       {props.isAdmin ? (
         <View style={{ height: '100%' }}>
-          <Text style={[typography.subtitle2, {marginBottom: spacing.s}]}>Participants</Text>
+          <Text style={[typography.subtitle2, { marginBottom: spacing.s }]}>
+            Participants
+          </Text>
           <ScrollView>
-            <Text style={{marginBottom: spacing.m}}>
+            <Text style={{ marginBottom: spacing.m }}>
               An invitation to your dinner was send to all participants. Once
               they accept the invite, you can start loading recipe proposals,
               that fit all participants eating preferences.
             </Text>
-            {props.dinner.participants.map(participant => (
-              <InviteStatus
-                dinnerID={props.dinner.id ?? ''}
-                inviteState={participant.inviteState}
-                participant={participants.find(p => p.id == participant.user.id)}
-                key={participant.user.id}
-                onRevertInvite={() => leaveDinner(db, props.dinner.id, participant.user.id)}
-              />
-            ))}
+            {participants.map(participant => {
+              const inviteState = inviteStates[participant.id];
+              return (
+                inviteState && (
+                  <InviteStatus
+                    dinnerID={props.dinner.id ?? ''}
+                    inviteState={inviteState}
+                    participant={participant}
+                    key={participant.id}
+                    onRevertInvite={() =>
+                      leaveDinner(db, props.dinner.id, participant.id)
+                    }
+                  />
+                )
+              );
+            })}
           </ScrollView>
           <AppButton
             title="LOAD RECEPIE PROPOSALS"

@@ -23,34 +23,28 @@ import { DocumentData, updateDoc } from 'firebase/firestore';
 
 export const fetchDinners = async (
   db: Firestore,
-  userDetails: UserFirebase,
+  userId: string,
 ): Promise<DinnerFirebase[]> => {
-  return new Promise(async (resolve, reject) => {
-    console.log('IN FETCHING DINNERS');
+  console.log('IN FETCHING DINNERS');
 
-    if (!userDetails.dinners) return;
+  const userRef = doc(db, 'Users/' + userId);
+  const dinnerCollection = collection(db, 'Dinners');
 
-    // get data from firebase
-    const dinnersSnap = await getDocs(
-      query(
-        collection(db, 'Dinners'),
-        where(
-          '__name__',
-          'in',
-          userDetails.dinners.map(dinner => dinner.id),
-        ),
-      ),
-    );
+  const q = query(
+    dinnerCollection,
+    where('participants', 'array-contains', userRef),
+  );
+  const dinnersSnap = await getDocs(q);
 
-    if (!dinnersSnap.docs) reject('could not get dinner snap.');
-    resolve(
-      dinnersSnap.docs.map(dinner => {
-        const din = dinner.data() as DinnerFirebase;
-        din.id = dinner.id;
-        return din;
-      }),
-    );
-  });
+  console.log(dinnersSnap.docs[0].id);
+
+  return dinnersSnap.docs.map(
+    dinner =>
+      ({
+        ...dinner.data(),
+        id: dinner.id,
+      } as DinnerFirebase),
+  );
 };
 
 export const fetchDinner = async (
@@ -78,23 +72,17 @@ export const createDinner = async (
 ) => {
   console.log('IN CREATE DINNER');
 
+  const invites: Record<string, InviteState> = {};
+  participants.forEach(user => (invites[user.id] = InviteState.PENDING));
+
   const newDinner: DinnerFirebase = {
     date: Timestamp.fromDate(date),
     name,
-    participants: [
-      {
-        user: self, // self
-        inviteState: InviteState.PENDING,
-      },
-      ...participants.map(participant => {
-        return {
-          user: participant,
-          inviteState: InviteState.PENDING,
-        };
-      }),
-    ],
+    participants: participants,
+    inviteStates: invites,
     admin: self,
     state: DinnerState.INVITE,
+    votes: {},
   };
 
   const dinner = await addDoc(collection(db, 'Dinners'), newDinner);

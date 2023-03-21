@@ -91,9 +91,8 @@ export const setContactsOfUser = async (
   console.log('IN SET CONTACTS OF USER');
 
   return new Promise(async (resolve, reject) => {
-    const firestore = getFirestore(db.app);
-    const userRef = doc(firestore, 'Users/' + userId);
-    const contactRefs = contactIds.map(id => doc(firestore, 'Users/' + id));
+    const userRef = doc(db, 'Users/' + userId);
+    const contactRefs = contactIds.map(id => doc(db, 'Users/' + id));
     await updateDoc(userRef, 'contacts', contactRefs);
     resolve();
   });
