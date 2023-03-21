@@ -74,22 +74,17 @@ export const InviteScreen = (props: DinnerProps) => {
               they accept the invite, you can start loading recipe proposals,
               that fit all participants eating preferences.
             </Text>
-            {participants.map(participant => {
-              const inviteState = inviteStates[participant.id];
-              return (
-                inviteState && (
-                  <InviteStatus
-                    dinnerID={props.dinner.id ?? ''}
-                    inviteState={inviteState}
-                    participant={participant}
-                    key={participant.id}
-                    onRevertInvite={() =>
-                      leaveDinner(db, props.dinner.id, participant.id)
-                    }
-                  />
-                )
-              );
-            })}
+            {participants.map(participant => (
+              <InviteStatus
+                dinnerID={props.dinner.id ?? ''}
+                inviteState={inviteStates[participant.id]}
+                participant={participant}
+                key={participant.id}
+                onRevertInvite={() =>
+                  leaveDinner(db, props.dinner.id, participant.id)
+                }
+              />
+            ))}
           </ScrollView>
           <AppButton
             title="LOAD RECEPIE PROPOSALS"

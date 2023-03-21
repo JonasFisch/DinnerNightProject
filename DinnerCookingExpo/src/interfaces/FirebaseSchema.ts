@@ -39,7 +39,6 @@ type UserFirebase = {
   hasDoneIntro: boolean;
   imageUrl: string;
   name: string;
-  dinners: DocumentReference[];
   contacts: DocumentReference[];
   allergies: string[];
   diets: string[];
