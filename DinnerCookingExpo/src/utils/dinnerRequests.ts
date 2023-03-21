@@ -78,7 +78,7 @@ export const createDinner = async (
   const newDinner: DinnerFirebase = {
     date: Timestamp.fromDate(date),
     name,
-    participants: participants,
+    participants: [...participants, self],
     inviteStates: invites,
     admin: self,
     state: DinnerState.INVITE,
