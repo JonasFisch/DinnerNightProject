@@ -19,6 +19,7 @@ import { useCallback } from 'react';
 import { fetchDinners } from '../../utils/dinnerRequests';
 import {
   DinnerFirebase,
+  DinnerState,
   ParticipantMap,
 } from '../../interfaces/FirebaseSchema';
 import { onSnapshot } from 'firebase/firestore';
@@ -32,6 +33,7 @@ export const DinnerListScreen = () => {
   };
 
   const [dinners, setDinners] = useState<DinnerFirebase[]>([]);
+  const [archivedDinners, setArchivedDinners] = useState<DinnerFirebase[]>([])
   // const [participantsMap, setParticipantsMap] = useState<ParticipantMap>(
   //   new Map(),
   // );
@@ -45,7 +47,10 @@ export const DinnerListScreen = () => {
     return fetchDinners(
       db,
       userContext.currentUser.uid,
-      (fetchedDinners: DinnerFirebase[]) => setDinners(fetchedDinners),
+      (fetchedDinners: DinnerFirebase[]) => {
+        setDinners(fetchedDinners.filter(dinner => dinner.state != DinnerState.FINISHED)),
+        setArchivedDinners(fetchedDinners.filter(dinner => dinner.state == DinnerState.FINISHED))
+      } 
     );
   };
 
@@ -68,7 +73,7 @@ export const DinnerListScreen = () => {
               title: 'In Progress',
             },
             {
-              node: <Text>Seite 2</Text>,
+              node: <DinnerList dinners={archivedDinners} />,
               title: 'Archive',
             },
           ]}

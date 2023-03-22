@@ -68,6 +68,7 @@ export const DinnerDetailScreen = () => {
         />
       );
     case DinnerState.COOKING:
+    case DinnerState.FINISHED:
       return (
         <WinnerScreen
           isAdmin={isAdmin}
@@ -75,8 +76,6 @@ export const DinnerDetailScreen = () => {
           participants={participants ?? []}
         />
       );
-    case DinnerState.FINISHED:
-      return <Text>Already Finished.</Text>;
     case DinnerState.LOADING:
     default:
       return <Text>Loading...</Text>;

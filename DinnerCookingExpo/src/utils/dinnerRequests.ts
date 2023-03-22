@@ -219,6 +219,16 @@ export const setVotingTerminated = async (
   await updateDoc(dinnerRef, "state", DinnerState.COOKING)
 }
 
+export const finishDinner = async (
+  db: Firestore,
+  dinnerID: string,
+) => {
+  console.log("IN FINISH DINNER");
+  
+  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  await updateDoc(dinnerRef, "state", DinnerState.FINISHED)
+}
+
 export const setVote = async (db: Firestore, dinnerID: string, recipeID: string, userID: string) => {
   console.log("IN SET VOTE");
   

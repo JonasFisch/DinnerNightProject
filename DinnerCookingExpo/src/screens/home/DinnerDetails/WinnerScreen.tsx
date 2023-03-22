@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -20,6 +20,9 @@ import { typography } from '../../../styles/Typography';
 import { sizes } from '../../../styles/Sizes';
 import { AvatarList } from '../../../components/AvatarList';
 import { DinnerFirebase, Recipe, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import { ParticipantVotingRow } from '../../../components/ParticipantVotingRow';
+import { fetchRecipe, finishDinner } from '../../../utils/dinnerRequests';
+import DatabaseContext from '../../../contexts/DatabaseContext';
 
 type WinnerScreenType = {
   isAdmin: boolean;
@@ -29,19 +32,45 @@ type WinnerScreenType = {
 
 export const WinnerScreen = (props: WinnerScreenType) => {
   const navigator = useNavigation();
+  const db = useContext(DatabaseContext).database;
 
-  const recipe = useState<Recipe>();
+  const [recipe, setRecipe] = useState<Recipe>();
+  const [voted, setVoted] = useState(0);
+  const votes = Object.keys(props.dinner?.votes ?? {}).length;
+
+
+  useEffect(() => {
+    const votingArray = Object.keys(props.dinner?.votes ?? {}).reduce((acc, key) => {
+      acc.push(props.dinner?.votes[key]);
+      return acc
+    }, [])
+  
+    // get #votings for each recipe
+    const elementCounts = {};
+    votingArray.forEach(element => {
+      elementCounts[element] = (elementCounts[element] || 0) + 1;
+    });
+  
+    // determine winner
+    let highestCount = 0
+    let winner = null
+    for (const key of Object.keys(elementCounts)) {
+      if (highestCount < elementCounts[key]) {
+        winner = key
+        highestCount = elementCounts[key]
+      }
+    }
+    setVoted(highestCount)
+
+    fetchRecipe(db, winner).then(recipe => {
+      setRecipe(recipe)
+    });
+  },[])
 
   return (
     <Frame withSubPageHeader>
       <ScrollView style={{marginBottom: spacing.l}}>
-        <Row spaceBetween style={{marginBottom: spacing.s}}>
-          <Text style={[typography.subtitle2]}>Participants</Text>
-          <Row style={{alignItems: "flex-end"}}>
-            <Text style={typography.overline}>0 / 4</Text>
-            <Text style={typography.body2}>{" "}voted</Text>
-          </Row>
-        </Row>
+        <ParticipantVotingRow total={props.dinner?.participants.length ?? 0} voted={votes} />
         <AvatarList participants={props.participants} />
         <Row spaceBetween style={{marginBottom: spacing.s}}>
           <Text style={typography.subtitle2}>
@@ -49,7 +78,7 @@ export const WinnerScreen = (props: WinnerScreenType) => {
           </Text>
         </Row>
         <View style={{ width: '100%', height: 250 }}>
-            <CarouselItem name="Vegetarian Lasagne" selected={false} hideSelected voting={{total: 4, voted: 3}} duration={1} level={"Easy"} />    
+            <CarouselItem name={recipe?.title ?? ""} imageURL={recipe?.image} selected={false} hideSelected voting={{total: props.dinner?.participants.length ?? 0, voted: voted}} duration={(recipe?.readyInMinutes ?? 0) / 60} level={"Easy"} />    
         </View>
         <View style={{marginTop: spacing.m}}>
           <Text style={typography.overline}>
@@ -66,14 +95,17 @@ export const WinnerScreen = (props: WinnerScreenType) => {
           title="FINISH"
           type={AppButtonType.secondary}
           // TODO: finish Dinner
-          onPress={() => navigator.navigate('Recipe')}
+          onPress={() => {
+            finishDinner(db, props.dinner?.id)
+            navigator.navigate('Dinners')
+          }}
         />
         <AppButton
           style={{flex: 1}}
           title="COOK"
           type={AppButtonType.primary}
           onPress={() => navigator.navigate('Recipe', {
-            recipe
+            id: recipe?.id
           })}
         />
       </View>
