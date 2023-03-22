@@ -30,6 +30,7 @@ type DinnerFirebase = {
   name: string;
   inviteStates: Record<string, InviteState>;
   participants: DocumentReference[];
+  recipes: DocumentReference[];
   state: number;
   votes: Record<string, number>;
 };

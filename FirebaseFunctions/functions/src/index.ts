@@ -25,15 +25,21 @@ const spoonacularAPI = {
 };
 
 export const fetchRandomRecipes = async (count: number, diets: string[], allergies: string[]) : Promise<any[]> => {
-  return new Promise((resolve, reject) => {       
+  return new Promise((resolve, reject) => {     
+    
+    const tags = [...diets, ...allergies]
+    let tagString = ""
+    if (tags.length >= 1) tagString = tags.join(",")
+    else tagString = tags.join("")
+
     https.get(
         `${spoonacularAPI.baseURL}/recipes/random?` + 
-      `apiKey=${spoonacularAPI.key}&number=${count}&tags=${[...diets, ...allergies].join(",") ?? ""},`
+      `apiKey=${spoonacularAPI.key}&number=${count}&tags=${tagString}`
         , (res) => {
           let body = "";
           res.on("data", (d) => body += d);
           res.on("end", () => {
-            const result = JSON.parse(body);
+            const result = JSON.parse(body);            
             resolve(result.recipes);
           });
           res.on("error", (error) => {
@@ -51,14 +57,12 @@ exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
 
   let recipes = []
   try {
-    recipes = await fetchRandomRecipes(1, diets, allergies);
+    recipes = await fetchRandomRecipes(1, diets, allergies);    
   } catch (error) {
     console.log(error);
     response.status(500).send({error})
     return;
   }
-
-  console.log(recipes);
 
   const recipeData = [];
   for (const recipe of recipes) {

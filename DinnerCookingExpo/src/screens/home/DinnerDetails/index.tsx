@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
@@ -30,36 +30,26 @@ export const DinnerDetailScreen = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
 
-  // fetch dinner details here
-  const resolveDinner = async () => {
-    try {
-      const fetchedDinner = await fetchDinner(db, id);
-
+  
+  useEffect(() => {
+    const unsubscribe = fetchDinner(db, id, (dinner: DinnerFirebase) => {
+      console.log(dinner.name);
+      setDinner(dinner)
+      if (dinner) {
+        resolveParticipants(dinner);
+      } else {
+        throw new Error('dinner was not fetched correctly!');
+      }
       // if current user is admin of dinner
-      if (`Users/${user?.uid}` === fetchedDinner?.admin.path) setIsAdmin(true);
-      setDinner(fetchedDinner);
-      return fetchedDinner;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      if (`Users/${user?.uid}` === dinner?.admin.path) setIsAdmin(true);
+    })
+    
+    return () => unsubscribe();
+  }, [])
 
   const resolveParticipants = async (dinner: DinnerFirebase) => {
     setParticipants(await fetchUsers(db, dinner.participants));
   };
-
-  // refetch dinners on focus screen
-  useFocusEffect(
-    useCallback(() => {
-      resolveDinner().then(fetchedDinner => {
-        if (fetchedDinner) {
-          resolveParticipants(fetchedDinner);
-        } else {
-          throw new Error('dinner was not fetched correctly!');
-        }
-      });
-    }, []),
-  );
 
   // get state
   const state: DinnerState = dinner?.state ?? DinnerState.LOADING;

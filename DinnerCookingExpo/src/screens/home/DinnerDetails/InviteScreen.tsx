@@ -74,7 +74,7 @@ export const InviteScreen = (props: DinnerProps) => {
               they accept the invite, you can start loading recipe proposals,
               that fit all participants eating preferences.
             </Text>
-            {props.dinner.participants.filter(p => p.user.id !== userDetails?.id).map(participant => (
+            {participants.filter(p => p.id !== userDetails?.id).map(participant => (
               <InviteStatus
                 dinnerID={props.dinner.id ?? ''}
                 inviteState={inviteStates[participant.id]}
@@ -89,8 +89,8 @@ export const InviteScreen = (props: DinnerProps) => {
           <AppButton
             title="LOAD RECEPIE PROPOSALS"
             type={AppButtonType.primary}
-            onPress={() => {
-              loadRecipesForDinner(db, null);
+            onPress={async () => {
+              await loadRecipesForDinner(db, props.dinner, participants ?? []);              
             }}
           />
         </View>

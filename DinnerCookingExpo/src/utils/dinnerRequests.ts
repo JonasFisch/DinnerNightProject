@@ -52,21 +52,37 @@ export const fetchDinners = (
   return unsubscribe;
 };
 
-export const fetchDinner = async (
+// export const fetchDinner = async (
+//   db: Firestore,
+//   dinnerID: string,
+// ): Promise<DinnerFirebase> => {
+//   console.log('IN FETCHING SINGLE DINNER');
+
+//   return new Promise(async (resolve, reject) => {
+//     const dinnersSnap = await getDoc(doc(db, `Dinners/${dinnerID}`));
+//     if (!dinnersSnap.data()) reject('cannot fetch dinner details.');
+
+//     const dinner = dinnersSnap.data() as DinnerFirebase;
+//     dinner.id = dinnersSnap.id;
+//     resolve(dinner);
+//   });
+// };
+
+export const fetchDinner = (
   db: Firestore,
   dinnerID: string,
-): Promise<DinnerFirebase> => {
-  console.log('IN FETCHING SINGLE DINNER');
+  onHandleSnapshot: (dinner: DinnerFirebase) => void,
+): Unsubscribe => {
+  console.log('IN FETCHING DINNER');
+  const unsubscribe = onSnapshot(doc(db, "Dinners", dinnerID), (doc) => {
+    const dinner = doc.data() as DinnerFirebase
+    dinner.id = doc.id
+    onHandleSnapshot(dinner)
+  })
 
-  return new Promise(async (resolve, reject) => {
-    const dinnersSnap = await getDoc(doc(db, `Dinners/${dinnerID}`));
-    if (!dinnersSnap.data()) reject('cannot fetch dinner details.');
-
-    const dinner = dinnersSnap.data() as DinnerFirebase;
-    dinner.id = dinnersSnap.id;
-    resolve(dinner);
-  });
+  return unsubscribe;
 };
+
 
 export const createDinner = async (
   db: Firestore,
@@ -173,10 +189,7 @@ export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase
   for (const user of users) {
     user.allergies?.forEach(allergie => allergies.add(allergie))
     user.unwantedIngredients?.forEach(ingredient => diets.add(ingredient))
-  }
-
-  console.log(Array.from(allergies));
-  
+  }  
   
   const response = await fetch("https://us-central1-dinnercookingplanner.cloudfunctions.net/fetchRecipes", {
     method: "POST",
@@ -196,12 +209,11 @@ export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase
     recipeReferences.push(doc(db, 'Recipes/' + recipe))
   }
 
+  console.log(dinner.id);
   // set recipes for dinner
   const dinnerRef = doc(db, "Dinners/" + dinner.id)
-  await updateDoc(dinnerRef, {'recipes': recipeReferences});
-
-  await updateDoc(dinnerRef, {"state": DinnerState.VOTING})
-
+  await updateDoc(dinnerRef, {'recipes': recipeReferences, "state": DinnerState.VOTING});
+  
   return
 }
 
