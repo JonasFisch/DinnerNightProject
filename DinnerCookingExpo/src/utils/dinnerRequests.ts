@@ -209,9 +209,32 @@ export const setInviteState = async (
   await updateDoc(dinnerRef, 'inviteStates', inviteStates);
 };
 
-export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase, users: UserFirebase[]) => {
-  console.log(users);
+export const setVotingTerminated = async (
+  db: Firestore,
+  dinnerID: string,
+) => {
+  console.log("IN SET VOTING TERMINATED");
+
+  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  await updateDoc(dinnerRef, "state", DinnerState.COOKING)
+}
+
+export const setVote = async (db: Firestore, dinnerID: string, recipeID: string, userID: string) => {
+  console.log("IN SET VOTE");
   
+  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  const dinnerSnap = await getDoc(dinnerRef);
+  const dinner = dinnerSnap.data() as DinnerFirebase
+  const votes = dinner?.votes
+
+  votes[userID] = recipeID;
+
+  await updateDoc(dinnerRef, "votes", votes)
+}
+
+export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase, users: UserFirebase[]) => {
+  console.log("IN LOAD RECIPES FOR DINNER");
+    
   const allergies = new Set<string>()
   const diets = new Set<string>()
   for (const user of users) {

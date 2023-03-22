@@ -22,9 +22,10 @@ import { ParticipantVotingRow } from '../../../components/ParticipantVotingRow';
 import { typography } from '../../../styles/Typography';
 import { AvatarList } from '../../../components/AvatarList';
 import { DinnerFirebase, Recipe, UserFirebase } from '../../../interfaces/FirebaseSchema';
-import { fetchRecipes } from '../../../utils/dinnerRequests';
+import { fetchRecipes, setVote, setVotingTerminated } from '../../../utils/dinnerRequests';
 import { useContext } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
+import { useUserContext } from '../../../contexts/UserContext';
 
 type VotingScreenType = {
   isAdmin: boolean;
@@ -35,8 +36,9 @@ type VotingScreenType = {
 export const VotingScreen = (props: VotingScreenType) => {
   const navigator = useNavigation();
   const db = useContext(DatabaseContext).database;
+  const user = useUserContext()
+  const [selected, setSelected] = useState(props.dinner?.votes[user.currentUser?.uid ?? 0]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  // TODO: fetch recipes here!
   const getRecipes = async () => {
     const recipes = await fetchRecipes(db, props.dinner?.recipes.map(recipe => recipe.id));
     setRecipes(recipes);
@@ -47,12 +49,23 @@ export const VotingScreen = (props: VotingScreenType) => {
     }, []),
   );
 
+  const savedVote = props.dinner?.votes[user.currentUser?.uid ?? 0]
+
+  const saveVote = () => {
+    setVote(db, props.dinner?.id, selected, user.currentUser?.uid)
+  }
+
+  const terminateVoting = () => {
+    setVotingTerminated(db, props.dinner?.id)
+  }
+
+  const votes = Object.keys(props.dinner?.votes ?? {}).length;
 
   return (
     <Frame style={{paddingHorizontal: 0}} withSubPageHeader>
       <ScrollView>
         <View style={styles.paddingHorizontal}>
-          <ParticipantVotingRow />
+          <ParticipantVotingRow total={props.dinner?.participants.length ?? 0} voted={votes} />
           <AvatarList participants={props.participants} />
           <View style={styles.spaceBetween}>
             <Text style={typography.subtitle2}>
@@ -62,26 +75,31 @@ export const VotingScreen = (props: VotingScreenType) => {
           </View>
         </View>
         <View style={{backgroundColor: colors.white}}>
-          <RecepieCarousel recipes={recipes} />
+          <RecepieCarousel recipes={recipes} selected={selected} setSelected={(selected) => setSelected(selected)} />
         </View>
         <View style={styles.paddingHorizontal}>
           <Text>Vote for your preferred recipe!</Text>
         </View>
       </ScrollView>
-      {/* TODO: nochmal detailierter entscheiden je nach admin view */}
-      <View style={[styles.paddingHorizontal, {flexDirection: "row", flex: 1, justifyContent: 'space-between'}]}>
+      <View style={[styles.paddingHorizontal, {flexDirection: "column", flex: 1, justifyContent: 'space-between', marginBottom: 50}]}>
         <AppButton
-          style={{marginBottom: spacing.s, flex: 1, marginRight: spacing.s}}
-          title="CHANGE"
-          disabled={false}
-          type={AppButtonType.secondary}
-        />
-        <AppButton
-          style={{flex: 1}}
           title="SAVE"
-          disabled={false}
+          disabled={selected == savedVote}
           type={AppButtonType.primary}
+          onPress={() => {
+            saveVote()
+          }}
         />
+        {
+          props.isAdmin && <AppButton
+            style={{marginTop: spacing.m}}
+            title="TERMINATE VOTING PHASE"
+            type={AppButtonType.primary}
+            onPress={() => {
+              terminateVoting()
+            }}
+          />
+        }
       </View>
     </Frame>
   );

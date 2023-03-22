@@ -32,7 +32,9 @@ const PAGE_WIDTH = Dimensions.get('screen').width;
 // ];
 
 interface RecipeCarouselProps {
-  recipes: Recipe[]
+  recipes: Recipe[],
+  selected?: string,
+  setSelected: (selected: string) => void
 }
 
 const RecepieCarousel = (props: RecipeCarouselProps) => {
@@ -47,7 +49,6 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
     height: PAGE_WIDTH * 0.8,
   } as const;
 
-  const [selected, setSelected] = React.useState<number>(0);
   const navigator = useNavigation();
 
   const navigateExpandPage = (recipe: Recipe) => {
@@ -84,8 +85,8 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
             duration={item.readyInMinutes / 60}
             level={"easy"}
             imageURL={item.image}
-            selected={index == selected}
-            onThumbnailPressed={() => setSelected(index)}
+            selected={item.id == props.selected}
+            onThumbnailPressed={() => props.setSelected(item.id)}
             onExpandClicked={() => navigateExpandPage(item)}
           />
         )}
