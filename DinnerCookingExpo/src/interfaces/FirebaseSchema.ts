@@ -28,13 +28,10 @@ type DinnerFirebase = {
   admin: DocumentReference;
   date: Timestamp;
   name: string;
-  participants: {
-    user: DocumentReference;
-    inviteState: number;
-    vote?: DocumentReference | null;
-  }[];
-  recipes: DocumentReference[];
+  inviteStates: Record<string, InviteState>;
+  participants: DocumentReference[];
   state: number;
+  votes: Record<string, number>;
 };
 
 type UserFirebase = {
@@ -42,8 +39,10 @@ type UserFirebase = {
   hasDoneIntro: boolean;
   imageUrl: string;
   name: string;
-  dinners: DocumentReference[];
   contacts: DocumentReference[];
+  allergies: string[];
+  diets: string[];
+  unwantedIngredients: string[];
 };
 
 export type Ingredient = {
@@ -65,7 +64,7 @@ export type Ingredient = {
   meta: string[];
   name: string;
   nameClean: string;
-}
+};
 
 type Recipe = {
   aggregateLikes: number;

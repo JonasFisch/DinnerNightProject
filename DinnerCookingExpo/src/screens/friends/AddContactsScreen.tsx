@@ -4,11 +4,12 @@ import { useUserContext } from '../../contexts/UserContext';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { fetchAllUsers, setContactsOfUser } from '../../utils/userRequests';
 import { SelectableListEntry } from '../../components/SelectableList';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import ParamList from '../../utils/ParameterDefinitions';
 
-export const AddContactsScreen = ({ route }) => {
-  // TODO: const route = useRoute()
-  const { contacts }: { contacts: SelectableListEntry[] } = route.params;
+export const AddContactsScreen = () => {
+  const route = useRoute<RouteProp<ParamList, 'AddContactsScreen'>>();
+  const contacts: SelectableListEntry[] = route.params.contacts;
   const userContext = useUserContext();
   const dbContext = useContext(DatabaseContext);
   const db = dbContext.database;

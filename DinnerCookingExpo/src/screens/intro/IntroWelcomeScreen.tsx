@@ -1,14 +1,18 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { ImageLayout } from '../../components/ImageLayout';
+import StartSvg from '../../assets/graphics/startIntro.svg';
 
 export const IntroWelcomeScreen = ({ navigation }) => {
   const navigateToSteps = () => {
     navigation.navigate('Steps');
   };
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Welcome Screen</Text>
-      <Button title="Continue" onPress={navigateToSteps} />
-    </View>
+    <ImageLayout
+      ImageSVG={StartSvg}
+      headline="Set your eating preferences"
+      description="ahsfhal lfjas flkajsflksaj lkasjf lkasjf lkas sjhgajd asjhd asjhgd asjhgd ashdg asjhdg ashdg ashgd ashgd jh"
+      actionButtonLabel="Let's go!"
+      actionButtonClickHandler={navigateToSteps}
+    />
   );
 };

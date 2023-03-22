@@ -26,11 +26,15 @@ import { StepScreen } from './src/screens/intro/StepScreen';
 import { initializeApp } from 'firebase/app';
 import { getStorage } from 'firebase/storage';
 
-import { connectFirestoreEmulator, Firestore, getFirestore } from 'firebase/firestore';
+import {
+  connectFirestoreEmulator,
+  Firestore,
+  getFirestore,
+} from 'firebase/firestore';
 import { Playground } from './src/screens/Playground';
 import { IntroWelcomeScreen } from './src/screens/intro/IntroWelcomeScreen';
 import { WelcomeScreen } from './src/screens/auth/Welcome';
-import { CreateParty } from './src/screens/home/CreateParty';
+import { CreateDinner } from './src/screens/home/CreateDinner';
 import DatabaseContext from './src/contexts/DatabaseContext';
 import { typography } from './src/styles/Typography';
 import { useFonts } from 'expo-font';
@@ -41,6 +45,10 @@ import RecepieCarousel from './src/components/Carousel/RecepieCarousel';
 import { RecipeShow } from './src/screens/recipe/RecipeShow';
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { setupEmulators } from './Firebase';
+import { IntroFinishScreen } from './src/screens/intro/IntroFinishScreen';
+import { AddEatingPreferenceScreen } from './src/screens/preferences/AddEatingPreferenceScreen';
+import { AddDinnerParticipantsScreen } from './src/screens/AddDinnerParticipants';
+import { EditUsernameScreen } from './src/screens/settings/EditUsernameScreen';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAcAK7yLBd7J_saiXDEoDjFBsmsqsVBI0k',
@@ -53,7 +61,7 @@ const firebaseConfig = {
   appId: '1:818372515938:web:441f3a83ac5134ea72593b',
 };
 // config
-const localEnvironment = true
+const localEnvironment = true;
 
 // setup firebase app
 const firebaseApp = initializeApp(firebaseConfig);
@@ -63,7 +71,7 @@ const db = getFirestore(firebaseApp);
 // connectFirestoreEmulator(db, 'localhost', 8080);
 const storage = getStorage(firebaseApp);
 
-const App = () => {  
+const App = () => {
   // load fonts
   const [fontsLoaded] = useFonts({
     ArvoRegular: require('./src/assets/fonts/arvo/Arvo-Regular.ttf'),
@@ -126,12 +134,15 @@ const App = () => {
                             component={DinnerDetailScreen}
                           />
                           <AppStack.Screen
-                            name="CreateParty"
+                            name="CreateDinner"
                             options={{
                               headerTitle: 'Create Dinner',
-                              headerTitleStyle: typography.h4,
                             }}
-                            component={CreateParty}
+                            component={CreateDinner}
+                          />
+                          <AppStack.Screen
+                            name="AddDinnerParticipants"
+                            component={AddDinnerParticipantsScreen}
                           />
                           <AppStack.Screen
                             name="Recipe"
@@ -143,6 +154,17 @@ const App = () => {
                             component={AddContactsScreen}
                           />
                           {/* Sub Screens of Settings Screen */}
+                          <AppStack.Screen
+                            name="EditUsername"
+                            component={EditUsernameScreen}
+                            options={{
+                              headerTitle: 'Edit Username',
+                            }}
+                          />
+                          <AppStack.Screen
+                            name="AddEatingPreferences"
+                            component={AddEatingPreferenceScreen}
+                          />
                         </AppStack.Group>
                       ) : (
                         <AppStack.Group
@@ -155,6 +177,15 @@ const App = () => {
                           <AppStack.Screen
                             name="Steps"
                             component={StepScreen}
+                          />
+                          <AppStack.Screen
+                            name="AddEatingPreferences"
+                            component={AddEatingPreferenceScreen}
+                            options={{ headerShown: true }}
+                          />
+                          <AppStack.Screen
+                            name="Finish"
+                            component={IntroFinishScreen}
                           />
                         </AppStack.Group>
                       )}

@@ -11,6 +11,7 @@ type UserImageProps = {
   name: string;
   small?: boolean;
   style?: object;
+  customSize?: number;
 };
 
 const colorCollection = [
@@ -65,7 +66,16 @@ export const UserImage = (props: UserImageProps) => {
     <View style={props.style}>
       {hasUserImage ? (
         <Image
-          style={[styles.image, props.small && styles.smallSize]}
+          style={[
+            styles.image,
+            props.customSize
+              ? {
+                  width: props.customSize,
+                  height: props.customSize,
+                }
+              : props.small && styles.smallSize,
+            ,
+          ]}
           source={{
             uri: imageURL,
           }}
@@ -75,11 +85,20 @@ export const UserImage = (props: UserImageProps) => {
           style={[
             styles.alternative,
             { borderColor: alternativeColor },
-            props.small && styles.smallSize,
+            props.customSize
+              ? {
+                  width: props.customSize,
+                  height: props.customSize,
+                }
+              : props.small && styles.smallSize,
           ]}>
           <Text
             style={[
-              props.small ? typography.navBarActive : typography.subtitle2,
+              props.customSize
+                ? typography.h4
+                : props.small
+                ? typography.navBarActive
+                : typography.subtitle2,
               { color: alternativeColor },
             ]}>
             {props.name?.charAt(0).toUpperCase()}
@@ -95,10 +114,11 @@ const styles = StyleSheet.create({
   alternative: {
     width: 40,
     height: 40,
-    borderRadius: 40,
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
+    backgroundColor: colors.white,
   },
   smallSize: {
     height: 24,

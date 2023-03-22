@@ -35,9 +35,16 @@ export const SearchPage = ({
     setSelectedValues(newSelectedValues);
   };
 
-  const renderChip = ({ item }: { item: string }) => (
-    <Chip label={item} onPress={() => handleSelectionChange(item)} />
-  );
+  const renderChip = ({ item }: { item: string }) => {
+    const fullItem = listItems.find(el => el.label == item);
+    return (
+      <Chip
+        label={item}
+        imageUrl={fullItem?.image}
+        onPress={() => handleSelectionChange(item)}
+      />
+    );
+  };
 
   const saveContacts = () => {
     const currentlySelectedValues = listItems

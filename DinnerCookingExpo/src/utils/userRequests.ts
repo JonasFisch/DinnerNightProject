@@ -46,6 +46,19 @@ export const fetchUsers = async (
   });
 };
 
+export const fetchSingleUser = async (
+  db: Firestore,
+  userRef: DocumentReference,
+): Promise<UserFirebase> => {
+  console.log('IN FETCH SINGLE USER');
+
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) {
+    throw new Error('user does not exist');
+  }
+  return { ...userSnap.data(), id: userSnap.id } as UserFirebase;
+};
+
 export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
   console.log('IN FETCH ALL USERS');
 
@@ -91,10 +104,63 @@ export const setContactsOfUser = async (
   console.log('IN SET CONTACTS OF USER');
 
   return new Promise(async (resolve, reject) => {
-    const firestore = getFirestore(db.app);
-    const userRef = doc(firestore, 'Users/' + userId);
-    const contactRefs = contactIds.map(id => doc(firestore, 'Users/' + id));
+    const userRef = doc(db, 'Users/' + userId);
+    const contactRefs = contactIds.map(id => doc(db, 'Users/' + id));
     await updateDoc(userRef, 'contacts', contactRefs);
     resolve();
   });
+};
+
+export const setAllergiesOfUser = async (
+  db: Firestore,
+  userId: string,
+  allergies: string[],
+): Promise<void> => {
+  console.log('IN SET ALLERGIES OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'allergies', allergies);
+};
+
+export const setDietsOfUser = async (
+  db: Firestore,
+  userId: string,
+  diets: string[],
+): Promise<void> => {
+  console.log('IN SET DIETS OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'diets', diets);
+};
+
+export const setUnwantedIngredientsOfUser = async (
+  db: Firestore,
+  userId: string,
+  ingredients: string[],
+): Promise<void> => {
+  console.log('IN SET UNWANTED INGREDIENTS OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'unwantedIngredients', ingredients);
+};
+
+export const setNameOfUser = async (
+  db: Firestore,
+  userId: string,
+  name: string,
+): Promise<void> => {
+  console.log('IN SET NAME OF USER');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, 'name', name);
+};
+
+export const finishIntroOfUser = async (
+  db: Firestore,
+  userId: string,
+): Promise<void> => {
+  console.log('IN FINISH USER INTRO');
+
+  const userRef = doc(db, 'Users/' + userId);
+  await updateDoc(userRef, { hasDoneIntro: true });
 };

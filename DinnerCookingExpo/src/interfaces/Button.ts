@@ -14,6 +14,8 @@ export type AppButtonProps = {
   disabled?: boolean;
   logoURI?: string;
   logoSVG?: React.FC<SvgProps>;
+  logoColor?: string;
+  logoAsTrailingIcon?: boolean;
   style?: StyleProp<ViewStyle>;
   widthFitContent?: boolean;
   iconOnly?: boolean;
