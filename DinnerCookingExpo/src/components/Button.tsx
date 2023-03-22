@@ -48,7 +48,10 @@ export const AppButton = (props: AppButtonProps) => {
         // when the svg is not shown (properly) check if viewBox is set!
         <props.logoSVG
           fill={props.logoColor ? props.logoColor : colors.white}
-          style={styles.layout.leadingIcon}
+          style={[
+            styles.layout.leadingIcon,
+            props.iconOnly && { marginRight: spacing.none },
+          ]}
         />
       )}
       {props.logoURI && (
