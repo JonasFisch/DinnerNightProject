@@ -39,7 +39,6 @@ export const fetchDinners = (
   );
 
   const unsubscribe = onSnapshot(q, querySnapshot => {
-    console.log(querySnapshot);
     onHandleSnapshot(
       querySnapshot.docs.map(
         dinner =>
@@ -139,6 +138,17 @@ export const leaveDinner = async (
   );
 
   updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants });
+};
+
+export const setInviteState = async (
+  db: Firestore,
+  dinnerID: string,
+  inviteStates: Record<string, InviteState>,
+): Promise<void> => {
+  console.log('IN SET INVITE STATES');
+
+  const dinnerRef = doc(db, 'Dinners/' + dinnerID);
+  await updateDoc(dinnerRef, 'inviteStates', inviteStates);
 };
 
 // TODO: call the cloud function here to fetch recipes according to the invited users preferences !

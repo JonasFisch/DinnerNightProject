@@ -22,6 +22,7 @@ import { AppButton } from './Button';
 import { Participants } from './Participants';
 import CloseIcon from '../assets/icons/close.svg';
 import CheckIcon from '../assets/icons/check.svg';
+import { setInviteState } from '../utils/dinnerRequests';
 
 type DinnerListItemProps = {
   id: string;
@@ -50,6 +51,14 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
       props.ownerRef.id != userContext.currentUser.uid &&
       props.inviteStates[userContext.currentUser.uid] == InviteState.PENDING
     );
+  };
+
+  const handleInviteDecision = async (newInviteStateOfUser: InviteState) => {
+    if (!userContext.currentUser) throw new Error('User not authenticated');
+
+    const newInviteStates = props.inviteStates;
+    newInviteStates[userContext.currentUser.uid] = newInviteStateOfUser;
+    await setInviteState(db, props.id, newInviteStates);
   };
 
   // fetch participants
@@ -82,12 +91,6 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
     <Pressable
       style={styles.dinnerListItemWrapper}
       onPress={() => props.onPress(props.id)}>
-      {renderDinnerMainInformation}
-    </Pressable>
-  ) : (
-    <Pressable
-      style={styles.dinnerListItemWrapper}
-      onPress={() => props.onPress(props.id)}>
       <View>
         <Text style={[typography.subtitle2, styles.inviteText]}>
           {owner ? owner.name : 'A friend'} invited you to a Dinner:
@@ -97,20 +100,26 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
           <AppButton
             type={AppButtonType.text}
             title="Reject"
-            onPress={() => {}}
+            onPress={() => handleInviteDecision(InviteState.REJECTED)}
             logoSVG={CloseIcon}
             logoColor={colors.error}
           />
           <AppButton
             type={AppButtonType.text}
             title="Accept"
-            onPress={() => {}}
+            onPress={() => handleInviteDecision(InviteState.ACCEPTED)}
             logoSVG={CheckIcon}
             logoColor={colors.success}
             logoAsTrailingIcon
           />
         </View>
       </View>
+    </Pressable>
+  ) : (
+    <Pressable
+      style={styles.dinnerListItemWrapper}
+      onPress={() => props.onPress(props.id)}>
+      {renderDinnerMainInformation}
     </Pressable>
   );
 };
