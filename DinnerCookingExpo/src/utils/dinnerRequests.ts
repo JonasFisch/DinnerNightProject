@@ -16,6 +16,7 @@ import {
   getDoc,
   onSnapshot,
   Unsubscribe,
+  getDocs,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { updateDoc } from 'firebase/firestore';
@@ -148,7 +149,34 @@ export const fetchRecipe = async (
   const recipeSnap = await getDoc(doc(db, `Recipes/${recipeID}`));
   if (!recipeSnap.data()) throw new Error('cannot fetch recipe details.');
 
-  return recipeSnap.data() as Recipe;
+  const recipe = recipeSnap.data() as Recipe
+  recipe.id = recipeSnap.id
+
+  return recipe;
+};
+
+export const fetchRecipes = async (
+  db: Firestore,
+  recipeIds: string,
+): Promise<Recipe[]> => {
+  console.log('IN FETCH RECIPES');
+
+  
+  const q = query(
+    collection(db, 'Recipes'),
+    where('__name__', 'in', recipeIds),
+  );
+
+  const recipesSnapshot = await getDocs(q);
+
+  const recipes = []
+  for (const doc of recipesSnapshot.docs) {
+    const recipe = doc.data() as Recipe
+    recipe.id = doc.id
+    recipes.push(recipe) 
+  }
+  
+  return recipes;
 };
 
 export const leaveDinner = async (
@@ -181,9 +209,42 @@ export const setInviteState = async (
   await updateDoc(dinnerRef, 'inviteStates', inviteStates);
 };
 
-export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase, users: UserFirebase[]) => {
-  console.log(users);
+export const setVotingTerminated = async (
+  db: Firestore,
+  dinnerID: string,
+) => {
+  console.log("IN SET VOTING TERMINATED");
+
+  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  await updateDoc(dinnerRef, "state", DinnerState.COOKING)
+}
+
+export const finishDinner = async (
+  db: Firestore,
+  dinnerID: string,
+) => {
+  console.log("IN FINISH DINNER");
   
+  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  await updateDoc(dinnerRef, "state", DinnerState.FINISHED)
+}
+
+export const setVote = async (db: Firestore, dinnerID: string, recipeID: string, userID: string) => {
+  console.log("IN SET VOTE");
+  
+  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  const dinnerSnap = await getDoc(dinnerRef);
+  const dinner = dinnerSnap.data() as DinnerFirebase
+  const votes = dinner?.votes
+
+  votes[userID] = recipeID;
+
+  await updateDoc(dinnerRef, "votes", votes)
+}
+
+export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase, users: UserFirebase[]) => {
+  console.log("IN LOAD RECIPES FOR DINNER");
+    
   const allergies = new Set<string>()
   const diets = new Set<string>()
   for (const user of users) {

@@ -20,6 +20,7 @@ type CarouselItemProps = {
   level?: string;
   duration?: number;
   hideSelected?: boolean;
+  imageURL?: string;
   onThumbnailPressed?: (event: GestureResponderEvent) => void;
   onExpandClicked?: (event: GestureResponderEvent) => void;
 };
@@ -31,7 +32,7 @@ export const CarouselItem = (props: CarouselItemProps) => {
         <Image
           style={styles.thumbnail}
           source={{
-            uri: 'https://picsum.photos/500/600',
+            uri: props.imageURL,
           }}
         />
       </Pressable>

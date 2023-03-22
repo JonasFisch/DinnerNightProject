@@ -8,6 +8,9 @@ type ParamList = {
   DinnerDetailScreen: {
     id: string;
   };
+  RecipeDetailScreen: {
+    id: string;
+  },
   AddEatingPreferenceScreen: {
     type: EatingPreferenceType;
     preselectedItems: SelectableListEntry[];

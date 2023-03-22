@@ -32,7 +32,7 @@ type DinnerFirebase = {
   participants: DocumentReference[];
   recipes: DocumentReference[];
   state: number;
-  votes: Record<string, number>;
+  votes: Record<string, string>;
 };
 
 type UserFirebase = {
@@ -68,6 +68,7 @@ export type Ingredient = {
 };
 
 type Recipe = {
+  id: string,
   aggregateLikes: number;
   dishTypes: string[];
   diets: string[];
