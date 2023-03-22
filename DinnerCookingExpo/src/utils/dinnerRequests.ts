@@ -17,40 +17,41 @@ import {
   addDoc,
   getDoc,
   Query,
+  onSnapshot,
+  Unsubscribe,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { DocumentData, updateDoc } from 'firebase/firestore';
 
-export const fetchDinners = async (
+export const fetchDinners = (
   db: Firestore,
-  userDetails: UserFirebase,
-): Promise<DinnerFirebase[]> => {
-  return new Promise(async (resolve, reject) => {
-    console.log('IN FETCHING DINNERS');
+  userId: string,
+  onHandleSnapshot: (dinners: DinnerFirebase[]) => void,
+): Unsubscribe => {
+  console.log('IN FETCHING DINNERS');
 
-    if (!userDetails.dinners) return;
+  const userRef = doc(db, 'Users/' + userId);
+  const dinnerCollection = collection(db, 'Dinners');
 
-    // get data from firebase
-    const dinnersSnap = await getDocs(
-      query(
-        collection(db, 'Dinners'),
-        where(
-          '__name__',
-          'in',
-          userDetails.dinners.map(dinner => dinner.id),
-        ),
+  const q = query(
+    dinnerCollection,
+    where('participants', 'array-contains', userRef),
+  );
+
+  const unsubscribe = onSnapshot(q, querySnapshot => {
+    console.log(querySnapshot);
+    onHandleSnapshot(
+      querySnapshot.docs.map(
+        dinner =>
+          ({
+            ...dinner.data(),
+            id: dinner.id,
+          } as DinnerFirebase),
       ),
     );
-
-    if (!dinnersSnap.docs) reject('could not get dinner snap.');
-    resolve(
-      dinnersSnap.docs.map(dinner => {
-        const din = dinner.data() as DinnerFirebase;
-        din.id = dinner.id;
-        return din;
-      }),
-    );
   });
+
+  return unsubscribe;
 };
 
 export const fetchDinner = async (
@@ -78,23 +79,17 @@ export const createDinner = async (
 ) => {
   console.log('IN CREATE DINNER');
 
+  const invites: Record<string, InviteState> = {};
+  participants.forEach(user => (invites[user.id] = InviteState.PENDING));
+
   const newDinner: DinnerFirebase = {
     date: Timestamp.fromDate(date),
     name,
-    participants: [
-      {
-        user: self, // self
-        inviteState: InviteState.PENDING,
-      },
-      ...participants.map(participant => {
-        return {
-          user: participant,
-          inviteState: InviteState.PENDING,
-        };
-      }),
-    ],
+    participants: [...participants, self],
+    inviteStates: invites,
     admin: self,
     state: DinnerState.INVITE,
+    votes: {},
   };
 
   const dinner = await addDoc(collection(db, 'Dinners'), newDinner);

@@ -58,7 +58,6 @@ export function UserProvider({
     hasDoneIntro: false,
     name: '',
     imageUrl: '',
-    inviteStates: {},
     contacts: [],
     allergies: [],
     diets: [],
