@@ -14,29 +14,32 @@ import { colors } from '../styles/Color';
 import { sizes } from '../styles/Sizes';
 import { spacing } from '../styles/Spacing';
 import { typography } from '../styles/Typography';
-import { fetchUsers } from '../utils/userRequests';
+import { fetchSingleUser, fetchUsers } from '../utils/userRequests';
 import { Participants } from './Participants';
 
 type DinnerListItemProps = {
   id: string;
   title: string;
   creationDate: Date;
-  participants: DocumentReference[];
+  ownerRef: DocumentReference;
+  participantsRefs: DocumentReference[];
   onPress: (data: string) => void;
 };
 
 export const DinnerListItem = (props: DinnerListItemProps) => {
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
+  const [owner, setOwner] = useState<UserFirebase>();
   const db = useContext(DatabaseContext).database;
 
-  const resolveParticipants = async () => {
-    setParticipants(await fetchUsers(db, props.participants));
+  const resolveParticipantsAndOwner = async () => {
+    setParticipants(await fetchUsers(db, props.participantsRefs));
+    setOwner(await fetchSingleUser(db, props.ownerRef));
   };
 
   // fetch participants
   useFocusEffect(
     useCallback(() => {
-      resolveParticipants();
+      resolveParticipantsAndOwner();
     }, []),
   );
 
@@ -44,7 +47,9 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
     <TouchableWithoutFeedback onPress={() => props.onPress(props.id)}>
       <View style={styles.dinnerListItemWrapper}>
         <View style={styles.textWrapper}>
-          <Text style={[typography.body]}>{props.title}</Text>
+          <Text style={[typography.body, { marginBottom: spacing.xs }]}>
+            {props.title}
+          </Text>
           <Text style={typography.body2}>
             {props.creationDate.toLocaleDateString('de-DE', {
               day: '2-digit',
@@ -52,6 +57,7 @@ export const DinnerListItem = (props: DinnerListItemProps) => {
               year: 'numeric',
             })}
           </Text>
+          {owner && <Text style={typography.body2}>Owner: {owner.name}</Text>}
         </View>
         <Participants participants={participants} />
       </View>

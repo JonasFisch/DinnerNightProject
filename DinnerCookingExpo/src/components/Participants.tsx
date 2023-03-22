@@ -20,12 +20,7 @@ export const Participants = (props: ParticipantsProps) => {
       <View style={styles.participants}>
         {props.participants.slice(0, 3).map((participant, index) => {
           return (
-            <View
-              key={`participant-${index}`}
-              style={[
-                styles.userImage,
-                { right: 5 + index * 25, zIndex: index * 2 },
-              ]}>
+            <View key={`participant-${index}`} style={[styles.userImage]}>
               <UserImage
                 name={participant.name}
                 imageUrl={participant.imageUrl}
@@ -55,17 +50,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     position: 'relative',
   },
-  userImage: {
-    position: 'absolute',
-    bottom: '-50%',
-    transform: [
-      {
-        translateY: 3,
-      },
-    ],
-  },
+  userImage: { marginLeft: -spacing.m },
   moreText: {
     textAlign: 'center',
-    width: 15,
+    marginLeft: spacing.xxs,
   },
 });

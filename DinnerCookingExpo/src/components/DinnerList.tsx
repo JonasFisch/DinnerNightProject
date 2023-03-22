@@ -28,7 +28,8 @@ export const DinnerList = (props: DinnerListProps) => {
             creationDate={dinner.date.toDate()}
             id={dinner.id ?? ''}
             key={dinner.id}
-            participants={dinner.participants}
+            ownerRef={dinner.admin}
+            participantsRefs={dinner.participants}
             onPress={openDinnerDetails}
           />
         </View>
