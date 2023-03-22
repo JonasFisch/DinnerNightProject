@@ -1,4 +1,4 @@
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import React, { useCallback, useContext, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { AppButton } from '../../components/Button';
@@ -12,10 +12,16 @@ import { Recipe } from '../../interfaces/FirebaseSchema';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
 import { fetchRecipe } from '../../utils/dinnerRequests';
+import ParamList from '../../utils/ParameterDefinitions';
 
-export const RecipeShow = () => {
+export type DinnerDetailScreenParams = {
+  id: string;
+};
+
+export const RecipeShow = (props: DinnerDetailScreenParams) => {
   const [recipe, setRecipe] = useState<Recipe>();
-  const route = useRoute()
+  const route = useRoute<RouteProp<ParamList, 'RecipeDetailScreen'>>();
+  const recipeID: string = route.params.id;
 
   const db = useContext(DatabaseContext).database;
 
@@ -23,7 +29,7 @@ export const RecipeShow = () => {
     try {
       const fetchedRecipe = await fetchRecipe(
         db,
-        "ASvDTQnpXvHCNvrTOuCQ"
+        recipeID
       );
 
       setRecipe(fetchedRecipe);

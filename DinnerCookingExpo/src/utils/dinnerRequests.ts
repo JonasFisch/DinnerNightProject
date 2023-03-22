@@ -16,6 +16,7 @@ import {
   getDoc,
   onSnapshot,
   Unsubscribe,
+  getDocs,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { updateDoc } from 'firebase/firestore';
@@ -148,7 +149,34 @@ export const fetchRecipe = async (
   const recipeSnap = await getDoc(doc(db, `Recipes/${recipeID}`));
   if (!recipeSnap.data()) throw new Error('cannot fetch recipe details.');
 
-  return recipeSnap.data() as Recipe;
+  const recipe = recipeSnap.data() as Recipe
+  recipe.id = recipeSnap.id
+
+  return recipe;
+};
+
+export const fetchRecipes = async (
+  db: Firestore,
+  recipeIds: string,
+): Promise<Recipe[]> => {
+  console.log('IN FETCH RECIPES');
+
+  
+  const q = query(
+    collection(db, 'Recipes'),
+    where('__name__', 'in', recipeIds),
+  );
+
+  const recipesSnapshot = await getDocs(q);
+
+  const recipes = []
+  for (const doc of recipesSnapshot.docs) {
+    const recipe = doc.data() as Recipe
+    recipe.id = doc.id
+    recipes.push(recipe) 
+  }
+  
+  return recipes;
 };
 
 export const leaveDinner = async (

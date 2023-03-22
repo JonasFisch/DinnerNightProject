@@ -10,27 +10,32 @@ import Animated, {
 import { SBItem } from './SBItem';
 import { CarouselItem } from './CarouselItem';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { Recipe } from '../../interfaces/FirebaseSchema';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
-const recepies = [
-  {
-    title: 'Nices Essen',
-    duration: 1,
-    level: 'easy',
-  },
-  {
-    title: 'Apple Pie',
-    duration: 1,
-    level: 'easy',
-  },
-  {
-    title: 'something else',
-    duration: 1,
-    level: 'easy',
-  },
-];
+// const recepies = [
+//   {
+//     title: 'Nices Essen',
+//     duration: 1,
+//     level: 'easy',
+//   },
+//   {
+//     title: 'Apple Pie',
+//     duration: 1,
+//     level: 'easy',
+//   },
+//   {
+//     title: 'something else',
+//     duration: 1,
+//     level: 'easy',
+//   },
+// ];
 
-const RecepieCarousel = () => {
+interface RecipeCarouselProps {
+  recipes: Recipe[]
+}
+
+const RecepieCarousel = (props: RecipeCarouselProps) => {
   const isVertical = false;
   const autoPlay = false;
   const pagingEnabled = true;
@@ -45,8 +50,10 @@ const RecepieCarousel = () => {
   const [selected, setSelected] = React.useState<number>(0);
   const navigator = useNavigation();
 
-  const navigateExpandPage = (index: number) => {
-    navigator.navigate('Recipe');
+  const navigateExpandPage = (recipe: Recipe) => {
+    navigator.navigate('Recipe', {
+      id: recipe.id 
+    });
   };
 
   return (
@@ -70,15 +77,16 @@ const RecepieCarousel = () => {
           parallaxScrollingOffset: 70,
           parallaxAdjacentItemScale: 0.7,
         }}
-        data={recepies}
+        data={props.recipes}
         renderItem={({ index, item }) => (
           <CarouselItem
             name={item.title}
-            duration={item.duration}
-            level={item.level}
+            duration={item.readyInMinutes / 60}
+            level={"easy"}
+            imageURL={item.image}
             selected={index == selected}
             onThumbnailPressed={() => setSelected(index)}
-            onExpandClicked={() => navigateExpandPage(index)}
+            onExpandClicked={() => navigateExpandPage(item)}
           />
         )}
       />

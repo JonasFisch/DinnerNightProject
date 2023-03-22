@@ -68,6 +68,7 @@ export type Ingredient = {
 };
 
 type Recipe = {
+  id: string,
   aggregateLikes: number;
   dishTypes: string[];
   diets: string[];

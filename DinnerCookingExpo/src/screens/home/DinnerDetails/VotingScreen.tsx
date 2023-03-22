@@ -21,7 +21,10 @@ import { spacing } from '../../../styles/Spacing';
 import { ParticipantVotingRow } from '../../../components/ParticipantVotingRow';
 import { typography } from '../../../styles/Typography';
 import { AvatarList } from '../../../components/AvatarList';
-import { DinnerFirebase, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import { DinnerFirebase, Recipe, UserFirebase } from '../../../interfaces/FirebaseSchema';
+import { fetchRecipes } from '../../../utils/dinnerRequests';
+import { useContext } from 'react';
+import DatabaseContext from '../../../contexts/DatabaseContext';
 
 type VotingScreenType = {
   isAdmin: boolean;
@@ -31,6 +34,19 @@ type VotingScreenType = {
 
 export const VotingScreen = (props: VotingScreenType) => {
   const navigator = useNavigation();
+  const db = useContext(DatabaseContext).database;
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  // TODO: fetch recipes here!
+  const getRecipes = async () => {
+    const recipes = await fetchRecipes(db, props.dinner?.recipes.map(recipe => recipe.id));
+    setRecipes(recipes);
+  };
+  useFocusEffect(
+    useCallback(() => {
+      getRecipes()
+    }, []),
+  );
+
 
   return (
     <Frame style={{paddingHorizontal: 0}} withSubPageHeader>
@@ -42,11 +58,11 @@ export const VotingScreen = (props: VotingScreenType) => {
             <Text style={typography.subtitle2}>
               Recipe proposals
             </Text>
-            <RefreshIcon style={styles.refreshIcon}/>
+            <RefreshIcon style={styles.refreshIcon} />
           </View>
         </View>
         <View style={{backgroundColor: colors.white}}>
-          <RecepieCarousel />
+          <RecepieCarousel recipes={recipes} />
         </View>
         <View style={styles.paddingHorizontal}>
           <Text>Vote for your preferred recipe!</Text>

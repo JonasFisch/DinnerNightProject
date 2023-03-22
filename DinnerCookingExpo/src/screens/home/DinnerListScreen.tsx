@@ -37,8 +37,7 @@ export const DinnerListScreen = () => {
   // );
 
   const userContext = useUserContext();
-  const dbContext = useContext(DatabaseContext);
-  const db = dbContext.database;
+  const db = useContext(DatabaseContext).database;
 
   const listenToParticipatedDinners = () => {
     if (!userContext.currentUser) throw new Error('User not authenticated.');
