@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     position: 'relative',
   },
-  userImage: { marginLeft: -spacing.m },
+  userImage: { marginLeft: -spacing.s },
   moreText: {
     textAlign: 'center',
     marginLeft: spacing.xxs,

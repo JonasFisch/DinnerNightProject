@@ -44,13 +44,16 @@ export const AppButton = (props: AppButtonProps) => {
         { alignSelf: props.widthFitContent ? 'center' : 'auto' },
         props.iconOnly && styles.layout.iconButton,
       ]}>
-      {props.logoSVG && (
+      {!props.logoAsTrailingIcon && props.logoSVG && (
         // when the svg is not shown (properly) check if viewBox is set!
-        <props.logoSVG fill={colors.white} style={styles.layout.tinyLogo} />
+        <props.logoSVG
+          fill={props.logoColor ? props.logoColor : colors.white}
+          style={styles.layout.leadingIcon}
+        />
       )}
       {props.logoURI && (
         <Image
-          style={styles.layout.tinyLogo}
+          style={styles.layout.leadingIcon}
           source={{
             uri: props.logoURI,
           }}
@@ -58,6 +61,13 @@ export const AppButton = (props: AppButtonProps) => {
       )}
       {!props.iconOnly && (
         <Text style={computedStyles.text}>{props.title}</Text>
+      )}
+      {props.logoAsTrailingIcon && props.logoSVG && (
+        // when the svg is not shown (properly) check if viewBox is set!
+        <props.logoSVG
+          fill={props.logoColor ? props.logoColor : colors.white}
+          style={styles.layout.trailingIcon}
+        />
       )}
     </Pressable>
   );
@@ -78,11 +88,16 @@ const styles = {
       ...typography.button,
       color: colors.white,
       paddingVertical: spacing.m,
-      marginLeft: spacing.xs,
     },
-    tinyLogo: {
+    leadingIcon: {
       width: 24,
       height: 24,
+      marginRight: spacing.xs,
+    },
+    trailingIcon: {
+      width: 24,
+      height: 24,
+      marginLeft: spacing.xs,
     },
     iconButton: {
       borderRadius: 50,

@@ -30,6 +30,7 @@ export const DinnerList = (props: DinnerListProps) => {
             key={dinner.id}
             ownerRef={dinner.admin}
             participantsRefs={dinner.participants}
+            inviteStates={dinner.inviteStates}
             onPress={openDinnerDetails}
           />
         </View>
