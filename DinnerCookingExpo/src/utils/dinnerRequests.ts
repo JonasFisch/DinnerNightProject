@@ -4,24 +4,21 @@ import {
   Recipe,
   UserFirebase,
 } from './../interfaces/FirebaseSchema';
-import { User } from 'firebase/auth';
 import {
   collection,
   doc,
   DocumentReference,
   Firestore,
-  getDocs,
   query,
   where,
   Timestamp,
   addDoc,
   getDoc,
-  Query,
   onSnapshot,
   Unsubscribe,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
-import { DocumentData, updateDoc } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
 
 export const fetchDinners = (
   db: Firestore,
@@ -40,13 +37,15 @@ export const fetchDinners = (
 
   const unsubscribe = onSnapshot(q, querySnapshot => {
     onHandleSnapshot(
-      querySnapshot.docs.map(
-        dinner =>
-          ({
-            ...dinner.data(),
-            id: dinner.id,
-          } as DinnerFirebase),
-      ),
+      querySnapshot.docs
+        .filter(doc => doc.data().inviteStates[userId] != InviteState.REJECTED)
+        .map(
+          dinner =>
+            ({
+              ...dinner.data(),
+              id: dinner.id,
+            } as DinnerFirebase),
+        ),
     );
   });
 
