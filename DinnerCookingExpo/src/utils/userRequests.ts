@@ -46,6 +46,19 @@ export const fetchUsers = async (
   });
 };
 
+export const fetchSingleUser = async (
+  db: Firestore,
+  userRef: DocumentReference,
+): Promise<UserFirebase> => {
+  console.log('IN FETCH SINGLE USER');
+
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) {
+    throw new Error('user does not exist');
+  }
+  return { ...userSnap.data(), id: userSnap.id } as UserFirebase;
+};
+
 export const fetchAllUsers = async (db: Firestore): Promise<UserFirebase[]> => {
   console.log('IN FETCH ALL USERS');
 

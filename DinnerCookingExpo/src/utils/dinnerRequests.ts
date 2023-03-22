@@ -4,24 +4,21 @@ import {
   Recipe,
   UserFirebase,
 } from './../interfaces/FirebaseSchema';
-import { User } from 'firebase/auth';
 import {
   collection,
   doc,
   DocumentReference,
   Firestore,
-  getDocs,
   query,
   where,
   Timestamp,
   addDoc,
   getDoc,
-  Query,
   onSnapshot,
   Unsubscribe,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
-import { DocumentData, updateDoc } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
 
 export const fetchDinners = (
   db: Firestore,
@@ -39,15 +36,16 @@ export const fetchDinners = (
   );
 
   const unsubscribe = onSnapshot(q, querySnapshot => {
-    console.log(querySnapshot);
     onHandleSnapshot(
-      querySnapshot.docs.map(
-        dinner =>
-          ({
-            ...dinner.data(),
-            id: dinner.id,
-          } as DinnerFirebase),
-      ),
+      querySnapshot.docs
+        .filter(doc => doc.data().inviteStates[userId] != InviteState.REJECTED)
+        .map(
+          dinner =>
+            ({
+              ...dinner.data(),
+              id: dinner.id,
+            } as DinnerFirebase),
+        ),
     );
   });
 
@@ -139,6 +137,17 @@ export const leaveDinner = async (
   );
 
   updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants });
+};
+
+export const setInviteState = async (
+  db: Firestore,
+  dinnerID: string,
+  inviteStates: Record<string, InviteState>,
+): Promise<void> => {
+  console.log('IN SET INVITE STATES');
+
+  const dinnerRef = doc(db, 'Dinners/' + dinnerID);
+  await updateDoc(dinnerRef, 'inviteStates', inviteStates);
 };
 
 // TODO: call the cloud function here to fetch recipes according to the invited users preferences !

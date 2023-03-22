@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
+    backgroundColor: colors.white,
   },
   smallSize: {
     height: 24,
