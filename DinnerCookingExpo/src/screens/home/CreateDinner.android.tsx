@@ -7,14 +7,15 @@ import DatabaseContext from '../../contexts/DatabaseContext';
 import { AppButtonType } from '../../interfaces/Button';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { createDinner } from '../../utils/dinnerRequests';
+import { createDinner, editDinner } from '../../utils/dinnerRequests';
 import { useUserContext } from '../../contexts/UserContext';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
 import { ChipList } from '../../components/ChipList';
 import { SelectableListEntry } from '../../components/SelectableList';
 import CheckIcon from '../../assets/icons/check.svg';
+import ParamList from '../../utils/ParameterDefinitions';
 
 const months = [
   'January',
@@ -38,11 +39,25 @@ export const CreateDinner = ({ navigation }) => {
   const userContext = useUserContext();
   const navigator = useNavigation();
 
-  const [name, setName] = useState<string>('');
-  const [date, setDate] = useState<Date>(new Date(Date.now()));
+  const route = useRoute<RouteProp<ParamList, 'CreateDinner'>>();
+  let editMode = false
+
+  // this is enables the edit mode!
+  const dinner = route.params?.dinner
+  const partics = route.params?.participants
+  if (dinner) editMode = true
+
+  const [name, setName] = useState<string>(dinner?.name ?? '');
+  const [date, setDate] = useState<Date>(new Date(dinner?.date.toDate() ?? Date.now()));
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState<boolean>(false);
-  const [participants, setParticipants] = useState<SelectableListEntry[]>([]);
+  const [participants, setParticipants] = useState<SelectableListEntry[]>(partics?.map(participant => {
+    return {
+      id: participant.id,
+      label: participant.name,
+      image: participant.imageUrl,
+    }
+  }) ?? []);
 
   const triggerDatePicker = (mode: string) => {
     setMode(mode);
@@ -106,13 +121,22 @@ export const CreateDinner = ({ navigation }) => {
       doc(db, 'Users', user.id),
     );
 
-    createDinner(db, participantsRefs, userRef, date, name)
+    if (editMode) {
+      editDinner(db, dinner?.id, participantsRefs, userRef, date, name)
       .then(() => {
         navigator.goBack();
+      }).catch(error => {
+        console.error('error during editing dinner: ', error);
       })
-      .catch(error => {
-        console.error('error during creating dinner: ', error);
-      });
+    } else {
+      createDinner(db, participantsRefs, userRef, date, name)
+        .then(() => {
+          navigator.goBack();
+        })
+        .catch(error => {
+          console.error('error during creating dinner: ', error);
+        });
+    }
   };
 
   return (
