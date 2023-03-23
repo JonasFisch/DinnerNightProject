@@ -22,8 +22,6 @@ export const CreateDinner = () => {
 
   const [name, setName] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date(Date.now()));
-  const [mode, setMode] = useState<any>('date');
-  const [show, setShow] = useState<boolean>(false);
   const [participants, setParticipants] = useState<SelectableListEntry[]>([]);
   const navigator = useNavigation();
 

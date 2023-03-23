@@ -66,7 +66,7 @@ export const VotingScreen = (props: VotingScreenType) => {
       <ScrollView>
         <View style={styles.paddingHorizontal}>
           <ParticipantVotingRow total={props.dinner?.participants.length ?? 0} voted={votes} />
-          <AvatarList participants={props.participants} />
+          <AvatarList participants={props.participants} votes={props.dinner?.votes ?? {}} />
           <View style={styles.spaceBetween}>
             <Text style={typography.subtitle2}>
               Recipe proposals
