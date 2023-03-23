@@ -1,4 +1,4 @@
-import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
+import { GestureResponderEvent, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
 export enum AppButtonType {
@@ -19,4 +19,5 @@ export type AppButtonProps = {
   style?: StyleProp<ViewStyle>;
   widthFitContent?: boolean;
   iconOnly?: boolean;
+  textStyle?: StyleProp<TextStyle>;
 };

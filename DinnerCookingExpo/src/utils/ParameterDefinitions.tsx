@@ -1,4 +1,5 @@
 import { SelectableListEntry } from '../components/SelectableList';
+import { DinnerFirebase, UserFirebase } from '../interfaces/FirebaseSchema';
 import { EatingPreferenceType } from '../screens/preferences/AddEatingPreferenceScreen';
 
 type ParamList = {
@@ -10,6 +11,10 @@ type ParamList = {
   };
   RecipeDetailScreen: {
     id: string;
+  },
+  CreateDinner: {
+    dinner?: DinnerFirebase,
+    participants?: UserFirebase[]
   },
   AddEatingPreferenceScreen: {
     type: EatingPreferenceType;

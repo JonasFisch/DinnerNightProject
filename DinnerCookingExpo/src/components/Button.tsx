@@ -63,7 +63,7 @@ export const AppButton = (props: AppButtonProps) => {
         />
       )}
       {!props.iconOnly && (
-        <Text style={computedStyles.text}>{props.title}</Text>
+        <Text style={[computedStyles.text, props.textStyle]}>{props.title}</Text>
       )}
       {props.logoAsTrailingIcon && props.logoSVG && (
         // when the svg is not shown (properly) check if viewBox is set!

@@ -9,7 +9,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, UIManager, useColorScheme } from 'react-native';
+import { Platform, Pressable, Text, UIManager, useColorScheme } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { Tabs } from './src/screens/Tabs';

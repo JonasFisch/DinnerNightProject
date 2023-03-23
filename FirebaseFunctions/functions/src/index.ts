@@ -70,10 +70,7 @@ exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
       ...recipe,
     }));
   }
-  
-  // console.log(diets);
-  // console.log(allergies);
-  
+    
   response.send({
     recipes: recipeData.map(recipe => recipe.id)
   });

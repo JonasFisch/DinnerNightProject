@@ -17,6 +17,7 @@ import {
   onSnapshot,
   Unsubscribe,
   getDocs,
+  deleteDoc,
 } from 'firebase/firestore';
 import { DinnerFirebase } from '../interfaces/FirebaseSchema';
 import { updateDoc } from 'firebase/firestore';
@@ -100,21 +101,7 @@ export const createDinner = async (
   const newDinner: DinnerFirebase = {
     date: Timestamp.fromDate(date),
     name,
-    // participants: [
-    //   {
-    //     user: self,
-    //     inviteState: InviteState.ACCEPTED,
-    //     vote: null
-    //   },
-    //   ...participants.map(participant => {
-    //     return {
-    //       user: participant,
-    //       inviteState: InviteState.PENDING,
-    //       vote: null,
-    //     }
-    //   }),
-    // ],
-    // recipes: [],
+    recipes: [],
     participants: [...participants, self],
     inviteStates: invites,
     admin: self,
@@ -139,6 +126,24 @@ export const createDinner = async (
 
   return dinner;
 };
+
+export const editDinner = async (
+  db: Firestore,
+  dinnerID: string,
+  participants: DocumentReference[],
+  self: DocumentReference,
+  date: Date,
+  name: string,
+) => {
+  console.log('IN EDIT DINNER');
+
+  const dinner = doc(db, "Dinners/" + dinnerID);
+  updateDoc(dinner, {
+    date: Timestamp.fromDate(date),
+    name,
+    participants: [...participants, self],
+  })
+}
 
 export const fetchRecipe = async (
   db: Firestore,
@@ -195,8 +200,18 @@ export const leaveDinner = async (
     participant => participant.id != userID,
   );
 
-  updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants });
+  await updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants });
 };
+
+export const deleteDinner = async (
+  db: Firestore,
+  dinnerID: string,
+) => {
+  console.log("in delete dinner");
+
+  const dinnerRef = doc(db, "Dinners/" + dinnerID)
+  await deleteDoc(dinnerRef);
+}
 
 export const setInviteState = async (
   db: Firestore,

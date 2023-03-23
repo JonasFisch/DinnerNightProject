@@ -1,5 +1,5 @@
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { doc } from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -13,16 +13,32 @@ import { useUserContext } from '../../contexts/UserContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
-import { createDinner } from '../../utils/dinnerRequests';
+import { createDinner, editDinner } from '../../utils/dinnerRequests';
 import CheckIcon from '../../assets/icons/check.svg';
+import ParamList from '../../utils/ParameterDefinitions';
 
 export const CreateDinner = () => {
   const db = useContext(DatabaseContext).database;
   const userContext = useUserContext();
 
-  const [name, setName] = useState<string>('');
-  const [date, setDate] = useState<Date>(new Date(Date.now()));
-  const [participants, setParticipants] = useState<SelectableListEntry[]>([]);
+
+  const route = useRoute<RouteProp<ParamList, 'CreateDinner'>>();
+  let editMode = false
+
+  // this is enables the edit mode!
+  const dinner = route.params?.dinner
+  const partics = route.params?.participants
+  if (dinner) editMode = true
+
+  const [name, setName] = useState<string>(dinner?.name ?? '');
+  const [date, setDate] = useState<Date>(new Date(dinner?.date.toDate() ?? Date.now()));
+  const [participants, setParticipants] = useState<SelectableListEntry[]>(partics?.map(participant => {
+    return {
+      id: participant.id,
+      label: participant.name,
+      image: participant.imageUrl,
+    }
+  }) ?? []);
   const navigator = useNavigation();
 
   const handleSelectionChange = (participant: SelectableListEntry) => {
@@ -59,13 +75,23 @@ export const CreateDinner = () => {
       doc(db, 'Users', user.id),
     );
 
-    createDinner(db, participantsRefs, userRef, date, name)
+    if (editMode) {
+      editDinner(db, dinner?.id, participantsRefs, userRef, date, name)
       .then(() => {
         navigator.goBack();
+      }).catch(error => {
+        console.error('error during editing dinner: ', error);
       })
-      .catch(error => {
-        console.error('error during creating dinner: ', error);
-      });
+    } else {
+      createDinner(db, participantsRefs, userRef, date, name)
+        .then(() => {
+          navigator.goBack();
+        })
+        .catch(error => {
+          console.error('error during creating dinner: ', error);
+        });
+    }
+
   };
 
   return (

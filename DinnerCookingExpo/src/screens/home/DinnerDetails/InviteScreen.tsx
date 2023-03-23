@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { Frame } from '../../../components/Frame';
 import { InviteStatus } from '../../../components/InviteStatus';
