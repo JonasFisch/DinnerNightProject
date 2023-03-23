@@ -71,7 +71,7 @@ export const WinnerScreen = (props: WinnerScreenType) => {
     <Frame withSubPageHeader>
       <ScrollView style={{marginBottom: spacing.l}}>
         <ParticipantVotingRow total={props.dinner?.participants.length ?? 0} voted={votes} />
-        <AvatarList participants={props.participants} />
+        <AvatarList participants={props.participants} votes={props.dinner?.votes ?? {}} />
         <Row spaceBetween style={{marginBottom: spacing.s}}>
           <Text style={typography.subtitle2}>
             Winner Recipe
