@@ -57,7 +57,7 @@ exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
 
   let recipes = []
   try {
-    recipes = await fetchRandomRecipes(1, diets, allergies);    
+    recipes = await fetchRandomRecipes(5, diets, allergies);    
   } catch (error) {
     console.log(error);
     response.status(500).send({error})
