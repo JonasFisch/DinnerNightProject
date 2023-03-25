@@ -7,6 +7,7 @@ import {
   StyleProp,
   ViewStyle,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { typography } from '../styles/Typography';
 import { colors } from '../styles/Color';
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dashedHorizontalLine: {
-    borderStyle: 'dashed',
+    borderStyle: Platform.OS == "android" ? 'dashed' : "solid" ,
     right: 8,
     left: 8,
   },
