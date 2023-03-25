@@ -187,7 +187,7 @@ export const StepScreen = ({ navigation }) => {
               style={styles.input}
               value={''}
               onChangeText={() => {}}
-              customOnFokus={handleSearchInputFocus}
+              onPressIn={handleSearchInputFocus}
               label={'Search'}
               clearable={true}
             />
