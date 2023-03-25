@@ -1,7 +1,7 @@
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { doc } from 'firebase/firestore';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { ChipList } from '../../components/ChipList';
@@ -20,15 +20,23 @@ import ParamList from '../../utils/ParameterDefinitions';
 export const CreateDinner = () => {
   const db = useContext(DatabaseContext).database;
   const userContext = useUserContext();
-
+  const navigator = useNavigation();
+  const [editMode, setEditMode] = useState(false);
 
   const route = useRoute<RouteProp<ParamList, 'CreateDinner'>>();
-  let editMode = false
 
   // this is enables the edit mode!
   const dinner = route.params?.dinner
   const partics = route.params?.participants
-  if (dinner) editMode = true
+  
+  useEffect(() => {  
+    if (dinner) {
+      setEditMode(true)
+      navigator.setOptions({
+        headerTitle: "Edit Dinner",
+      })
+    }  
+  }, [dinner])
 
   const [name, setName] = useState<string>(dinner?.name ?? '');
   const [date, setDate] = useState<Date>(new Date(dinner?.date.toDate() ?? Date.now()));
@@ -39,7 +47,6 @@ export const CreateDinner = () => {
       image: participant.imageUrl,
     }
   }) ?? []);
-  const navigator = useNavigation();
 
   const handleSelectionChange = (participant: SelectableListEntry) => {
     const isValueAlreadySelected = participants.find(

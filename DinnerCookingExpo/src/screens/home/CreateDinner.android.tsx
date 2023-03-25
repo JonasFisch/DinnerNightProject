@@ -1,5 +1,5 @@
 import { doc } from 'firebase/firestore';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
 import { AppInput } from '../../components/Input';
@@ -38,14 +38,23 @@ export const CreateDinner = ({ navigation }) => {
   const db = useContext(DatabaseContext).database;
   const userContext = useUserContext();
   const navigator = useNavigation();
+  const [editMode, setEditMode] = useState(false);
 
   const route = useRoute<RouteProp<ParamList, 'CreateDinner'>>();
-  let editMode = false
 
   // this is enables the edit mode!
   const dinner = route.params?.dinner
   const partics = route.params?.participants
-  if (dinner) editMode = true
+
+  useEffect(() => {  
+    if (dinner) {
+      setEditMode(true)
+      navigator.setOptions({
+        headerTitle: "Edit Dinner",
+      })
+    }  
+  }, [dinner])
+
 
   const [name, setName] = useState<string>(dinner?.name ?? '');
   const [date, setDate] = useState<Date>(new Date(dinner?.date.toDate() ?? Date.now()));
