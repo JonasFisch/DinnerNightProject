@@ -105,7 +105,9 @@ export const WinnerScreen = (props: WinnerScreenType) => {
           title="COOK"
           type={AppButtonType.primary}
           onPress={() => navigator.navigate('Recipe', {
-            id: recipe?.id
+            id: recipe?.id,
+            canFinishDinner: true,
+            dinnerID: props.dinner?.id 
           })}
         />
       </View>
