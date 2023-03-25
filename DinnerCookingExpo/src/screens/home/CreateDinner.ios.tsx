@@ -9,7 +9,7 @@ import { Frame } from '../../components/Frame';
 import { AppInput } from '../../components/Input';
 import { SelectableListEntry } from '../../components/SelectableList';
 import DatabaseContext from '../../contexts/DatabaseContext';
-import { useUserContext } from '../../contexts/UserContext';
+import { UserContext, useUserContext } from '../../contexts/UserContext';
 import { AppButtonType } from '../../interfaces/Button';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
@@ -27,7 +27,7 @@ export const CreateDinner = () => {
 
   // this is enables the edit mode!
   const dinner = route.params?.dinner
-  const partics = route.params?.participants
+  const partics = route.params?.participants?.filter(parts => parts.id != userContext.currentUser?.uid)
   
   useEffect(() => {  
     if (dinner) {
@@ -40,7 +40,7 @@ export const CreateDinner = () => {
 
   const [name, setName] = useState<string>(dinner?.name ?? '');
   const [date, setDate] = useState<Date>(new Date(dinner?.date.toDate() ?? Date.now()));
-  const [participants, setParticipants] = useState<SelectableListEntry[]>(partics?.map(participant => {
+  const [participants, setParticipants] = useState<SelectableListEntry[]>(partics?.filter(participant => participant.id != userContext.currentUser?.uid).map(participant => {
     return {
       id: participant.id,
       label: participant.name,
@@ -60,7 +60,7 @@ export const CreateDinner = () => {
     } else {
       newSelectedValues.push(participant);
     }
-    setParticipants(newSelectedValues);
+    setParticipants(newSelectedValues.filter(participant => participant.id != userContext.currentUser?.uid));
   };
 
   const triggerSearchPage = () => {
@@ -83,7 +83,7 @@ export const CreateDinner = () => {
     );
 
     if (editMode) {
-      editDinner(db, dinner?.id, participantsRefs, userRef, date, name)
+      editDinner(db, dinner?.id, participantsRefs.filter(participants => participants.id != userRef.id), userRef, date, name)
       .then(() => {
         navigator.goBack();
       }).catch(error => {
@@ -137,7 +137,7 @@ export const CreateDinner = () => {
         Invite your friends to the dinner
       </Text>
       <ChipList
-        items={participants}
+        items={participants.filter(participant => participant.id != userContext.currentUser?.uid)}
         onPress={handleSelectionChange}
         onAdd={triggerSearchPage}
         withAvatar
