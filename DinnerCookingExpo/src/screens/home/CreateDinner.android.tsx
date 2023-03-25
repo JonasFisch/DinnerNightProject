@@ -108,7 +108,7 @@ export const CreateDinner = ({ navigation }) => {
     } else {
       newSelectedValues.push(participant);
     }
-    setParticipants(newSelectedValues);
+    setParticipants(newSelectedValues.filter(participant => participant.id != userContext.currentUser?.uid));
   };
 
   const triggerSearchPage = () => {
@@ -119,7 +119,7 @@ export const CreateDinner = ({ navigation }) => {
   };
 
   const onAddParticipants = (participants: SelectableListEntry[]) => {
-    setParticipants(participants);
+    setParticipants(participants.filter(participant => participant.id != userContext.currentUser?.uid));
   };
 
   const saveDinner = () => {
@@ -131,7 +131,7 @@ export const CreateDinner = ({ navigation }) => {
     );
 
     if (editMode) {
-      editDinner(db, dinner?.id, participantsRefs, userRef, date, name)
+      editDinner(db, dinner?.id, participantsRefs.filter(participants => participants.id != userRef.id), userRef, date, name)
       .then(() => {
         navigator.goBack();
       }).catch(error => {
