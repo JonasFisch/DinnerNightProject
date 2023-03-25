@@ -78,7 +78,7 @@ export const WinnerScreen = (props: WinnerScreenType) => {
           </Text>
         </Row>
         <View style={{ width: '100%', height: 250 }}>
-            <CarouselItem name={recipe?.title ?? ""} imageURL={recipe?.image} selected={false} hideSelected voting={{total: props.dinner?.participants.length ?? 0, voted: voted}} duration={(recipe?.readyInMinutes ?? 0) / 60} level={"Easy"} />    
+            <CarouselItem name={recipe?.title ?? ""} imageURL={recipe?.image} selected={false} hideSelected voting={{total: props.dinner?.participants.length ?? 0, voted: voted}} duration={(recipe?.readyInMinutes ?? 0) / 60} />    
         </View>
         <View style={{marginTop: spacing.m}}>
           <Text style={typography.overline}>

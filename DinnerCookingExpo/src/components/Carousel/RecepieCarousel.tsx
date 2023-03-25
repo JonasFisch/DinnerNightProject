@@ -13,23 +13,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Recipe } from '../../interfaces/FirebaseSchema';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
-// const recepies = [
-//   {
-//     title: 'Nices Essen',
-//     duration: 1,
-//     level: 'easy',
-//   },
-//   {
-//     title: 'Apple Pie',
-//     duration: 1,
-//     level: 'easy',
-//   },
-//   {
-//     title: 'something else',
-//     duration: 1,
-//     level: 'easy',
-//   },
-// ];
 
 interface RecipeCarouselProps {
   recipes: Recipe[],
@@ -83,7 +66,6 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
           <CarouselItem
             name={item.title}
             duration={item.readyInMinutes / 60}
-            level={"easy"}
             imageURL={item.image}
             selected={item.id == props.selected}
             onThumbnailPressed={() => props.setSelected(item.id)}
