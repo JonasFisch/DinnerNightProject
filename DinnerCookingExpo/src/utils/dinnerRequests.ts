@@ -200,7 +200,11 @@ export const leaveDinner = async (
     participant => participant.id != userID,
   );
 
-  await updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants });
+  // remove user from invite states
+  const inviteStates = dinner.inviteStates
+  delete inviteStates[userID];
+  
+  await updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants, inviteStates: inviteStates });
 };
 
 export const deleteDinner = async (
