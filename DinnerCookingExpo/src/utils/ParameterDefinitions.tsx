@@ -11,6 +11,8 @@ type ParamList = {
   };
   RecipeDetailScreen: {
     id: string;
+    canFinishDinner: boolean;
+    dinnerID: string;
   },
   CreateDinner: {
     dinner?: DinnerFirebase,

@@ -36,7 +36,8 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
 
   const navigateExpandPage = (recipe: Recipe) => {
     navigator.navigate('Recipe', {
-      id: recipe.id 
+      id: recipe.id,
+      canFinishDinner: false,
     });
   };
 
