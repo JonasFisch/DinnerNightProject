@@ -83,19 +83,19 @@ export const SettingScreen = () => {
     setUsername(userContext.userDetails.name);
     setImage(userContext.userDetails.imageUrl);
     setAllergies(
-      userContext.userDetails.allergies.map(item => ({
+      userContext.userDetails.allergies?.map(item => ({
         id: item,
         label: item,
       })),
     );
     setDiets(
-      userContext.userDetails.diets.map(item => ({
+      userContext.userDetails.diets?.map(item => ({
         id: item,
         label: item,
       })),
     );
     setUnwantedIngredients(
-      userContext.userDetails.unwantedIngredients.map(item => ({
+      userContext.userDetails.unwantedIngredients?.map(item => ({
         id: item,
         label: item,
       })),
