@@ -64,10 +64,7 @@ export const WinnerScreen = (props: WinnerScreenType) => {
     // if no recipe was voted then just take the first recipe
     if (!winner) {
       winner = props.dinner?.recipes[0].id
-    }
-
-    console.log(winner);
-    
+    }    
 
     setVoted(highestCount)    
 
