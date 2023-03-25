@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Image,
   LayoutAnimation,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -18,7 +19,7 @@ import ClearIcon from '../assets/icons/close.svg';
 import { spacing } from '../styles/Spacing';
 
 export const AppInput = (props: AppInputProps) => {
-  const height = 56;
+  const height = Platform.OS == "ios" ? 46 : 56
 
   // const [text, setText] = useState('');
   const [labelTransform, setLabelTransform] = useState(
