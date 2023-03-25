@@ -1,12 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { AppButton } from '../../components/Button';
 import { ChipList } from '../../components/ChipList';
 import { Frame } from '../../components/Frame';
 import { SelectableListEntry } from '../../components/SelectableList';
 import { UserImage } from '../../components/UserImage';
 import DatabaseContext from '../../contexts/DatabaseContext';
 import { useUserContext } from '../../contexts/UserContext';
+import { AppButtonType } from '../../interfaces/Button';
 import { colors } from '../../styles/Color';
 import { spacing } from '../../styles/Spacing';
 import { typography } from '../../styles/Typography';
@@ -16,6 +18,7 @@ import {
   setUnwantedIngredientsOfUser,
 } from '../../utils/userRequests';
 import { EatingPreferenceType } from '../preferences/AddEatingPreferenceScreen';
+import LeaveIcon from '../../assets/icons/leave.svg';
 
 export const SettingScreen = () => {
   const userContext = useUserContext();
@@ -77,6 +80,8 @@ export const SettingScreen = () => {
     );
   };
 
+  const logout = async () => await userContext.logout();
+
   useEffect(() => {
     if (!userContext.userDetails) throw new Error('user not authenticated');
 
@@ -135,6 +140,13 @@ export const SettingScreen = () => {
               withAddButton></ChipList>
           </View>
         ))}
+        <AppButton
+          type={AppButtonType.primary}
+          title="Logout"
+          onPress={logout}
+          logoSVG={LeaveIcon}
+          widthFitContent
+        />
       </ScrollView>
     </Frame>
   );

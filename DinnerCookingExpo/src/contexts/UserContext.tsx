@@ -115,7 +115,6 @@ export function UserProvider({
         setLoading(false);
       }
     });
-    // logout();
     return unsubscribe;
   }, []);
 
