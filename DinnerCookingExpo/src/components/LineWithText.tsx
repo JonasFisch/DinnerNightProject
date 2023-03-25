@@ -26,15 +26,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     top: typography.subtitle2.lineHeight / 2 - 1,
+    zIndex: 1
   },
   textWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    zIndex: 10,
   },
   text: {
     backgroundColor: colors.white,
     color: colors.textLight,
-    zIndex: 2,
     paddingHorizontal: spacing.m,
   },
 });
