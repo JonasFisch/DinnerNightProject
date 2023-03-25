@@ -60,7 +60,16 @@ export const WinnerScreen = (props: WinnerScreenType) => {
         highestCount = elementCounts[key]
       }
     }
-    setVoted(highestCount)
+
+    // if no recipe was voted then just take the first recipe
+    if (!winner) {
+      winner = props.dinner?.recipes[0].id
+    }
+
+    console.log(winner);
+    
+
+    setVoted(highestCount)    
 
     fetchRecipe(db, winner).then(recipe => {
       setRecipe(recipe)
