@@ -17,7 +17,6 @@ type CarouselItemProps = {
   name: string;
   selected: boolean;
   voting?: { total: number, voted: number };
-  level?: string;
   duration?: number;
   hideSelected?: boolean;
   imageURL?: string;
@@ -40,7 +39,7 @@ export const CarouselItem = (props: CarouselItemProps) => {
         <View style={styles.description}>
           <Text style={[typography.subtitle2, {marginBottom: spacing.xxs}]}>{props.name}</Text>
           <Text style={typography.body2}>
-            Level: {props.level}, Duration: {props.duration}h
+            Duration: {props.duration}h
           </Text>
         </View>
         {

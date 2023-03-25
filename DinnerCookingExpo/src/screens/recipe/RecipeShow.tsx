@@ -57,7 +57,6 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
         />
 
         <Row spaceBetween style={{marginBottom: spacing.m}}>
-          <Text style={typography.body}>Level: easy</Text>
           <Text style={typography.body}>Cooking time: {recipe?.readyInMinutes} min</Text>
         </Row>
 
