@@ -171,6 +171,7 @@ export const AppInput = (props: AppInputProps) => {
         onChangeText={text => {
           props.onChangeText(text);
         }}
+        onPressIn={props.onPressIn}
         value={props.value}
         keyboardType={props.keyboardType}
         textContentType={props.textContentType}
