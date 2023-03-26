@@ -10,7 +10,7 @@ export const IntroWelcomeScreen = ({ navigation }) => {
     <ImageLayout
       ImageSVG={StartSvg}
       headline="Set your eating preferences"
-      description="ahsfhal lfjas flkajsflksaj lkasjf lkasjf lkas sjhgajd asjhd asjhgd asjhgd ashdg asjhdg ashdg ashgd ashgd jh"
+      description="To suggest the right recipes for your dinners, we need to know about your allergies, diets and unwanted ingredients"
       actionButtonLabel="Let's go!"
       actionButtonClickHandler={navigateToSteps}
     />

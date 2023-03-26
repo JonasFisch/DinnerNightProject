@@ -21,7 +21,7 @@ export const IntroFinishScreen = () => {
     <ImageLayout
       ImageSVG={FinishSvg}
       headline="Finished!"
-      description="ahsfhal lfjas flkajsflksaj lkasjf lkasjf lkas sjhgajd asjhd asjhgd asjhgd ashdg asjhdg ashdg ashgd ashgd jh"
+      description="You have completed all the setup and are ready to start planning amazing cooking events with your friends"
       actionButtonLabel="Get Started"
       actionButtonClickHandler={finishIntro}
     />

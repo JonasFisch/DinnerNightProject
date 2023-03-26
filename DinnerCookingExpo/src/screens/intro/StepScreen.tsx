@@ -36,7 +36,7 @@ export const StepScreen = ({ navigation }) => {
     {
       title: 'Username',
       description:
-        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
+        'Before we start, please tell us the username you would like to be displayed to others',
       items: [],
       changeHandler: () => {},
       type: null,
@@ -44,7 +44,7 @@ export const StepScreen = ({ navigation }) => {
     {
       title: 'Allergies',
       description:
-        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
+        'Please use the search to find and select all your allergies or click the button below if you have no allergies',
       items: allergies,
       changeHandler: setAllergies,
       type: EatingPreferenceType.allergies,
@@ -52,7 +52,7 @@ export const StepScreen = ({ navigation }) => {
     {
       title: 'Diets',
       description:
-        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
+        'Please use the search to find and select all your diets or click the button below if you have no diets',
       items: diets,
       changeHandler: setDiets,
       type: EatingPreferenceType.diets,
@@ -60,7 +60,7 @@ export const StepScreen = ({ navigation }) => {
     {
       title: 'Unwanted Ingredients',
       description:
-        'dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh askjd',
+        'Please use the search to find and select all unwanted ingredients or click the button below if you have no unwanted ingredients',
       items: unwantedIngredients,
       changeHandler: setUnwantedIngredients,
       type: EatingPreferenceType.unwantedIngredients,
