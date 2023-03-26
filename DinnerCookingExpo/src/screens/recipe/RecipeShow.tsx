@@ -1,4 +1,9 @@
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { useCallback, useContext, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { AppButton } from '../../components/Button';
@@ -22,19 +27,16 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
   const [recipe, setRecipe] = useState<Recipe>();
   const route = useRoute<RouteProp<ParamList, 'RecipeDetailScreen'>>();
   const recipeID: string = route.params.id;
-  const dinnerID: string = route.params.dinnerID
-  const canFinishDinner: boolean = route.params.canFinishDinner
-  const navigator = useNavigation()
+  const dinnerID: string = route.params.dinnerID;
+  const canFinishDinner: boolean = route.params.canFinishDinner;
+  const navigator = useNavigation();
   // TODO: add recipes can be finished in route
 
   const db = useContext(DatabaseContext).database;
 
   const resolveRecipe = async () => {
     try {
-      const fetchedRecipe = await fetchRecipe(
-        db,
-        recipeID
-      );
+      const fetchedRecipe = await fetchRecipe(db, recipeID);
 
       setRecipe(fetchedRecipe);
     } catch (error) {
@@ -52,47 +54,69 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
   return (
     <ScrollView>
       <Frame withSubPageHeader>
-        <Text style={[typography.h4, {textAlign: "center", marginBottom: spacing.m}]}>{recipe?.title}</Text>
+        <Text
+          style={[
+            typography.h4,
+            { textAlign: 'center', marginBottom: spacing.m },
+          ]}>
+          {recipe?.title}
+        </Text>
         <Image
-          style={{ width: '100%', height: 200, borderRadius: 10, marginBottom: spacing.xs }}
+          style={{
+            width: '100%',
+            height: 200,
+            marginBottom: spacing.xs,
+          }}
           source={{
             uri: recipe?.image,
           }}
         />
 
-        <Row spaceBetween style={{marginBottom: spacing.m}}>
-          <Text style={typography.body}>Cooking time: {recipe?.readyInMinutes} min</Text>
+        <Row spaceBetween style={{ marginBottom: spacing.m }}>
+          <Text style={typography.body}>
+            Cooking time: {recipe?.readyInMinutes} min
+          </Text>
         </Row>
 
-        <View style={{marginBottom: spacing.l}}>
-          <Text style={[typography.subtitle2, {marginBottom: spacing.s}]}>Ingredients:</Text>
-          <Ingredients ingredients={recipe?.extendedIngredients ?? []} servings={recipe?.servings ?? 0} />
+        <View style={{ marginBottom: spacing.l }}>
+          <Text style={[typography.subtitle2, { marginBottom: spacing.s }]}>
+            Ingredients:
+          </Text>
+          <Ingredients
+            ingredients={recipe?.extendedIngredients ?? []}
+            servings={recipe?.servings ?? 0}
+          />
         </View>
 
         <View>
           <Text style={typography.subtitle2}>Instructions:</Text>
           {recipe?.analyzedInstructions[0].steps.map((step, index) => {
             return (
-              <View key={"step"+step.number}>
-                <Text style={[typography.overline, {marginTop: spacing.xs, marginBottom: spacing.xxs}]}>Step {step.number}</Text>
+              <View key={'step' + step.number}>
+                <Text
+                  style={[
+                    typography.overline,
+                    { marginTop: spacing.xs, marginBottom: spacing.xxs },
+                  ]}>
+                  Step {step.number}
+                </Text>
                 <Instruction>{step.step}</Instruction>
               </View>
             );
           })}
         </View>
-        {
-          canFinishDinner && 
-          <AppButton 
+        {canFinishDinner && (
+          <AppButton
             // TODO: finish dinner action
             onPress={() => {
-              finishDinner(db, dinnerID)
-              navigator.navigate('Dinners')
-            }} 
-            title={"FINISH DINNER"} 
-            type={AppButtonType.primary} 
-            style={{marginTop: spacing.l}}
+              finishDinner(db, dinnerID);
+              navigator.navigate('Dinners');
+            }}
+            title={'FINISH DINNER'}
+            type={AppButtonType.primary}
+            style={{ marginTop: spacing.l }}
           />
-        }
+        )}
       </Frame>
     </ScrollView>
   );
