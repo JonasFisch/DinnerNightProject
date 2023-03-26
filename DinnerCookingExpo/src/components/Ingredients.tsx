@@ -5,10 +5,11 @@ import MinusIcon from '../assets/icons/minus.svg';
 import { Row } from './Row';
 import { colors } from '../styles/Color';
 import { sizes } from '../styles/Sizes';
-import { CircleIconWrapper } from './CircleIconWrapper';
 import { typography } from '../styles/Typography';
 import { useEffect, useState } from 'react';
 import { spacing } from '../styles/Spacing';
+import { AppButton } from './Button';
+import { AppButtonType } from '../interfaces/Button';
 
 type IngredientsProps = {
   ingredients: Ingredient[];
@@ -38,19 +39,27 @@ export const Ingredients = (props: IngredientsProps) => {
           alignItems: 'center',
           marginBottom: spacing.m,
         }}>
-        <CircleIconWrapper
+        <AppButton
+          title=""
+          iconOnly
+          logoSVG={MinusIcon}
+          logoColor={colors.primary}
+          type={AppButtonType.secondary}
           onPress={() => {
             updateServings(servings - 1);
-          }}>
-          <MinusIcon fill={colors.primary} />
-        </CircleIconWrapper>
+          }}
+        />
         <Text style={typography.overline}>{`${servings} SERVINGS`}</Text>
-        <CircleIconWrapper
+        <AppButton
+          title=""
+          iconOnly
+          logoSVG={PlusIcon}
+          logoColor={colors.primary}
+          type={AppButtonType.secondary}
           onPress={() => {
             updateServings(servings + 1);
-          }}>
-          <PlusIcon fill={colors.primary} />
-        </CircleIconWrapper>
+          }}
+        />
       </Row>
 
       <View>
