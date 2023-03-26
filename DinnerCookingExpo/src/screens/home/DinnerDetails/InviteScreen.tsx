@@ -49,20 +49,18 @@ export const InviteScreen = (props: DinnerProps) => {
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
   const inviteStates = props.dinner.inviteStates;
 
-  const fetchParticipants = async () => {
-    const participants = await fetchUsers(db, props.dinner.participants);
-    setParticipants(participants);
-  };
-
   const noMorePendingInvites = Object.values(inviteStates).every(value => {
     value != InviteState.PENDING;
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchParticipants();
-    }, []),
-  );
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      const participants = await fetchUsers(db, props.dinner.participants);
+      setParticipants(participants);
+    };
+
+    fetchParticipants().catch(console.error);
+  }, [props.dinner]);
 
   // current user leaves dinner
   const leaveDinnerSelf = () => {
