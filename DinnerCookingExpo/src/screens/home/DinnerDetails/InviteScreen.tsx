@@ -26,6 +26,7 @@ import {
 } from 'firebase/firestore';
 import {
   DinnerFirebase,
+  InviteState,
   UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
 import { spacing } from '../../../styles/Spacing';
@@ -53,6 +54,10 @@ export const InviteScreen = (props: DinnerProps) => {
     setParticipants(participants);
   };
 
+  const noMorePendingInvites = Object.values(inviteStates).every(value => {
+    value != InviteState.PENDING;
+  });
+
   useFocusEffect(
     useCallback(() => {
       fetchParticipants();
@@ -68,6 +73,11 @@ export const InviteScreen = (props: DinnerProps) => {
     setTimeout(() => {
       navigator.goBack();
     }, 200);
+  };
+
+  const loadRecipeProposals = async () => {
+    if (!noMorePendingInvites) return;
+    await loadRecipesForDinner(db, props.dinner, participants ?? []);
   };
 
   return (
@@ -100,9 +110,8 @@ export const InviteScreen = (props: DinnerProps) => {
           <AppButton
             title="LOAD RECEPIE PROPOSALS"
             type={AppButtonType.primary}
-            onPress={async () => {
-              await loadRecipesForDinner(db, props.dinner, participants ?? []);
-            }}
+            onPress={loadRecipeProposals}
+            disabled={!noMorePendingInvites}
           />
         </View>
       ) : (
