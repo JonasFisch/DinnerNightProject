@@ -44,13 +44,12 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
-      <Frame>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <Frame style={{ height: '100%' }}>
         <View style={authStyles.textWrapper}>
           <Text style={[typography.h3, authStyles.heading]}>Login</Text>
           <Text style={typography.body}>
-            dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh
-            askjdhaksjdh askjd
+            To continue, please log in with your e-mail address and password
           </Text>
         </View>
 
@@ -58,7 +57,7 @@ export const LoginScreen = ({ navigation }) => {
         <View style={authStyles.inputWrapper}>
           <View style={authStyles.input}>
             <AppInput
-              label="Email"
+              label="E-Mail"
               keyboardType="email-address"
               textContentType="emailAddress"
               value={email}
