@@ -5,6 +5,7 @@ import { UserImage } from './UserImage';
 import CloseIcon from '../assets/icons/close.svg';
 import { typography } from '../styles/Typography';
 import { colors } from '../styles/Color';
+import { spacing } from '../styles/Spacing';
 
 type InviteStatusProps = {
   dinnerID: string;
@@ -16,8 +17,7 @@ type InviteStatusProps = {
 const inviteStateText = ['PENDING', 'ACCEPTED', 'REJECTED'];
 
 export const InviteStatus = (props: InviteStatusProps) => {
-
-  if (!props.participant) return null
+  if (!props.participant) return null;
 
   return (
     <View style={styles.card}>
@@ -41,7 +41,9 @@ export const InviteStatus = (props: InviteStatusProps) => {
           </Text>
         </Text>
       </View>
-      <Pressable onPress={() => props.onRevertInvite()} style={styles.closeButton}>
+      <Pressable
+        onPress={() => props.onRevertInvite()}
+        style={styles.closeButton}>
         <CloseIcon fill={colors.text} />
       </Pressable>
     </View>
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: 16,
+    marginVertical: spacing.xs,
   },
   userImageContainer: {
     flexDirection: 'column',
@@ -62,14 +64,16 @@ const styles = StyleSheet.create({
     width: 50,
   },
   inviteStatusText: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inviteStatus: {
     fontWeight: 'bold',
   },
-  userName: {},
+  userName: {
+    marginTop: spacing.xs,
+  },
   closeButton: {
     height: '100%',
     aspectRatio: 1,
