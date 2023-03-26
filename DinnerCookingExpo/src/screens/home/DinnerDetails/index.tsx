@@ -159,7 +159,7 @@ export const DinnerDetailScreen = () => {
   }
 
   return (
-    <ScrollView>
+    <>
       {screen}
       <BottomSheet height={200} ref={bottomSheet}>
         <View style={style.bottomSheetView}>
@@ -197,7 +197,7 @@ export const DinnerDetailScreen = () => {
           )}
         </View>
       </BottomSheet>
-    </ScrollView>
+    </>
   );
   // </View>
 };

@@ -73,16 +73,16 @@ export const InviteScreen = (props: DinnerProps) => {
   return (
     <Frame withBottomNavBar={false} withSubPageHeader>
       {props.isAdmin ? (
-        <View style={{ height: '100%' }}>
+        <View style={{ flex: 1 }}>
           <Text style={[typography.subtitle2, { marginBottom: spacing.s }]}>
             Participants
           </Text>
-          <ScrollView>
-            <Text style={{ marginBottom: spacing.m }}>
-              An invitation to your dinner was send to all participants. Once
-              they accept the invite, you can start loading recipe proposals,
-              that fit all participants eating preferences
-            </Text>
+          <Text>
+            An invitation to your dinner was send to all participants. Once they
+            accept the invite, you can start loading recipe proposals, that fit
+            all participants eating preferences
+          </Text>
+          <ScrollView style={{ marginVertical: spacing.m }}>
             {participants
               .filter(p => p.id !== userDetails?.id)
               .map(participant => (
