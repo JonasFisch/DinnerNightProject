@@ -16,13 +16,15 @@ export const WelcomeScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
-      <Frame>
-        <WelcomeGraphic width={'100%'} style={styles.distanceBottom} />
+    <Frame>
+      <View style={{ flex: 1, marginVertical: spacing.xl }}>
+        <WelcomeGraphic height={'100%'} style={styles.distanceBottom} />
+      </View>
+      <View style={{ flex: 1 }}>
         <Text style={[typography.h1, styles.distanceBottom]}>Welcome!</Text>
         <Text style={[typography.body, styles.distanceBottom]}>
-          dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh askjdhaksjdh
-          askjd
+          Plan cooking parties with your friends and quickly find a recipe that
+          suits everyone's eating preferences
         </Text>
         <View style={styles.distanceBottom}>
           <AppButton
@@ -37,8 +39,8 @@ export const WelcomeScreen = ({ navigation }) => {
             onPress={navigateLogin}
           />
         </View>
-      </Frame>
-    </ScrollView>
+      </View>
+    </Frame>
   );
 };
 
