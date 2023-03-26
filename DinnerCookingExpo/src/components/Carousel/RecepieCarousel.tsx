@@ -30,7 +30,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
   const baseOptions = {
     vertical: false,
     width: PAGE_WIDTH,
-    height: PAGE_HEIGHT * 0.35,
+    height: PAGE_HEIGHT * 0.4,
   } as const;
 
   const navigator = useNavigation();

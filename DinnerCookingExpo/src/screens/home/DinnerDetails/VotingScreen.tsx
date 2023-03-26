@@ -107,38 +107,34 @@ export const VotingScreen = (props: VotingScreenType) => {
 
           <Text>
             {savedVote
-              ? 'Now wait for the others to vote or terminate the voting phase immediately'
+              ? 'Now wait for the others to vote or stop the voting phase immediately for all participants'
               : 'Vote for your preferred recipe!'}
           </Text>
         </View>
       </ScrollView>
       <View
-        style={[
-          styles.paddingHorizontal,
-          {
-            marginTop: spacing.m,
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          },
-        ]}>
+        style={[styles.paddingHorizontal, styles.horizontalButtonContainer]}>
+        {props.isAdmin && savedVote && (
+          <AppButton
+            style={[styles.button, { marginRight: spacing.m }]}
+            title="Stop"
+            type={AppButtonType.secondary}
+            onPress={() => {
+              terminateVoting();
+            }}
+            widthFitContent
+          />
+        )}
         <AppButton
-          title={savedVote ? 'change vote' : 'SAVE'}
+          style={styles.button}
+          title={savedVote ? 'change' : 'SAVE'}
           disabled={selected == savedVote}
           type={AppButtonType.primary}
           onPress={() => {
             saveVote();
           }}
+          widthFitContent={!!(props.isAdmin && savedVote)}
         />
-        {props.isAdmin && savedVote && (
-          <AppButton
-            style={{ marginTop: spacing.m }}
-            title="TERMINATE VOTING PHASE"
-            type={AppButtonType.primary}
-            onPress={() => {
-              terminateVoting();
-            }}
-          />
-        )}
       </View>
     </Frame>
   );
@@ -156,5 +152,14 @@ const styles = StyleSheet.create({
   },
   paddingHorizontal: {
     paddingHorizontal: spacing.m,
+  },
+  horizontalButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: spacing.m,
+  },
+  button: {
+    flex: 1,
   },
 });
