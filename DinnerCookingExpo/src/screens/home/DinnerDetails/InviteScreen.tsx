@@ -81,6 +81,12 @@ export const InviteScreen = (props: DinnerProps) => {
 
   const loadRecipeProposals = async () => {
     if (!noMorePendingInvites()) return;
+    participants
+      .filter(user => inviteStates[user.id] == InviteState.REJECTED)
+      .forEach(
+        async participant =>
+          await leaveDinner(db, props.dinner.id, participant.id),
+      );
     await loadRecipesForDinner(db, props.dinner, participants ?? []);
   };
 
