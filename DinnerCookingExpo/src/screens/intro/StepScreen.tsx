@@ -151,7 +151,7 @@ export const StepScreen = ({ navigation }) => {
       return;
     }
 
-    setUsername(userContext.userDetails.name);
+    if (!username) setUsername(userContext.userDetails.name);
     setAllergies(userContext.userDetails.allergies);
     setDiets(userContext.userDetails.diets);
     setUnwantedIngredients(userContext.userDetails.unwantedIngredients);
