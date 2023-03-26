@@ -15,9 +15,9 @@ import { Recipe } from '../../interfaces/FirebaseSchema';
 const PAGE_WIDTH = Dimensions.get('screen').width;
 
 interface RecipeCarouselProps {
-  recipes: Recipe[],
-  selected?: string,
-  setSelected: (selected: string) => void
+  recipes: Recipe[];
+  selected?: string;
+  setSelected: (selected: string) => void;
 }
 
 const RecepieCarousel = (props: RecipeCarouselProps) => {
@@ -29,7 +29,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
   const baseOptions = {
     vertical: false,
     width: PAGE_WIDTH,
-    height: PAGE_WIDTH * 0.8,
+    height: PAGE_WIDTH * 0.75,
   } as const;
 
   const navigator = useNavigation();
@@ -94,7 +94,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
                   alignSelf: 'center',
                 }
           }>
-            {/* TODO: pagination */}
+          {/* TODO: pagination */}
           {/* {recepies.map((backgroundColor, index) => {
             return (
               <PaginationItem
