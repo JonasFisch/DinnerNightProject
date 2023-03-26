@@ -6,6 +6,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
+  Unsubscribe,
   User,
   UserCredential,
 } from 'firebase/auth';
@@ -20,6 +21,8 @@ export type UserContextType = {
   login: (email: string, password: string) => Promise<UserCredential>;
   signup: (email: string, password: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
+  snapshotSubscriptions: Unsubscribe[];
+  setSnapshotSubscriptions: (values: Unsubscribe[]) => void;
 };
 
 const defaultUserValues = {
@@ -37,6 +40,8 @@ const defaultUserValues = {
     new Promise(async (resolve, reject) => {
       resolve();
     }),
+  snapshotSubscriptions: [],
+  setSnapshotSubscriptions: (values: Unsubscribe[]) => {},
 };
 
 export const UserContext =
@@ -66,6 +71,9 @@ export function UserProvider({
 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userDetails, setUserDetails] = useState<UserFirebase | null>(null);
+  const [snapshotSubscriptions, setSnapshotSubscriptions] = useState<
+    Unsubscribe[]
+  >([]);
   const [loading, setLoading] = useState(true);
   // const auth: Auth = getAuth();
   const dbContext = useContext(DatabaseContext);
@@ -81,6 +89,7 @@ export function UserProvider({
 
   const logout = async () => {
     try {
+      snapshotSubscriptions.forEach(unsubscribe => unsubscribe());
       await signOut(auth);
       setCurrentUser(null);
       setUserDetails(null);
@@ -91,12 +100,13 @@ export function UserProvider({
 
   const registerListenerOnUserDetails = (id: string) => {
     const userRef = doc(db, 'Users', id);
-    onSnapshot(userRef, userSnapshot => {
+    const unsubscribe: Unsubscribe = onSnapshot(userRef, userSnapshot => {
       setUserDetails({
         ...userSnapshot.data(),
         id: userSnapshot.id,
       } as UserFirebase);
     });
+    setSnapshotSubscriptions([...snapshotSubscriptions, unsubscribe]);
   };
 
   useEffect(() => {
@@ -115,7 +125,6 @@ export function UserProvider({
         setLoading(false);
       }
     });
-    // logout();
     return unsubscribe;
   }, []);
 
@@ -125,6 +134,8 @@ export function UserProvider({
     login,
     signup,
     logout,
+    snapshotSubscriptions,
+    setSnapshotSubscriptions,
   };
 
   return (

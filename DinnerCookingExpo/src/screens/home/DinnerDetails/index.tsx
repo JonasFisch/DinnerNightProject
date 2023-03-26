@@ -1,6 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Pressable, Text, View, StyleSheet, ViewBase, ScrollView } from 'react-native';
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+  ViewBase,
+  ScrollView,
+} from 'react-native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { useCallback } from 'react';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import { VotingScreen } from './VotingScreen';
@@ -10,15 +22,19 @@ import {
   DinnerState,
   UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
-import { deleteDinner, fetchDinner, leaveDinner } from '../../../utils/dinnerRequests';
+import {
+  deleteDinner,
+  fetchDinner,
+  leaveDinner,
+} from '../../../utils/dinnerRequests';
 import { fetchUsers } from '../../../utils/userRequests';
 import { useUserContext } from '../../../contexts/UserContext';
 import { WinnerScreen } from './WinnerScreen';
 import ParamList from '../../../utils/ParameterDefinitions';
-import MoreIcon from "../../../assets/icons/more.svg";
-import DeleteIcon from "../../../assets/icons/delete.svg";
-import EditIcon from "../../../assets/icons/edit.svg";
-import LeaveIcon from "../../../assets/icons/leave.svg";
+import MoreIcon from '../../../assets/icons/more.svg';
+import DeleteIcon from '../../../assets/icons/delete.svg';
+import EditIcon from '../../../assets/icons/edit.svg';
+import LeaveIcon from '../../../assets/icons/leave.svg';
 
 import { BottomSheet, BottomSheetRef } from 'react-native-sheet';
 import { AppButton } from '../../../components/Button';
@@ -45,16 +61,19 @@ export const DinnerDetailScreen = () => {
   useEffect(() => {
     navigator.setOptions({
       headerRight: () => {
-        return <Pressable onPress={() => bottomSheet.current?.show()}><MoreIcon/></Pressable> 
+        return (
+          <Pressable onPress={() => bottomSheet.current?.show()}>
+            <MoreIcon />
+          </Pressable>
+        );
       },
-      title: dinner?.name
-    })
-  }, [isAdmin])
+      title: dinner?.name,
+    });
+  }, [isAdmin]);
 
   useEffect(() => {
     const unsubscribe = fetchDinner(db, id, (dinner: DinnerFirebase) => {
-      console.log(dinner.name);
-      setDinner(dinner)
+      setDinner(dinner);
       if (dinner) {
         resolveParticipants(dinner);
       } else {
@@ -62,10 +81,15 @@ export const DinnerDetailScreen = () => {
       }
       // if current user is admin of dinner
       if (`Users/${user?.uid}` === dinner?.admin.path) setIsAdmin(true);
-    })
-    
+    });
+
+    userContext.setSnapshotSubscriptions([
+      ...userContext.snapshotSubscriptions,
+      unsubscribe,
+    ]);
+
     return () => unsubscribe();
-  }, [])
+  }, []);
 
   const resolveParticipants = async (dinner: DinnerFirebase) => {
     setParticipants(await fetchUsers(db, dinner.participants));
@@ -77,31 +101,31 @@ export const DinnerDetailScreen = () => {
     leaveDinner(db, dinner?.id, user?.uid);
 
     setTimeout(() => {
-      navigator.navigate("Dinners");
-    }, 200)
-  }
+      navigator.navigate('Dinners');
+    }, 200);
+  };
 
   const delDinner = () => {
-    console.log("delete dinner!");
-    deleteDinner(db, dinner?.id)
+    console.log('delete dinner!');
+    deleteDinner(db, dinner?.id);
 
-    navigator.navigate("Dinners");
-  }
+    navigator.navigate('Dinners');
+  };
 
   const editDinner = () => {
     bottomSheet.current?.hide();
-    
-    console.log("edit dinner");
-    navigator.navigate("CreateDinner", {
+
+    console.log('edit dinner');
+    navigator.navigate('CreateDinner', {
       dinner: dinner,
-      participants: participants
-    })
-  }
+      participants: participants,
+    });
+  };
 
   // get state
   const state: DinnerState = dinner?.state ?? DinnerState.LOADING;
-  let screen = null
-  
+  let screen = null;
+
   if (!dinner) return <Text>Loading...</Text>;
 
   switch (state) {
@@ -116,7 +140,7 @@ export const DinnerDetailScreen = () => {
           participants={participants ?? []}
         />
       );
-      break
+      break;
     case DinnerState.COOKING:
     case DinnerState.FINISHED:
       screen = (
@@ -126,48 +150,54 @@ export const DinnerDetailScreen = () => {
           participants={participants ?? []}
         />
       );
-      break
+      break;
     case DinnerState.LOADING:
     default:
       screen = <Text>Loading...</Text>;
       break;
   }
 
-  return <ScrollView>
-    {screen}
-    <BottomSheet height={200} ref={bottomSheet}>
-      <View style={style.bottomSheetView}>
-        {isAdmin ? 
-          <View style={{flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start"}}>
-            <AppButton 
-              title='EDIT DINNER'
-              type={AppButtonType.text}  
-              logoSVG={EditIcon}
-              logoColor={colors.primary}  
-              onPress={() => editDinner()}
-            />
-            <AppButton 
-              title='DELETE DINNER'
+  return (
+    <ScrollView>
+      {screen}
+      <BottomSheet height={200} ref={bottomSheet}>
+        <View style={style.bottomSheetView}>
+          {isAdmin ? (
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+              }}>
+              <AppButton
+                title="EDIT DINNER"
+                type={AppButtonType.text}
+                logoSVG={EditIcon}
+                logoColor={colors.primary}
+                onPress={() => editDinner()}
+              />
+              <AppButton
+                title="DELETE DINNER"
+                type={AppButtonType.text}
+                logoSVG={DeleteIcon}
+                logoColor={colors.error}
+                textStyle={{ color: colors.error }}
+                onPress={() => delDinner()}
+              />
+            </View>
+          ) : (
+            <AppButton
+              title="LEAVE DINNER"
               type={AppButtonType.text}
-              logoSVG={DeleteIcon}
-              logoColor={colors.error} 
-              textStyle={{color: colors.error}} 
-              onPress={() => delDinner()}
+              logoSVG={LeaveIcon}
+              logoColor={colors.primary}
+              onPress={() => leaveDinnerSelf()}
             />
-          </View>
-        :  
-          <AppButton
-            title="LEAVE DINNER"
-            type={AppButtonType.text}
-            logoSVG={LeaveIcon}
-            logoColor={colors.primary}  
-            onPress={() => leaveDinnerSelf()}
-          />
-        }
-        
-       </View>
-    </BottomSheet>
-  </ScrollView>
+          )}
+        </View>
+      </BottomSheet>
+    </ScrollView>
+  );
   // </View>
 };
 

@@ -76,15 +76,14 @@ export const fetchDinner = (
   onHandleSnapshot: (dinner: DinnerFirebase) => void,
 ): Unsubscribe => {
   console.log('IN FETCHING DINNER');
-  const unsubscribe = onSnapshot(doc(db, "Dinners", dinnerID), (doc) => {
-    const dinner = doc.data() as DinnerFirebase
-    dinner.id = doc.id
-    onHandleSnapshot(dinner)
-  })
+  const unsubscribe = onSnapshot(doc(db, 'Dinners', dinnerID), doc => {
+    const dinner = doc.data() as DinnerFirebase;
+    dinner.id = doc.id;
+    onHandleSnapshot(dinner);
+  });
 
   return unsubscribe;
 };
-
 
 export const createDinner = async (
   db: Firestore,
@@ -137,13 +136,13 @@ export const editDinner = async (
 ) => {
   console.log('IN EDIT DINNER');
 
-  const dinner = doc(db, "Dinners/" + dinnerID);
+  const dinner = doc(db, 'Dinners/' + dinnerID);
   updateDoc(dinner, {
     date: Timestamp.fromDate(date),
     name,
     participants: [...participants, self],
-  })
-}
+  });
+};
 
 export const fetchRecipe = async (
   db: Firestore,
@@ -154,8 +153,8 @@ export const fetchRecipe = async (
   const recipeSnap = await getDoc(doc(db, `Recipes/${recipeID}`));
   if (!recipeSnap.data()) throw new Error('cannot fetch recipe details.');
 
-  const recipe = recipeSnap.data() as Recipe
-  recipe.id = recipeSnap.id
+  const recipe = recipeSnap.data() as Recipe;
+  recipe.id = recipeSnap.id;
 
   return recipe;
 };
@@ -166,7 +165,6 @@ export const fetchRecipes = async (
 ): Promise<Recipe[]> => {
   console.log('IN FETCH RECIPES');
 
-  
   const q = query(
     collection(db, 'Recipes'),
     where('__name__', 'in', recipeIds),
@@ -174,13 +172,13 @@ export const fetchRecipes = async (
 
   const recipesSnapshot = await getDocs(q);
 
-  const recipes = []
+  const recipes = [];
   for (const doc of recipesSnapshot.docs) {
-    const recipe = doc.data() as Recipe
-    recipe.id = doc.id
-    recipes.push(recipe) 
+    const recipe = doc.data() as Recipe;
+    recipe.id = doc.id;
+    recipes.push(recipe);
   }
-  
+
   return recipes;
 };
 
@@ -201,21 +199,21 @@ export const leaveDinner = async (
   );
 
   // remove user from invite states
-  const inviteStates = dinner.inviteStates
+  const inviteStates = dinner.inviteStates;
   delete inviteStates[userID];
-  
-  await updateDoc(doc(db, `Dinners/${dinnerID}`), { participants: newParticipants, inviteStates: inviteStates });
+
+  await updateDoc(doc(db, `Dinners/${dinnerID}`), {
+    participants: newParticipants,
+    inviteStates: inviteStates,
+  });
 };
 
-export const deleteDinner = async (
-  db: Firestore,
-  dinnerID: string,
-) => {
-  console.log("in delete dinner");
+export const deleteDinner = async (db: Firestore, dinnerID: string) => {
+  console.log('in delete dinner');
 
-  const dinnerRef = doc(db, "Dinners/" + dinnerID)
+  const dinnerRef = doc(db, 'Dinners/' + dinnerID);
   await deleteDoc(dinnerRef);
-}
+};
 
 export const setInviteState = async (
   db: Firestore,
@@ -228,72 +226,80 @@ export const setInviteState = async (
   await updateDoc(dinnerRef, 'inviteStates', inviteStates);
 };
 
-export const setVotingTerminated = async (
+export const setVotingTerminated = async (db: Firestore, dinnerID: string) => {
+  console.log('IN SET VOTING TERMINATED');
+
+  const dinnerRef = doc(db, 'Dinners/' + dinnerID);
+  await updateDoc(dinnerRef, 'state', DinnerState.COOKING);
+};
+
+export const finishDinner = async (db: Firestore, dinnerID: string) => {
+  console.log('IN FINISH DINNER');
+
+  const dinnerRef = doc(db, 'Dinners/' + dinnerID);
+  await updateDoc(dinnerRef, 'state', DinnerState.FINISHED);
+};
+
+export const setVote = async (
   db: Firestore,
   dinnerID: string,
+  recipeID: string,
+  userID: string,
 ) => {
-  console.log("IN SET VOTING TERMINATED");
+  console.log('IN SET VOTE');
 
-  const dinnerRef = doc(db, "Dinners/" + dinnerID);
-  await updateDoc(dinnerRef, "state", DinnerState.COOKING)
-}
-
-export const finishDinner = async (
-  db: Firestore,
-  dinnerID: string,
-) => {
-  console.log("IN FINISH DINNER");
-  
-  const dinnerRef = doc(db, "Dinners/" + dinnerID);
-  await updateDoc(dinnerRef, "state", DinnerState.FINISHED)
-}
-
-export const setVote = async (db: Firestore, dinnerID: string, recipeID: string, userID: string) => {
-  console.log("IN SET VOTE");
-  
-  const dinnerRef = doc(db, "Dinners/" + dinnerID);
+  const dinnerRef = doc(db, 'Dinners/' + dinnerID);
   const dinnerSnap = await getDoc(dinnerRef);
-  const dinner = dinnerSnap.data() as DinnerFirebase
-  const votes = dinner?.votes
+  const dinner = dinnerSnap.data() as DinnerFirebase;
+  const votes = dinner?.votes;
 
   votes[userID] = recipeID;
 
-  await updateDoc(dinnerRef, "votes", votes)
-}
+  await updateDoc(dinnerRef, 'votes', votes);
+};
 
-export const loadRecipesForDinner = async (db: Firestore, dinner: DinnerFirebase, users: UserFirebase[]) => {
-  console.log("IN LOAD RECIPES FOR DINNER");
-    
-  const allergies = new Set<string>()
-  const diets = new Set<string>()
+export const loadRecipesForDinner = async (
+  db: Firestore,
+  dinner: DinnerFirebase,
+  users: UserFirebase[],
+) => {
+  console.log('IN LOAD RECIPES FOR DINNER');
+
+  const allergies = new Set<string>();
+  const diets = new Set<string>();
   for (const user of users) {
-    user.allergies?.forEach(allergie => allergies.add(allergie))
-    user.unwantedIngredients?.forEach(ingredient => diets.add(ingredient))
-  }  
-  
-  const response = await fetch("https://us-central1-dinnercookingplanner.cloudfunctions.net/fetchRecipes", {
-    method: "POST",
-    body: JSON.stringify({
-      diets: Array.from(allergies),
-      allergies: Array.from(diets),
-    })
-  })
+    user.allergies?.forEach(allergie => allergies.add(allergie));
+    user.unwantedIngredients?.forEach(ingredient => diets.add(ingredient));
+  }
 
-  const responseData = await response.json()
-  const recipes: string[] = responseData.recipes 
-  
+  const response = await fetch(
+    'https://us-central1-dinnercookingplanner.cloudfunctions.net/fetchRecipes',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        diets: Array.from(allergies),
+        allergies: Array.from(diets),
+      }),
+    },
+  );
+
+  const responseData = await response.json();
+  const recipes: string[] = responseData.recipes;
+
   console.log(recipes);
 
-  const recipeReferences = []
+  const recipeReferences = [];
   for (const recipe of recipes) {
-    recipeReferences.push(doc(db, 'Recipes/' + recipe))
+    recipeReferences.push(doc(db, 'Recipes/' + recipe));
   }
 
   console.log(dinner.id);
   // set recipes for dinner
-  const dinnerRef = doc(db, "Dinners/" + dinner.id)
-  await updateDoc(dinnerRef, {'recipes': recipeReferences, "state": DinnerState.VOTING});
-  
-  return
-}
+  const dinnerRef = doc(db, 'Dinners/' + dinner.id);
+  await updateDoc(dinnerRef, {
+    recipes: recipeReferences,
+    state: DinnerState.VOTING,
+  });
 
+  return;
+};
