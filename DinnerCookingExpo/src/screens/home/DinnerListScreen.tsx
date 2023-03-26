@@ -22,7 +22,6 @@ import {
   DinnerState,
   ParticipantMap,
 } from '../../interfaces/FirebaseSchema';
-import { onSnapshot } from 'firebase/firestore';
 
 export const DinnerListScreen = () => {
   const navigation = useNavigation();
@@ -33,7 +32,7 @@ export const DinnerListScreen = () => {
   };
 
   const [dinners, setDinners] = useState<DinnerFirebase[]>([]);
-  const [archivedDinners, setArchivedDinners] = useState<DinnerFirebase[]>([])
+  const [archivedDinners, setArchivedDinners] = useState<DinnerFirebase[]>([]);
   // const [participantsMap, setParticipantsMap] = useState<ParticipantMap>(
   //   new Map(),
   // );
@@ -48,14 +47,24 @@ export const DinnerListScreen = () => {
       db,
       userContext.currentUser.uid,
       (fetchedDinners: DinnerFirebase[]) => {
-        setDinners(fetchedDinners.filter(dinner => dinner.state != DinnerState.FINISHED)),
-        setArchivedDinners(fetchedDinners.filter(dinner => dinner.state == DinnerState.FINISHED))
-      } 
+        setDinners(
+          fetchedDinners.filter(dinner => dinner.state != DinnerState.FINISHED),
+        ),
+          setArchivedDinners(
+            fetchedDinners.filter(
+              dinner => dinner.state == DinnerState.FINISHED,
+            ),
+          );
+      },
     );
   };
 
   useEffect(() => {
     const unsubscribe = listenToParticipatedDinners();
+    userContext.setSnapshotSubscriptions([
+      ...userContext.snapshotSubscriptions,
+      unsubscribe,
+    ]);
 
     return () => unsubscribe();
   }, []);
