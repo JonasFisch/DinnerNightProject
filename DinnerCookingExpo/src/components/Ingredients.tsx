@@ -56,7 +56,9 @@ export const Ingredients = (props: IngredientsProps) => {
       <View>
         {props.ingredients.map(ingredient => {
           return (
-            <Text style={typography.body} key={ingredient.name}>
+            <Text
+              style={[typography.body, { marginTop: spacing.xxs }]}
+              key={ingredient.name}>
               {`${Math.ceil(
                 ingredient.measures.metric.amount * servingMultiplier,
               )} ${ingredient.measures.metric.unitShort} ${ingredient.name}`}

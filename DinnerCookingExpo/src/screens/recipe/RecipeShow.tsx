@@ -4,7 +4,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { AppButton } from '../../components/Button';
 import { Frame } from '../../components/Frame';
@@ -44,27 +44,32 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
     }
   };
 
-  // refetch recipe on focus screen + only fetch once when opening screen
-  useFocusEffect(
-    useCallback(() => {
-      resolveRecipe();
-    }, []),
-  );
+  useEffect(() => {
+    navigator.setOptions({
+      title: recipe?.title,
+    });
+
+    const resolveRecipe = async () => {
+      try {
+        const fetchedRecipe = await fetchRecipe(db, recipeID);
+
+        setRecipe(fetchedRecipe);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    resolveRecipe();
+  }, [recipe]);
 
   return (
     <ScrollView>
       <Frame withSubPageHeader>
-        <Text
-          style={[
-            typography.h4,
-            { textAlign: 'center', marginBottom: spacing.m },
-          ]}>
-          {recipe?.title}
-        </Text>
         <Image
           style={{
             width: '100%',
             height: 200,
+            borderRadius: 8,
             marginBottom: spacing.xs,
           }}
           source={{
@@ -72,15 +77,15 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
           }}
         />
 
-        <Row spaceBetween style={{ marginBottom: spacing.m }}>
+        <Row spaceBetween style={{ marginBottom: spacing.xl }}>
           <Text style={typography.body}>
             Cooking time: {recipe?.readyInMinutes} min
           </Text>
         </Row>
 
-        <View style={{ marginBottom: spacing.l }}>
+        <View style={{ marginBottom: spacing.xl }}>
           <Text style={[typography.subtitle2, { marginBottom: spacing.s }]}>
-            Ingredients:
+            Ingredients
           </Text>
           <Ingredients
             ingredients={recipe?.extendedIngredients ?? []}
@@ -89,7 +94,7 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
         </View>
 
         <View>
-          <Text style={typography.subtitle2}>Instructions:</Text>
+          <Text style={typography.subtitle2}>Instructions</Text>
           {recipe?.analyzedInstructions[0].steps.map((step, index) => {
             return (
               <View key={'step' + step.number}>
