@@ -37,7 +37,8 @@ export const EditUsernameScreen = () => {
   return (
     <Frame withBottomNavBar withSubPageHeader>
       <Text style={[typography.body, styles.description]}>
-        Choose a public username that other participants can use to find you.
+        Choose a username that is visible to others and that your friends can
+        use to find you
       </Text>
       <AppInput
         style={styles.input}
