@@ -101,11 +101,11 @@ export const VotingScreen = (props: VotingScreenType) => {
           />
         </View>
         <View style={styles.paddingHorizontal}>
-          <Text style={[typography.overline, { marginBottom: spacing.xxs }]}>
+          <Text style={[typography.overline, { marginBottom: spacing.xs }]}>
             {savedVote ? 'You voted!' : "Let's vote!"}
           </Text>
 
-          <Text>
+          <Text style={typography.body}>
             {savedVote
               ? 'Now wait for the others to vote or stop the voting phase immediately for all participants'
               : 'Vote for your preferred recipe!'}
