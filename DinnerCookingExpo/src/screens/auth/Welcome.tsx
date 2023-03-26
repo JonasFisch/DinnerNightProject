@@ -17,10 +17,10 @@ export const WelcomeScreen = ({ navigation }) => {
 
   return (
     <Frame>
-      <View style={{ flex: 1, marginVertical: spacing.xl }}>
+      <View style={styles.imageWrapper}>
         <WelcomeGraphic height={'100%'} style={styles.distanceBottom} />
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={styles.textWrapper}>
         <Text style={[typography.h1, styles.distanceBottom]}>Welcome!</Text>
         <Text style={[typography.body, styles.distanceBottom]}>
           Plan cooking parties with your friends and quickly find a recipe that
@@ -51,4 +51,6 @@ const styles = StyleSheet.create({
   buttonDistance: {
     marginBottom: spacing.m,
   },
+  imageWrapper: { flex: 1, marginVertical: spacing.xl },
+  textWrapper: { flex: 1 },
 });
