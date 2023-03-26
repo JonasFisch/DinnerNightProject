@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Recipe } from '../../interfaces/FirebaseSchema';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
+const PAGE_HEIGHT = Dimensions.get('screen').height;
 
 interface RecipeCarouselProps {
   recipes: Recipe[];
@@ -29,7 +30,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
   const baseOptions = {
     vertical: false,
     width: PAGE_WIDTH,
-    height: PAGE_WIDTH * 0.75,
+    height: PAGE_HEIGHT * 0.35,
   } as const;
 
   const navigator = useNavigation();
