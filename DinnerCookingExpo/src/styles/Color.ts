@@ -1,7 +1,7 @@
 const palette = {
   blue: '#074EE8',
   darkBlue: '#0D218B',
-  lightBlue: '#DDE8FF',
+  lightBlue: '#8AAEFC',
   purple: '#6E40F0',
   lightPurple: ' #DFD5F9',
   offBlack: '#1D1D1D',
