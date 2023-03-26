@@ -53,7 +53,8 @@ export const DinnerDetailScreen = () => {
   const bottomSheet = useRef<BottomSheetRef>(null);
 
   const db = useContext(DatabaseContext).database;
-  const user = useUserContext().currentUser;
+  const userContext = useUserContext();
+  const user = userContext.currentUser;
   const [dinner, setDinner] = useState<DinnerFirebase>();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
