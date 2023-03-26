@@ -80,8 +80,8 @@ export const RegisterScreen = ({ navigation }) => {
             Create an Account
           </Text>
           <Text style={typography.body}>
-            dakjsdkasjhdkajsdaskhd askjdh askjdh askjdh askjdh askjdh
-            askjdhaksjdh askjd
+            Please register an account with your email address and choose a
+            password
           </Text>
         </View>
 
