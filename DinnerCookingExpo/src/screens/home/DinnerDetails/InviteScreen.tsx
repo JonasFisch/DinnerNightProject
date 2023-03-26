@@ -47,13 +47,19 @@ export const InviteScreen = (props: DinnerProps) => {
   const db = useContext(DatabaseContext).database;
   const userDetails = useUserContext().userDetails;
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
-  const inviteStates = props.dinner.inviteStates;
+  const [inviteStates, setInviteStates] = useState<Record<string, InviteState>>(
+    {},
+  );
 
-  const noMorePendingInvites = Object.values(inviteStates).every(value => {
-    value != InviteState.PENDING;
-  });
+  const noMorePendingInvites = () => {
+    const res = Object.values(inviteStates).filter(
+      element => element == InviteState.PENDING,
+    );
+    return res.length == 0;
+  };
 
   useEffect(() => {
+    setInviteStates(props.dinner.inviteStates);
     const fetchParticipants = async () => {
       const participants = await fetchUsers(db, props.dinner.participants);
       setParticipants(participants);
@@ -74,7 +80,7 @@ export const InviteScreen = (props: DinnerProps) => {
   };
 
   const loadRecipeProposals = async () => {
-    if (!noMorePendingInvites) return;
+    if (!noMorePendingInvites()) return;
     await loadRecipesForDinner(db, props.dinner, participants ?? []);
   };
 
@@ -109,7 +115,7 @@ export const InviteScreen = (props: DinnerProps) => {
             title="LOAD RECEPIE PROPOSALS"
             type={AppButtonType.primary}
             onPress={loadRecipeProposals}
-            disabled={!noMorePendingInvites}
+            disabled={!noMorePendingInvites()}
           />
         </View>
       ) : (
