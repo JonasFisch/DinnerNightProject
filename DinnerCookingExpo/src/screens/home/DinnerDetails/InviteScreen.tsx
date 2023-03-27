@@ -43,7 +43,6 @@ type DinnerProps = {
 
 export const InviteScreen = (props: DinnerProps) => {
   const navigator = useNavigation();
-  const bottomSheet = useRef<BottomSheetRef>(null);
   const db = useContext(DatabaseContext).database;
   const userDetails = useUserContext().userDetails;
   const [participants, setParticipants] = useState<UserFirebase[]>([]);
@@ -70,8 +69,6 @@ export const InviteScreen = (props: DinnerProps) => {
 
   // current user leaves dinner
   const leaveDinnerSelf = () => {
-    bottomSheet.current?.hide();
-
     leaveDinner(db, props.dinner.id, userDetails?.id);
 
     setTimeout(() => {
@@ -135,16 +132,7 @@ export const InviteScreen = (props: DinnerProps) => {
           <AppButton
             title="LEAVE DINNER"
             type={AppButtonType.text}
-            onPress={() => bottomSheet.current?.show()}></AppButton>
-          <BottomSheet height={125} ref={bottomSheet}>
-            <View style={style.bottomSheetView}>
-              <AppButton
-                title="LEAVE DINNER"
-                type={AppButtonType.text}
-                onPress={() => leaveDinnerSelf()}
-              />
-            </View>
-          </BottomSheet>
+            onPress={() => leaveDinnerSelf()}></AppButton>
         </View>
       )}
     </Frame>
