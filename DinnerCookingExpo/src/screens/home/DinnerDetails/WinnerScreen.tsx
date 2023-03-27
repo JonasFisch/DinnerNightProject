@@ -16,6 +16,7 @@ import { sizes } from '../../../styles/Sizes';
 import { AvatarList } from '../../../components/AvatarList';
 import {
   DinnerFirebase,
+  DinnerState,
   Recipe,
   UserFirebase,
 } from '../../../interfaces/FirebaseSchema';
@@ -116,16 +117,18 @@ export const WinnerScreen = (props: WinnerScreenType) => {
         </Text>
       </ScrollView>
       <View style={[styles.horizontalButtonContainer]}>
-        <AppButton
-          style={[styles.button, { marginRight: spacing.m }]}
-          title="FINISH"
-          type={AppButtonType.secondary}
-          // TODO: finish Dinner
-          onPress={() => {
-            finishDinner(db, props.dinner?.id);
-            navigator.navigate('Dinners');
-          }}
-        />
+        {
+          props.dinner?.state != DinnerState.FINISHED && <AppButton
+            style={[styles.button, { marginRight: spacing.m }]}
+            title="FINISH"
+            type={AppButtonType.secondary}
+            // TODO: finish Dinner
+            onPress={() => {
+              finishDinner(db, props.dinner?.id);
+              navigator.navigate('Dinners');
+            }}
+          />
+        }
         <AppButton
           style={styles.button}
           title="COOK"
@@ -133,7 +136,7 @@ export const WinnerScreen = (props: WinnerScreenType) => {
           onPress={() =>
             navigator.navigate('Recipe', {
               id: recipe?.id,
-              canFinishDinner: true,
+              canFinishDinner: props.dinner?.state != DinnerState.FINISHED,
               dinnerID: props.dinner?.id,
             })
           }
