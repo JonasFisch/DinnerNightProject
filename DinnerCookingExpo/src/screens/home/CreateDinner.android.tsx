@@ -131,7 +131,7 @@ export const CreateDinner = ({ navigation }) => {
     );
 
     if (editMode) {
-      editDinner(db, dinner?.id, participantsRefs.filter(participants => participants.id != userRef.id), userRef, date, name)
+      editDinner(db, dinner?.id, dinner?.inviteStates, participantsRefs.filter(participants => participants.id != userRef.id), userRef, date, name)
       .then(() => {
         navigator.goBack();
       }).catch(error => {
