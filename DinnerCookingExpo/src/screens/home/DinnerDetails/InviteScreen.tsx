@@ -17,14 +17,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DatabaseContext from '../../../contexts/DatabaseContext';
 import { useUserContext } from '../../../contexts/UserContext';
 import {
-  collection,
-  DocumentReference,
-  Firestore,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
-import {
   DinnerFirebase,
   InviteState,
   UserFirebase,
@@ -49,6 +41,7 @@ export const InviteScreen = (props: DinnerProps) => {
   const [inviteStates, setInviteStates] = useState<Record<string, InviteState>>(
     {},
   );
+  const [fechingRecipes, setFechtingRecipes] = useState<boolean>(false);
 
   const noMorePendingInvites = () => {
     const res = Object.values(inviteStates).filter(
@@ -77,6 +70,9 @@ export const InviteScreen = (props: DinnerProps) => {
   };
 
   const loadRecipeProposals = async () => {
+
+    setFechtingRecipes(true);
+    
     if (!noMorePendingInvites()) return;
     participants
       .filter(user => inviteStates[user.id] == InviteState.REJECTED)
@@ -118,7 +114,7 @@ export const InviteScreen = (props: DinnerProps) => {
             title="LOAD RECEPIE PROPOSALS"
             type={AppButtonType.primary}
             onPress={loadRecipeProposals}
-            disabled={!noMorePendingInvites()}
+            disabled={!noMorePendingInvites() || fechingRecipes}
           />
         </View>
       ) : (
