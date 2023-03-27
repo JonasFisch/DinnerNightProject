@@ -261,6 +261,11 @@ export const setVote = async (
   votes[userID] = recipeID;
 
   await updateDoc(dinnerRef, 'votes', votes);
+
+  // terminate voting phase automatically when all participants have voted
+  if (Object.keys(votes).length >= dinner.participants.length) {
+    await setVotingTerminated(db, dinnerID);
+  }
 };
 
 export const loadRecipesForDinner = async (
