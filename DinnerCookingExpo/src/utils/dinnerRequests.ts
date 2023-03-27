@@ -129,6 +129,7 @@ export const createDinner = async (
 export const editDinner = async (
   db: Firestore,
   dinnerID: string,
+  inviteStates: Record<string, InviteState>,
   participants: DocumentReference[],
   self: DocumentReference,
   date: Date,
@@ -136,11 +137,15 @@ export const editDinner = async (
 ) => {
   console.log('IN EDIT DINNER');
 
+  const invites: Record<string, InviteState> = {};
+  participants.forEach(user => (invites[user.id] = inviteStates[user.id] ?? InviteState.PENDING));
+
   const dinner = doc(db, 'Dinners/' + dinnerID);
   updateDoc(dinner, {
     date: Timestamp.fromDate(date),
     name,
     participants: [...participants, self],
+    invites,
   });
 };
 
