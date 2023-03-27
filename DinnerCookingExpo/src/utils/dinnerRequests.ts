@@ -110,19 +110,6 @@ export const createDinner = async (
 
   const dinner = await addDoc(collection(db, 'Dinners'), newDinner);
 
-  // update user to diner references
-  const userPromises = [];
-  for (const participant of [self, ...participants]) {
-    const participantSnap = await getDoc(participant);
-    const participantData = participantSnap.data() as UserFirebase;
-    const dinners = participantData?.dinners ?? [];
-    dinners.push(dinner);
-
-    userPromises.push(updateDoc(participant, { dinners }));
-  }
-
-  await Promise.all(userPromises);
-
   return dinner;
 };
 
