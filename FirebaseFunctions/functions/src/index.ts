@@ -24,23 +24,23 @@ const spoonacularAPI = {
   baseURL: "https://api.spoonacular.com",
 };
 
-export const fetchRandomRecipes = async (count: number, diets: string[], allergies: string[]) : Promise<any[]> => {
+export const fetchRandomRecipes = async (count: number, diets: string[], allergies: string[], excludeIngredients: string[]) : Promise<any[]> => {
   return new Promise((resolve, reject) => {     
-    
-    const tags = [...diets, ...allergies]
-    let tagString = ""
-    if (tags.length >= 1) tagString = tags.join(",")
-    else tagString = tags.join("")
 
+    const transformedExcludeIngredients = excludeIngredients ? excludeIngredients.join(",") : ""
+    const transformedDients = diets.join(",")
+    const transformedAllergies = allergies.join(",")
+
+    // TODO: replace random with complexsearch
     https.get(
         `${spoonacularAPI.baseURL}/recipes/random?` + 
-      `apiKey=${spoonacularAPI.key}&number=${count}&tags=${tagString}`
+      `apiKey=${spoonacularAPI.key}&number=${count}&diet=${transformedDients}&excludeIngredients=${transformedExcludeIngredients}&intolerances${transformedAllergies}&type=main course&addRecipeInformation=true`
         , (res) => {
           let body = "";
           res.on("data", (d) => body += d);
           res.on("end", () => {
             const result = JSON.parse(body);            
-            resolve(result.recipes);
+            resolve(result.results);
           });
           res.on("error", (error) => {
             reject(error);
@@ -54,10 +54,11 @@ exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
 
   const diets: string[] = body.diets ?? []
   const allergies: string[] = body.allergies ?? []
+  const excludeIngredients: string[] = body.excludeIngredients ?? []
 
   let recipes = []
   try {
-    recipes = await fetchRandomRecipes(5, diets, allergies);    
+    recipes = await fetchRandomRecipes(5, diets, allergies, excludeIngredients);    
   } catch (error) {
     console.log(error);
     response.status(500).send({error})
