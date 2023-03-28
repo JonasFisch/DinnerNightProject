@@ -118,13 +118,15 @@ export const InviteScreen = (props: DinnerProps) => {
           />
         </View>
       ) : (
-        <View>
-          <Text style={typography.body}>
+        <View style={{ flex: 1 }}>
+          <Text style={[typography.body, { marginBottom: spacing.m }]}>
             You joined the Dinner! Once all other participants have accepted
             their invitation, the owner of this dinner will start loading recipe
             proposals!
           </Text>
-          <InviteGrafic width={'100%'}></InviteGrafic>
+          <View style={{ flex: 1 }}>
+            <InviteGrafic width={'100%'}></InviteGrafic>
+          </View>
           <AppButton
             title="LEAVE DINNER"
             type={AppButtonType.text}
