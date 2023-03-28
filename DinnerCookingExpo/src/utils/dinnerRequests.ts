@@ -125,14 +125,16 @@ export const editDinner = async (
   console.log('IN EDIT DINNER');
 
   const invites: Record<string, InviteState> = {};
-  participants.forEach(user => (invites[user.id] = inviteStates[user.id] ?? InviteState.PENDING));
+  participants.forEach(
+    user => (invites[user.id] = inviteStates[user.id] ?? InviteState.PENDING),
+  );
 
   const dinner = doc(db, 'Dinners/' + dinnerID);
   updateDoc(dinner, {
     date: Timestamp.fromDate(date),
     name,
     participants: [...participants, self],
-    invites,
+    inviteStates: invites,
   });
 };
 
