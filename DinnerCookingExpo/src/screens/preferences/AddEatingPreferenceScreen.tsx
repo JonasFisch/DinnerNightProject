@@ -32,39 +32,42 @@ export const AddEatingPreferenceScreen = () => {
   const navigator = useNavigation();
 
   const allergiesList: SelectableListEntry[] = [
-    { id: 'milk', label: 'milk' },
-    { id: 'eggs', label: 'eggs' },
-    { id: 'peanuts', label: 'peanuts' },
-    { id: 'soybeans', label: 'soybeans' },
-    { id: 'peas', label: 'peas' },
-    { id: 'walnuts', label: 'walnuts' },
-    { id: 'hazelnuts', label: 'hazelnuts' },
-    { id: 'pecans', label: 'pecans' },
-    { id: 'cashews', label: 'cashews' },
-    { id: 'pistachios', label: 'pistachios' },
+    { id: 'peanut', label: 'peanut' },
+    { id: 'egg', label: 'egg' },
+    { id: 'gluten', label: 'gluten' },
+    { id: 'dairy', label: 'dairy' },
+    { id: 'grain', label: 'grain' },
+    { id: 'seafood', label: 'seafood' },
+    { id: 'sesame', label: 'sesame' },
     { id: 'shellfish', label: 'shellfish' },
+    { id: 'soy', label: 'soy' },
     { id: 'wheat', label: 'wheat' },
   ];
 
   const dietsList: SelectableListEntry[] = [
     { id: 'vegan', label: 'vegan' },
     { id: 'vegetarian', label: 'vegetarian' },
-    { id: 'low carb', label: 'low carb' },
     { id: 'paleo', label: 'paleo' },
-    { id: 'sugar free', label: 'sugar free' },
-    { id: 'gluten free', label: 'gluten free' },
-    { id: 'lactose free', label: 'lactose free' },
+    { id: 'fruitarian', label: 'fruitarian' },
+    { id: 'pescetarian', label: 'pescetarian' },
+    { id: 'ketogenic', label: 'ketogenic' },
   ];
 
   const unwantedIngredientsList: SelectableListEntry[] = [
-    { id: 'nuts', label: 'nuts' },
-    { id: 'garlic', label: 'garlic' },
-    { id: 'onions', label: 'onions' },
     { id: 'parsley', label: 'parsley' },
     { id: 'coriander', label: 'coriander' },
+    { id: 'dill', label: 'dill' },
+    { id: 'chili', label: 'chili' },
+    { id: 'garlic', label: 'garlic' },
+    { id: 'onions', label: 'onions' },
+    { id: 'olive', label: 'olive' },
+    { id: 'anchovies', label: 'anchovies' },
+    { id: 'mushroom', label: 'mushroom' },
     { id: 'fish', label: 'fish' },
-    { id: 'wheat', label: 'wheat' },
     { id: 'cheese', label: 'cheese' },
+    { id: 'coconut', label: 'coconut' },
+    { id: 'dates', label: 'dates' },
+    { id: 'beer', label: 'beer' },
   ];
 
   const config: {
