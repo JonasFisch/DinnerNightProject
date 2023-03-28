@@ -93,6 +93,7 @@ export const SearchPage = ({
 const styles = StyleSheet.create({
   selectedValuesList: {
     marginVertical: spacing.xs,
+    minHeight: 50,
     maxHeight: 50,
   },
   listContentContainer: {
