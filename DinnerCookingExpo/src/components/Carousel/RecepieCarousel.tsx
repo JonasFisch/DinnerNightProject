@@ -11,6 +11,9 @@ import { SBItem } from './SBItem';
 import { CarouselItem } from './CarouselItem';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Recipe } from '../../interfaces/FirebaseSchema';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { spacing } from '../../styles/Spacing';
+import { colors } from '../../styles/Color';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 const PAGE_HEIGHT = Dimensions.get('screen').height;
@@ -18,6 +21,7 @@ const PAGE_HEIGHT = Dimensions.get('screen').height;
 interface RecipeCarouselProps {
   recipes: Recipe[];
   selected?: string;
+  active?: string;
   setSelected: (selected: string) => void;
 }
 
@@ -43,11 +47,9 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
   };
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-      }}>
+    <GestureHandlerRootView style={{ marginTop: -spacing.m }}>
       <Carousel
+        style={{ marginBottom: -spacing.m }}
         {...baseOptions}
         loop
         pagingEnabled={pagingEnabled}
@@ -60,15 +62,17 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 0.8,
-          parallaxScrollingOffset: 70,
-          parallaxAdjacentItemScale: 0.7,
+          parallaxScrollingOffset: 90,
+          parallaxAdjacentItemScale: 0.6,
         }}
         data={props.recipes}
         renderItem={({ index, item }) => (
           <CarouselItem
+            key={item.id}
             name={item.title}
             duration={item.readyInMinutes / 60}
             imageURL={item.image}
+            active={item.id == props.active}
             selected={item.id == props.selected}
             onThumbnailPressed={() => props.setSelected(item.id)}
             onExpandClicked={() => navigateExpandPage(item)}
@@ -93,24 +97,24 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
                   justifyContent: 'space-between',
                   width: 100,
                   alignSelf: 'center',
+                  marginBottom: spacing.l,
                 }
           }>
-          {/* TODO: pagination */}
-          {/* {recepies.map((backgroundColor, index) => {
+          {props.recipes.map((recipe, index) => {
             return (
               <PaginationItem
-                backgroundColor={backgroundColor}
+                backgroundColor={colors.textLight}
                 animValue={progressValue}
                 index={index}
                 key={index}
                 isRotate={isVertical}
-                length={colors.length}
+                length={props.recipes.length}
               />
             );
-          })} */}
+          })}
         </View>
       )}
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -149,7 +153,9 @@ const PaginationItem: React.FC<{
   return (
     <View
       style={{
-        backgroundColor: 'white',
+        borderColor: colors.textLight,
+        borderStyle: 'solid',
+        borderWidth: 1,
         width,
         height: width,
         borderRadius: 50,
