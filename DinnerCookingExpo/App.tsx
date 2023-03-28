@@ -9,7 +9,14 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, Pressable, Text, UIManager, useColorScheme } from 'react-native';
+import {
+  LogBox,
+  Platform,
+  Pressable,
+  Text,
+  UIManager,
+  useColorScheme,
+} from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { Tabs } from './src/screens/Tabs';
@@ -101,6 +108,10 @@ const App = () => {
   if (!fontsLoaded) {
     return null;
   }
+
+  LogBox.ignoreLogs([
+    'AsyncStorage has been extracted from react-native core and will be removed in a future release.',
+  ]);
 
   const AppStack = createNativeStackNavigator();
 
