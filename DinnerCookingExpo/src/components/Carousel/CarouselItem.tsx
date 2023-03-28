@@ -16,7 +16,8 @@ import { spacing } from '../../styles/Spacing';
 type CarouselItemProps = {
   name: string;
   selected: boolean;
-  voting?: { total: number, voted: number };
+  active: boolean;
+  voting?: { total: number; voted: number };
   duration?: number;
   hideSelected?: boolean;
   imageURL?: string;
@@ -26,7 +27,7 @@ type CarouselItemProps = {
 
 export const CarouselItem = (props: CarouselItemProps) => {
   return (
-    <View style={[styles.carouselItem, props.selected && styles.selected]}>
+    <View style={[styles.carouselItem, props.active && styles.selected]}>
       <Pressable onPress={props.onThumbnailPressed}>
         <Image
           style={styles.thumbnail}
@@ -37,29 +38,31 @@ export const CarouselItem = (props: CarouselItemProps) => {
       </Pressable>
       <Pressable style={styles.footer} onPress={props.onExpandClicked}>
         <View style={styles.description}>
-          <Text style={[typography.subtitle2, {marginBottom: spacing.xxs}]}>{props.name}</Text>
-          <Text style={typography.body2}>
-            Duration: {props.duration}h
+          <Text style={[typography.subtitle2, { marginBottom: spacing.xxs }]}>
+            {props.name}
           </Text>
+          <Text style={typography.body2}>Duration: {props.duration}h</Text>
         </View>
-        {
-          props.voting ? 
-            <View style={styles.voting}>
-              <Text style={[typography.overline, {marginBottom: spacing.xxs}]}>{`${props.voting.voted} / ${props.voting.total}`}</Text>
-              <Text style={typography.body2}>Votes</Text>
-            </View>
-          : 
-            <OpenIcon width={24} height={24} style={{ fill: colors.textLight }} />
-        }
-      </Pressable>
-      {
-        !props.hideSelected &&
-          <View style={styles.radioWrapper}>
-            <RadioButton
-              selected={props.selected}
-              onPress={props.onThumbnailPressed}></RadioButton>
+        {props.voting ? (
+          <View style={styles.voting}>
+            <Text
+              style={[
+                typography.overline,
+                { marginBottom: spacing.xxs },
+              ]}>{`${props.voting.voted} / ${props.voting.total}`}</Text>
+            <Text style={typography.body2}>Votes</Text>
           </View>
-      }
+        ) : (
+          <OpenIcon width={24} height={24} style={{ fill: colors.textLight }} />
+        )}
+      </Pressable>
+      {!props.hideSelected && (
+        <View style={styles.radioWrapper}>
+          <RadioButton
+            selected={props.selected}
+            onPress={props.onThumbnailPressed}></RadioButton>
+        </View>
+      )}
     </View>
   );
 };
@@ -102,8 +105,8 @@ const styles = StyleSheet.create({
     borderRadius: sizes.borderRadius - 2,
   },
   voting: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  }
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

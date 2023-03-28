@@ -21,6 +21,7 @@ const PAGE_HEIGHT = Dimensions.get('screen').height;
 interface RecipeCarouselProps {
   recipes: Recipe[];
   selected?: string;
+  active?: string;
   setSelected: (selected: string) => void;
 }
 
@@ -71,6 +72,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
             name={item.title}
             duration={item.readyInMinutes / 60}
             imageURL={item.image}
+            active={item.id == props.active}
             selected={item.id == props.selected}
             onThumbnailPressed={() => props.setSelected(item.id)}
             onExpandClicked={() => navigateExpandPage(item)}

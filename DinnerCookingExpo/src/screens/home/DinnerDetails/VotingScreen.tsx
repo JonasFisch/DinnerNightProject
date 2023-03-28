@@ -97,7 +97,8 @@ export const VotingScreen = (props: VotingScreenType) => {
           <RecepieCarousel
             recipes={recipes}
             selected={selected}
-            setSelected={selected => setSelected(selected)}
+            active={savedVote}
+            setSelected={el => setSelected(el)}
           />
         </View>
         <View style={styles.paddingHorizontal}>
