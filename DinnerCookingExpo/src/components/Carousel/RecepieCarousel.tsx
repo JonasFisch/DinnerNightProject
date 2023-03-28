@@ -11,6 +11,7 @@ import { SBItem } from './SBItem';
 import { CarouselItem } from './CarouselItem';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Recipe } from '../../interfaces/FirebaseSchema';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 const PAGE_HEIGHT = Dimensions.get('screen').height;
@@ -43,10 +44,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
   };
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-      }}>
+    <GestureHandlerRootView>
       <Carousel
         {...baseOptions}
         loop
@@ -110,7 +108,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
           })} */}
         </View>
       )}
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
