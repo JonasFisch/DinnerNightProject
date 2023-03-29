@@ -98,11 +98,12 @@ export const WinnerScreen = (props: WinnerScreenType) => {
             imageURL={recipe?.image}
             selected={false}
             hideSelected
+            active={false}
             voting={{
               total: props.dinner?.participants.length ?? 0,
               voted: voted,
             }}
-            duration={(recipe?.readyInMinutes ?? 0) / 60}
+            duration={recipe?.readyInMinutes}
           />
         </View>
         <Text
