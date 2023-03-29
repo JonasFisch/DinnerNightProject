@@ -70,7 +70,7 @@ const RecepieCarousel = (props: RecipeCarouselProps) => {
           <CarouselItem
             key={item.id}
             name={item.title}
-            duration={item.readyInMinutes / 60}
+            duration={item.readyInMinutes}
             imageURL={item.image}
             active={item.id == props.active}
             selected={item.id == props.selected}

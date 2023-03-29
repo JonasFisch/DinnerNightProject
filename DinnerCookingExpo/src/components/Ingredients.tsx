@@ -67,7 +67,7 @@ export const Ingredients = (props: IngredientsProps) => {
           return (
             <Text
               style={[typography.body, { marginTop: spacing.xxs }]}
-              key={ingredient.name}>
+              key={"ingredient" + ingredient.name + ingredient.id}>
               {`${Math.ceil(
                 ingredient.measures.metric.amount * servingMultiplier,
               )} ${ingredient.measures.metric.unitShort} ${ingredient.name}`}
