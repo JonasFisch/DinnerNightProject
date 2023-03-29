@@ -34,7 +34,7 @@ export const AppButton = (props: AppButtonProps) => {
 
   return (
     <Pressable
-      onPress={props.onPress}
+      onPress={(e) => !props.disabled && props.onPress(e)}
       onPressIn={() => setActive(true)}
       onPressOut={() => setActive(false)}
       style={[
