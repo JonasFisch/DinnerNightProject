@@ -28,12 +28,11 @@ export const fetchRandomRecipes = async (count: number, diets: string[], allergi
   return new Promise((resolve, reject) => {     
 
     const transformedExcludeIngredients = excludeIngredients ? excludeIngredients.join(",") : ""
-    const transformedDients = diets.join(",")
-    const transformedAllergies = allergies.join(",")
+    const transformedDients = diets ? diets.join(",") : ""
+    const transformedAllergies = allergies ? allergies.join(",") : ""
 
-    // TODO: replace random with complexsearch
     https.get(
-        `${spoonacularAPI.baseURL}/recipes/random?` + 
+        `${spoonacularAPI.baseURL}/recipes/complexSearch?` + 
       `apiKey=${spoonacularAPI.key}&number=${count}&diet=${transformedDients}&excludeIngredients=${transformedExcludeIngredients}&intolerances${transformedAllergies}&type=main course&addRecipeInformation=true`
         , (res) => {
           let body = "";
@@ -58,7 +57,7 @@ exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
 
   let recipes = []
   try {
-    recipes = await fetchRandomRecipes(5, diets, allergies, excludeIngredients);    
+    recipes = await fetchRandomRecipes(1, diets, allergies, excludeIngredients);    
   } catch (error) {
     console.log(error);
     response.status(500).send({error})
