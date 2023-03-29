@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { SearchPage } from '../components/SearchPage';
 import { useUserContext } from '../contexts/UserContext';
 import DatabaseContext from '../contexts/DatabaseContext';
-import { fetchAllUsers } from '../utils/userRequests';
+import { fetchUsers } from '../utils/userRequests';
 import { SelectableListEntry } from '../components/SelectableList';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import ParamList from '../utils/ParameterDefinitions';
@@ -34,11 +34,12 @@ export const AddDinnerParticipantsScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const resolveAllUsers = async () => {
-      if (!userContext.currentUser) throw new Error('User not authenticated.');
-      const currentUserId = userContext.currentUser.uid;
+    const resolveContacts = async () => {
+      if (!userContext.userDetails) throw new Error('User not authenticated.');
+      const currentUserId = userContext.userDetails.id;
+      const userContactIds = userContext.userDetails.contacts;
 
-      const fetchedUsers = await fetchAllUsers(db);
+      const fetchedUsers = await fetchUsers(db, userContactIds);
       const userList: SelectableListEntry[] = fetchedUsers
         .filter(user => user.id != currentUserId)
         .map(user => ({
@@ -48,7 +49,7 @@ export const AddDinnerParticipantsScreen = ({ navigation }) => {
         }));
       setAllUsers(userList);
     };
-    resolveAllUsers().catch(console.error);
+    resolveContacts().catch(console.error);
   }, []);
 
   return (
