@@ -15,8 +15,10 @@ import { colors } from '../../styles/Color';
 export const LoginScreen = ({ navigation }) => {
   const userContext = useUserContext();
 
-  const [email, setEmail] = useState<string>('jon.fischerboy@gmail.com');
-  const [password, setPassword] = useState<string>('jonrocktrot');
+  // const [email, setEmail] = useState<string>('jon.fischerboy@gmail.com');
+  const [email, setEmail] = useState<string>('');
+  // const [password, setPassword] = useState<string>('jonrocktrot');
+  const [password, setPassword] = useState<string>('');
   const [emailErrorText, setEmailErrorText] = useState<string>('');
   const [passwordErrorText, setPasswordErrorText] = useState<string>('');
 

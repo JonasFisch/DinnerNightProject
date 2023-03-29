@@ -44,7 +44,7 @@ export const CreateDinner = ({ navigation }) => {
 
   // this is enables the edit mode!
   const dinner = route.params?.dinner
-  const partics = route.params?.participants
+  const partics = route.params?.participants?.filter(parts => parts.id != userContext.currentUser?.uid)
 
   useEffect(() => {  
     if (dinner) {

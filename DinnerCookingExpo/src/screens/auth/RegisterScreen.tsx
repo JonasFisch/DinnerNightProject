@@ -23,9 +23,12 @@ export const RegisterScreen = ({ navigation }) => {
   };
 
   // states
-  const [email, setEmail] = useState<string>('yixan77675@v2ssr.com');
-  const [password, setPassword] = useState<string>('test123');
-  const [passwordConfirm, setPasswordConfirm] = useState<string>('test123');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+  // const [email, setEmail] = useState<string>('yixan77675@v2ssr.com');
+  // const [password, setPassword] = useState<string>('test123');
+  // const [passwordConfirm, setPasswordConfirm] = useState<string>('test123');
   const [passwordErrorText, setPasswordErrorText] = useState<string>('');
   const [emailErrorText, setEmailErrorText] = useState<string>('');
 
