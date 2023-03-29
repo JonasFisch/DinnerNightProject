@@ -60,7 +60,7 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
     };
 
     resolveRecipe();
-  }, [recipe]);
+  }, []);
 
   return (
     <ScrollView>

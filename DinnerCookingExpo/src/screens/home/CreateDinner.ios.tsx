@@ -40,7 +40,7 @@ export const CreateDinner = () => {
 
   const [name, setName] = useState<string>(dinner?.name ?? '');
   const [date, setDate] = useState<Date>(new Date(dinner?.date.toDate() ?? Date.now()));
-  const [participants, setParticipants] = useState<SelectableListEntry[]>(partics?.filter(participant => participant.id != userContext.currentUser?.uid).map(participant => {
+  const [participants, setParticipants] = useState<SelectableListEntry[]>(partics?.map(participant => {
     return {
       id: participant.id,
       label: participant.name,
