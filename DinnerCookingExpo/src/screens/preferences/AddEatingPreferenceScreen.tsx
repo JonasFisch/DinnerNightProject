@@ -47,10 +47,12 @@ export const AddEatingPreferenceScreen = () => {
   const dietsList: SelectableListEntry[] = [
     { id: 'vegan', label: 'vegan' },
     { id: 'vegetarian', label: 'vegetarian' },
-    { id: 'paleo', label: 'paleo' },
-    { id: 'fruitarian', label: 'fruitarian' },
-    { id: 'pescetarian', label: 'pescetarian' },
+    { id: 'gluten free', label: 'gluten free' },
+    { id: 'dairy free', label: 'dairy free' },
     { id: 'ketogenic', label: 'ketogenic' },
+    { id: 'primal', label: 'primal' },
+    { id: 'pescetarian', label: 'pescetarian' },
+    { id: 'whole 30', label: 'whole 30' },
   ];
 
   const unwantedIngredientsList: SelectableListEntry[] = [
