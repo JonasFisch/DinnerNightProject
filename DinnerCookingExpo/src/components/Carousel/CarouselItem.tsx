@@ -41,7 +41,7 @@ export const CarouselItem = (props: CarouselItemProps) => {
           <Text style={[typography.subtitle2, { marginBottom: spacing.xxs }]}>
             {props.name}
           </Text>
-          <Text style={typography.body2}>Duration: {props.duration}h</Text>
+          <Text style={typography.body2}>Duration: {props.duration} minutes</Text>
         </View>
         {props.voting ? (
           <View style={styles.voting}>
