@@ -266,9 +266,11 @@ export const loadRecipesForDinner = async (
 
   const allergies = new Set<string>();
   const diets = new Set<string>();
+  const excludedIngredients = new Set<string>();
   for (const user of users) {
     user.allergies?.forEach(allergie => allergies.add(allergie));
-    user.unwantedIngredients?.forEach(ingredient => diets.add(ingredient));
+    user.diets?.forEach(diet => diets.add(diet));
+    user.unwantedIngredients?.forEach(ingredient => excludedIngredients.add(ingredient));
   }
 
   const response = await fetch(
@@ -278,6 +280,7 @@ export const loadRecipesForDinner = async (
       body: JSON.stringify({
         diets: Array.from(allergies),
         allergies: Array.from(diets),
+        excludedIngredients: Array.from(excludedIngredients),
       }),
     },
   );
