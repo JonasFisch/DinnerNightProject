@@ -30,7 +30,6 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
   const dinnerID: string = route.params.dinnerID;
   const canFinishDinner: boolean = route.params.canFinishDinner;
   const navigator = useNavigation();
-  // TODO: add recipes can be finished in route
 
   const db = useContext(DatabaseContext).database;
 
@@ -112,7 +111,6 @@ export const RecipeShow = (props: DinnerDetailScreenParams) => {
         </View>
         {canFinishDinner && (
           <AppButton
-            // TODO: finish dinner action
             onPress={() => {
               finishDinner(db, dinnerID);
               navigator.navigate('Dinners');

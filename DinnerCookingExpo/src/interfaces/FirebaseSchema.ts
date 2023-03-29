@@ -50,6 +50,7 @@ export type Ingredient = {
   asile: string;
   amount: number;
   consistency: string;
+  id: string;
   measures: {
     metric: {
       amount: number;
