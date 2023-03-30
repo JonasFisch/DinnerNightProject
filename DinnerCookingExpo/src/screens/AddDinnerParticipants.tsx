@@ -36,6 +36,10 @@ export const AddDinnerParticipantsScreen = ({ navigation }) => {
   useEffect(() => {
     const resolveContacts = async () => {
       if (!userContext.userDetails) throw new Error('User not authenticated.');
+      if (userContext.userDetails.contacts.length == 0) {
+        setAllUsers([])
+        return;
+      };
       const currentUserId = userContext.userDetails.id;
       const userContactIds = userContext.userDetails.contacts;
 
