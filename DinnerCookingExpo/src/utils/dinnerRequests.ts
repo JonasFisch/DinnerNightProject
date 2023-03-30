@@ -157,7 +157,7 @@ export const fetchRecipes = async (
   db: Firestore,
   recipeIds: string,
 ): Promise<Recipe[]> => {
-  console.log('IN FETCH RECIPES');
+  console.log('IN FETCH RECIPES');  
 
   const q = query(
     collection(db, 'Recipes'),

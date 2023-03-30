@@ -39,7 +39,7 @@ export const fetchRandomRecipes = async (
 
         https.get(
             `${spoonacularAPI.baseURL}/recipes/complexSearch?` +
-                `apiKey=${spoonacularAPI.key}&number=${count}&diet=${transformedDients}&excludeIngredients=${transformedExcludeIngredients}&intolerances${transformedAllergies}&type=main%20course&addRecipeInformation=true&fillIngredients=true`,
+                `apiKey=${spoonacularAPI.key}&number=${count}&diet=${transformedDients}&excludeIngredients=${transformedExcludeIngredients}&intolerances${transformedAllergies}&addRecipeInformation=true&fillIngredients=true&sort=random`,
             (res) => {
                 let body = '';
                 res.on('data', (d) => (body += d));
