@@ -20,60 +20,76 @@ admin.initializeApp();
 // });
 
 const spoonacularAPI = {
-  key: "4caed3953aab44a3a3324c769e47c9ff",
-  baseURL: "https://api.spoonacular.com",
+    key: '4caed3953aab44a3a3324c769e47c9ff',
+    baseURL: 'https://api.spoonacular.com',
 };
 
-export const fetchRandomRecipes = async (count: number, diets: string[], allergies: string[], excludeIngredients: string[]) : Promise<any[]> => {
-  return new Promise((resolve, reject) => {     
+export const fetchRandomRecipes = async (
+    count: number,
+    diets: string[],
+    allergies: string[],
+    excludeIngredients: string[]
+): Promise<any[]> => {
+    return new Promise((resolve, reject) => {
+        const transformedExcludeIngredients = excludeIngredients
+            ? excludeIngredients.join(',')
+            : '';
+        const transformedDients = diets ? diets.join(',') : '';
+        const transformedAllergies = allergies ? allergies.join(',') : '';
 
-    const transformedExcludeIngredients = excludeIngredients ? excludeIngredients.join(",") : ""
-    const transformedDients = diets ? diets.join(",") : ""
-    const transformedAllergies = allergies ? allergies.join(",") : ""
-
-    https.get(
-        `${spoonacularAPI.baseURL}/recipes/complexSearch?` + 
-      `apiKey=${spoonacularAPI.key}&number=${count}&diet=${transformedDients}&excludeIngredients=${transformedExcludeIngredients}&intolerances${transformedAllergies}&type=main course&addRecipeInformation=true&fillIngredients=true`
-        , (res) => {
-          let body = "";
-          res.on("data", (d) => body += d);
-          res.on("end", () => {
-            const result = JSON.parse(body);            
-            resolve(result.results);
-          });
-          res.on("error", (error) => {
-            reject(error);
-          });
-        });
-  });
+        https.get(
+            `${spoonacularAPI.baseURL}/recipes/complexSearch?` +
+                `apiKey=${spoonacularAPI.key}&number=${count}&diet=${transformedDients}&excludeIngredients=${transformedExcludeIngredients}&intolerances${transformedAllergies}&type=main%20course&addRecipeInformation=true&fillIngredients=true`,
+            (res) => {
+                let body = '';
+                res.on('data', (d) => (body += d));
+                res.on('end', () => {
+                    const result = JSON.parse(body);
+                    resolve(result.results);
+                });
+                res.on('error', (error) => {
+                    reject(error);
+                });
+            }
+        );
+    });
 };
 exports.fetchRecipes = functions.https.onRequest(async (request, response) => {
+    const body = request.body;
 
-  const body = request.body
+    const diets: string[] = body.diets ?? [];
+    const allergies: string[] = body.allergies ?? [];
+    const excludeIngredients: string[] = body.excludedIngredients ?? [];
 
-  const diets: string[] = body.diets ?? []
-  const allergies: string[] = body.allergies ?? []
-  const excludeIngredients: string[] = body.excludeIngredients ?? []
+    let recipes = [];
+    try {
+        recipes = await fetchRandomRecipes(
+            5,
+            diets,
+            allergies,
+            excludeIngredients
+        );
+    } catch (error) {
+        console.log(error);
+        response.status(500).send({ error });
+        return;
+    }
 
-  let recipes = []
-  try {
-    recipes = await fetchRandomRecipes(5, diets, allergies, excludeIngredients);    
-  } catch (error) {
-    console.log(error);
-    response.status(500).send({error})
-    return;
-  }
+    const recipeData = [];
+    for (const recipe of recipes) {
+        recipeData.push(
+            await admin
+                .firestore()
+                .collection('Recipes')
+                .add({
+                    ...recipe,
+                })
+        );
+    }
 
-  const recipeData = [];
-  for (const recipe of recipes) {
-    recipeData.push(await admin.firestore().collection("Recipes").add({
-      ...recipe,
-    }));
-  }
-    
-  response.send({
-    recipes: recipeData.map(recipe => recipe.id)
-  });
+    response.send({
+        recipes: recipeData.map((recipe) => recipe.id),
+    });
 });
 
 // export const inviteToParty =

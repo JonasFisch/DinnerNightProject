@@ -270,8 +270,12 @@ export const loadRecipesForDinner = async (
   for (const user of users) {
     user.allergies?.forEach(allergie => allergies.add(allergie));
     user.diets?.forEach(diet => diets.add(diet));
-    user.unwantedIngredients?.forEach(ingredient => excludedIngredients.add(ingredient));
+    user.unwantedIngredients?.forEach(ingredient =>
+      excludedIngredients.add(ingredient),
+    );
   }
+
+  console.log(allergies, diets, excludedIngredients);
 
   const response = await fetch(
     'https://us-central1-dinnercookingplanner.cloudfunctions.net/fetchRecipes',
