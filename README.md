@@ -1,4 +1,5 @@
 # DinnerNightProject
+A cross-platform mobile app for planning dinner parties with friends that suits everyone's eating preferences.
 
 ## Setup Dev Environment
 
